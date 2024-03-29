@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+
+using MVCProject.Data;
+
 namespace MVCProject
 {
     public class Program
@@ -8,6 +12,11 @@ namespace MVCProject
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<attendanceDBContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("con1")
+                )
+            );
+
 
             var app = builder.Build();
 
