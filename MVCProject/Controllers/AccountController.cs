@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using MVCProject.Models;
 using MVCProject.Repos;
 using MVCProject.ViewModels;
 using System.Security.Claims;
@@ -26,15 +27,17 @@ namespace MVCProject.Controllers
             return View();
         }
 
-        public async void signInToken(string email, string role)
+        public async void signInToken(int id, string name, string role)
         {
-            Claim c1 = new Claim(ClaimTypes.Email, email);
-            Claim c2 = new Claim(ClaimTypes.Role, role);
+            Claim c1 = new Claim(ClaimTypes.NameIdentifier, id.ToString());
+            Claim c2 = new Claim(ClaimTypes.Name, name);
+            Claim c3 = new Claim(ClaimTypes.Role, role);
 
             ClaimsIdentity ci = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
             ci.AddClaim(c1);
             ci.AddClaim(c2);
+            ci.AddClaim(c3);
 
             ClaimsPrincipal cp = new ClaimsPrincipal(ci);
 
@@ -49,33 +52,53 @@ namespace MVCProject.Controllers
             {
                 if (loggedInUser.Email.ToLower() == "admin@gmail.com" && loggedInUser.Password == "123456") 
                 {
-                    signInToken(loggedInUser.Email, "admin");
+                    signInToken(0, "admin", "admin");
                     return RedirectToAction("index", "admin");
                 }
-                else if(stdRepo.GetStudentByEmailAndPassword(loggedInUser.Email, loggedInUser.Password)!=null)
+                
+                Student std = stdRepo.GetStudentByEmailAndPassword(loggedInUser.Email, loggedInUser.Password);
+                if (std != null)
                 {
-                    signInToken(loggedInUser.Email, "student");
-                    return RedirectToAction("index", "student");
+                    signInToken(std.Id, std.Name, "student");
+                    return RedirectToAction("index", "student", new { id = std.Id });
                 }
-                else if(empRepo.GetEmployeeByEmailAndPassword(loggedInUser.Email, loggedInUser.Password) != null)
+
+                Employee emp = empRepo.GetEmployeeByEmailAndPassword(loggedInUser.Email, loggedInUser.Password);
+                if (emp != null)
                 {
-                    signInToken(loggedInUser.Email, "employee");
-                    return RedirectToAction("index", "employee");
+                    signInToken(emp.Id, emp.Name, "employee");
+                    return RedirectToAction("index", "employee", new { id = emp.Id });
                 }
-                else if (instRepo.GetInstructorByEmailAndPassword(loggedInUser.Email, loggedInUser.Password) != null)
+
+                Instructor inst = instRepo.GetInstructorByEmailAndPassword(loggedInUser.Email, loggedInUser.Password);
+                
+
+                if (inst != null)
                 {
-                    signInToken(loggedInUser.Email, "instructor");
-                    return RedirectToAction("index", "instructor");
+                    //check if the instructor is a supervisor then set his rule to a supervisor
+                    Track track = instRepo.GetSuperVisorTrack(inst.Id);
+                    if (track != null)
+                    {
+                        signInToken(inst.Id, inst.Name, "supervisor");
+                    }
+                    else
+                    {
+                        signInToken(inst.Id, inst.Name, "instructor");
+                    }
+                    return RedirectToAction("index", "instructor", new {id = inst.Id});
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid Email or password");
-                    return View(loggedInUser);
-                }
+                
+                ModelState.AddModelError("", "Invalid Email or password");
+                return View(loggedInUser);
             }
             else
                 return View(loggedInUser);
-            return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("login");
         }
     }
 }

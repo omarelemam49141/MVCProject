@@ -1,0 +1,27 @@
+﻿@model Instructor
+
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.title = "Instructor dashboard";
+}
+
+
+@section dashboardTitle {
+    @Model.Name Dashboard
+}
+
+@{
+    if(User.IsInRole("supervisor"))
+    {
+        @section role {
+            Supervisor
+        }
+    }
+    else
+    {
+        @section role {
+            Instructor
+        }
+    }
+}
+
