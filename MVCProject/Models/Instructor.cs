@@ -9,7 +9,7 @@ namespace MVCProject.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public string Mobile { get; set; }
-        [ForeignKey("DeptID")]
+        [ForeignKey("Department")]
         public int DeptID { get; set; }
         public Department Department { get; set; }
         public ICollection<Permission> Permissions { get; set; } = new HashSet<Permission>();
