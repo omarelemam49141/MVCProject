@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8H8RL0wvsxsqbx8G6RgMebOzAuJ+Ujyt0lu8oHA5AyU=",
+  "Hash": "pV/bfZbIERkPU7ARW+So+nq6D7RSdXK0C6An8VvgOp4=",
   "Source": "MVCProject",
   "BasePath": "_content/MVCProject",
   "Mode": "Default",
@@ -5050,6 +5050,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\images\\waiting1.png",
+      "SourceId": "MVCProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\",
+      "BasePath": "_content/MVCProject",
+      "RelativePath": "images/waiting1.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\waiting1.png"
     },
     {
       "Identity": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\js\\site.js",

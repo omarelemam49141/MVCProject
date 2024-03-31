@@ -1057,6 +1057,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\images\\waiting1.png",
+      "PackagePath": "staticwebassets\\images\\waiting1.png"
+    },
+    {
       "Id": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
