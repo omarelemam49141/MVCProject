@@ -59,11 +59,11 @@ namespace MVCProject.Repos
             var intake = db.Intakes.FirstOrDefault(i => i.Id == intakeId);
             if (intake != null)
             {
-                intake.Intakes.Clear(); // Clear existing tracks to avoid duplicates
+                intake.Tracks.Clear(); // Clear existing tracks to avoid duplicates
                 var tracksToAdd = db.Tracks.Where(t => trackIds.Contains(t.Id)).ToList();
                 foreach (var track in tracksToAdd)
                 {
-                    intake.Intakes.Add(track);
+                    intake.Tracks.Add(track);
                 }
                 db.SaveChanges();
             }

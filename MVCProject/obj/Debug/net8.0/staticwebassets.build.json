@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LmGJbpx5/oBSZidwkiZcYhue/LXftkQIOzOiJu1E00c=",
+  "Hash": "Cg2SUC3Tcj5PyjCvtl/t18VjEGD3S5IRG2Q4SSW7xVw=",
   "Source": "MVCProject",
   "BasePath": "_content/MVCProject",
   "Mode": "Default",
@@ -5014,6 +5014,25 @@
       "OriginalItemSpec": "wwwroot\\assets\\scss\\soft-ui-dashboard\\variables\\_virtual-reality.scss"
     },
     {
+      "Identity": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\css\\instructorPermissions.css",
+      "SourceId": "MVCProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\",
+      "BasePath": "_content/MVCProject",
+      "RelativePath": "css/instructorPermissions.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\instructorPermissions.css"
+    },
+    {
       "Identity": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\css\\site.css",
       "SourceId": "MVCProject",
       "SourceType": "Discovered",
@@ -5050,6 +5069,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\images\\waiting1.png",
+      "SourceId": "MVCProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\",
+      "BasePath": "_content/MVCProject",
+      "RelativePath": "images/waiting1.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\waiting1.png"
     },
     {
       "Identity": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\js\\site.js",

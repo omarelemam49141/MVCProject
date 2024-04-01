@@ -1049,12 +1049,20 @@
       "PackagePath": "staticwebassets\\assets\\scss\\soft-ui-dashboard\\variables\\_virtual-reality.scss"
     },
     {
+      "Id": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\css\\instructorPermissions.css",
+      "PackagePath": "staticwebassets\\css\\instructorPermissions.css"
+    },
+    {
       "Id": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
       "Id": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\images\\waiting1.png",
+      "PackagePath": "staticwebassets\\images\\waiting1.png"
     },
     {
       "Id": "D:\\mvcProject\\MVCProject\\MVCProject\\wwwroot\\js\\site.js",

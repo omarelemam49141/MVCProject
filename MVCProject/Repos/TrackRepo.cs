@@ -1,21 +1,16 @@
 ﻿using MVCProject.Data;
 using MVCProject.Models;
-<<<<<<< HEAD
-using System.Diagnostics;
-=======
->>>>>>> master
 
 namespace MVCProject.Repos
 {
     public interface ITrackRepo
     {
-<<<<<<< HEAD
         public void AddTrack(Track t);
         public void RemoveTrack(int tid);
         public Track DeactivateTrack(int tid);
         public void UpdateTrack(Track t);
         public Track GetTrackById(int tid);
-
+        public Track GetTrackBySupervisorID(int supervisorId);
         public Track GetTrackBySupervisor(int sid);
 
 
@@ -25,6 +20,10 @@ namespace MVCProject.Repos
     public class TrackRepo : ITrackRepo
     {
         private attendanceDBContext db;
+        public TrackRepo(attendanceDBContext _db)
+        {
+            db = _db;
+        }
         public void RemoveTrack(int trackId)
         {
             var trackToRemove = db.Tracks.Find(trackId);
@@ -35,10 +34,7 @@ namespace MVCProject.Repos
             }
         }
 
-        public TrackRepo(attendanceDBContext _db)
-        {
-            db = _db;
-        }
+
 
         public void AddTrack(Track track)
         {
@@ -48,7 +44,7 @@ namespace MVCProject.Repos
 
         public Track DeactivateTrack(int trackId)
         {
-            var track = db.Tracks.FirstOrDefault(t=>t.Id==trackId);
+            var track = db.Tracks.FirstOrDefault(t => t.Id == trackId);
             if (track != null)
             {
                 track.Status = "Inactive";
@@ -59,7 +55,7 @@ namespace MVCProject.Repos
 
         public Track GetTrackById(int trackId)
         {
-            return db.Tracks.FirstOrDefault(t=>t.Id ==trackId);
+            return db.Tracks.FirstOrDefault(t => t.Id == trackId);
         }
 
 
@@ -73,19 +69,14 @@ namespace MVCProject.Repos
         {
             db.Tracks.Update(track);
             db.SaveChanges();
-=======
-        public Track GetTrackBySupervisorID(int supervisorId); 
-    }
-    public class TrackRepo: ITrackRepo
-    {
-        private attendanceDBContext db;
 
-        public TrackRepo(attendanceDBContext _db) { db = _db; }
+        }
+
 
         public Track GetTrackBySupervisorID(int supervisorId)
         {
-            return db.Tracks.FirstOrDefault(t=>t.SupervisorID==supervisorId);
->>>>>>> master
+            return db.Tracks.FirstOrDefault(t => t.SupervisorID == supervisorId);
+
         }
     }
 }
