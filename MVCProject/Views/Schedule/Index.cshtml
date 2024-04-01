@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Schedule>
+@{
+    ViewData["Title"] = "DisplaySchedules";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section dashboardTitle {
+    @ViewBag.instructor.Name Dashboard
+}
+
+@{
+    if (User.IsInRole("supervisor"))
+    {
+        @section role {
+    Supervisor
+        }
+    }
+    else
+    {
+        @section role {
+    Instructor
+        }
+    }
+}
+
+@section links {
+    <partial name="../partialViews/instructorLinks" />
+}
+
+
+<h3 class="text-center mb-4">
+    Schedules for track: @ViewBag.trackName
+</h3>
+
+<div class="text-center my-2">
+    <a asp-action="create" asp-controller="schedule" asp-route-instID="@ViewBag.instructor.Id" class="btn btn-success">Make a new schedule</a>
+</div>
+
+<table class="table table-hover table-bordered text-center table-striped">
+    <thead>
+        <tr>
+            <th>Schedule ID</th>
+            <th>Schedaule date</th>
+            <th>Start period</th>
+            <th class="bg-light text-dark">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody class="align-middle">
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="4">
+                    <p class="lead text-center">No Schedules for this track</p>
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (Schedule s in Model)
+            {
+                <tr>
+                    <td>@s.id</td>
+                    <td>@s.Date</td>
+                    <td>@s.StartPeriod</td>
+                    <td>
+                        <a asp-action="edit" asp-controller="schedule" asp-route-id="@s.id" asp-route-instID="@ViewBag.instructor.Id" class="btn btn-info my-0">Edit</a>
+                        <a asp-action="delete" asp-controller="schedule" asp-route-id="@s.id" asp-route-instID="@ViewBag.instructor.Id" class="btn btn-danger my-0">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

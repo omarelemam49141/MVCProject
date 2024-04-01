@@ -5,6 +5,7 @@ namespace MVCProject.Models
 {
     public class DailyAttendanceRecord
     {
+        public int Id { get; set; }
         public DateOnly Date { get; set; }
         [ForeignKey("Student")]
         public int StdID { get; set; }

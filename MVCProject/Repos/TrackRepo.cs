@@ -1,11 +1,15 @@
 ﻿using MVCProject.Data;
 using MVCProject.Models;
+<<<<<<< HEAD
 using System.Diagnostics;
+=======
+>>>>>>> master
 
 namespace MVCProject.Repos
 {
     public interface ITrackRepo
     {
+<<<<<<< HEAD
         public void AddTrack(Track t);
         public void RemoveTrack(int tid);
         public Track DeactivateTrack(int tid);
@@ -69,6 +73,19 @@ namespace MVCProject.Repos
         {
             db.Tracks.Update(track);
             db.SaveChanges();
+=======
+        public Track GetTrackBySupervisorID(int supervisorId); 
+    }
+    public class TrackRepo: ITrackRepo
+    {
+        private attendanceDBContext db;
+
+        public TrackRepo(attendanceDBContext _db) { db = _db; }
+
+        public Track GetTrackBySupervisorID(int supervisorId)
+        {
+            return db.Tracks.FirstOrDefault(t=>t.SupervisorID==supervisorId);
+>>>>>>> master
         }
     }
 }
