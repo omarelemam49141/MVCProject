@@ -1,0 +1,29 @@
+﻿#message {
+    animation-name: alertMessage;
+    animation-duration: 5s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    transform-origin: left;
+}
+
+@keyframes alertMessage {
+    0% {
+        transform: scaleX(0);
+        display: none;
+    }
+
+    20% {
+        transform: scaleX(1);
+        display: block;
+    }
+
+    80% {
+        transform: scaleX(1);
+    }
+
+    100% {
+        transform: scaleX(0);
+        display: none;
+    }
+}

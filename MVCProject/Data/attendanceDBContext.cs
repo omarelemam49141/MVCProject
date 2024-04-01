@@ -29,18 +29,6 @@ namespace MVCProject.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DailyAttendanceRecord>(entity =>
-            {
-                entity.HasKey(e => new { e.StdID, e.Date });
-            });
-            modelBuilder.Entity<Permission>(entity =>
-            {
-                entity.HasKey(e => new { e.StdID, e.Date });
-            });
-            modelBuilder.Entity<Schedule>(entity =>
-            {
-                entity.HasKey(e => new { e.TrackID, e.Date });
-            });
             modelBuilder.Entity<StudentIntakeTrack>(entity =>
             {
                 entity.HasKey(e => new { e.StdID, e.IntakeID });

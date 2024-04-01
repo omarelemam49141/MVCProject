@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MVCProject.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initial2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,7 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,14 +56,14 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    University = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Faculty = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GraduationYear = table.Column<DateOnly>(type: "date", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    University = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Faculty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GraduationYear = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,13 +76,13 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeptID = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    DepartmentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,8 +91,7 @@ namespace MVCProject.Migrations
                         name: "FK_Employees_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -101,19 +100,18 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeptID = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Instructors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Instructors_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
+                        name: "FK_Instructors_Departments_DeptID",
+                        column: x => x.DeptID,
                         principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
@@ -123,16 +121,18 @@ namespace MVCProject.Migrations
                 name: "DailyAttendanceRecords",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     StdID = table.Column<int>(type: "int", nullable: false),
                     TimeOfAttendance = table.Column<TimeOnly>(type: "time", nullable: false),
                     TimeOfLeave = table.Column<TimeOnly>(type: "time", nullable: false),
                     StudentDegree = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DailyAttendanceRecords", x => new { x.StdID, x.Date });
+                    table.PrimaryKey("PK_DailyAttendanceRecords", x => x.Id);
                     table.ForeignKey(
                         name: "FK_DailyAttendanceRecords_Students_StdID",
                         column: x => x.StdID,
@@ -142,18 +142,41 @@ namespace MVCProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StudentMessage",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentID = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentMessage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentMessage_Students_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Permissions",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     StdID = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InstructorID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Permissions", x => new { x.StdID, x.Date });
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Permissions_Instructors_InstructorID",
                         column: x => x.InstructorID,
@@ -174,8 +197,8 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     programID = table.Column<int>(type: "int", nullable: false),
                     SupervisorID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -201,11 +224,11 @@ namespace MVCProject.Migrations
                 columns: table => new
                 {
                     IntakesId = table.Column<int>(type: "int", nullable: false),
-                    IntakesId1 = table.Column<int>(type: "int", nullable: false)
+                    TracksId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IntakeTrack", x => new { x.IntakesId, x.IntakesId1 });
+                    table.PrimaryKey("PK_IntakeTrack", x => new { x.IntakesId, x.TracksId });
                     table.ForeignKey(
                         name: "FK_IntakeTrack_Intakes_IntakesId",
                         column: x => x.IntakesId,
@@ -213,8 +236,8 @@ namespace MVCProject.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_IntakeTrack_Tracks_IntakesId1",
-                        column: x => x.IntakesId1,
+                        name: "FK_IntakeTrack_Tracks_TracksId",
+                        column: x => x.TracksId,
                         principalTable: "Tracks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
@@ -224,13 +247,15 @@ namespace MVCProject.Migrations
                 name: "Schedules",
                 columns: table => new
                 {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    TrackID = table.Column<int>(type: "int", nullable: false),
-                    StartPeriod = table.Column<TimeOnly>(type: "time", nullable: false)
+                    StartPeriod = table.Column<TimeOnly>(type: "time", nullable: false),
+                    TrackID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Schedules", x => new { x.TrackID, x.Date });
+                    table.PrimaryKey("PK_Schedules", x => x.id);
                     table.ForeignKey(
                         name: "FK_Schedules_Tracks_TrackID",
                         column: x => x.TrackID,
@@ -271,24 +296,39 @@ namespace MVCProject.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_DailyAttendanceRecords_StdID",
+                table: "DailyAttendanceRecords",
+                column: "StdID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employees_DepartmentId",
                 table: "Employees",
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instructors_DepartmentId",
+                name: "IX_Instructors_DeptID",
                 table: "Instructors",
-                column: "DepartmentId");
+                column: "DeptID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IntakeTrack_IntakesId1",
+                name: "IX_IntakeTrack_TracksId",
                 table: "IntakeTrack",
-                column: "IntakesId1");
+                column: "TracksId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Permissions_InstructorID",
                 table: "Permissions",
                 column: "InstructorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_StdID",
+                table: "Permissions",
+                column: "StdID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedules_TrackID",
+                table: "Schedules",
+                column: "TrackID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentIntakeTracks_IntakeID",
@@ -299,6 +339,11 @@ namespace MVCProject.Migrations
                 name: "IX_StudentIntakeTracks_TrackID",
                 table: "StudentIntakeTracks",
                 column: "TrackID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentMessage_StudentID",
+                table: "StudentMessage",
+                column: "StudentID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tracks_programID",
@@ -334,13 +379,16 @@ namespace MVCProject.Migrations
                 name: "StudentIntakeTracks");
 
             migrationBuilder.DropTable(
+                name: "StudentMessage");
+
+            migrationBuilder.DropTable(
                 name: "Intakes");
 
             migrationBuilder.DropTable(
-                name: "Students");
+                name: "Tracks");
 
             migrationBuilder.DropTable(
-                name: "Tracks");
+                name: "Students");
 
             migrationBuilder.DropTable(
                 name: "Instructors");

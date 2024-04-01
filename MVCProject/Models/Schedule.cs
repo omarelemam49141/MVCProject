@@ -4,6 +4,7 @@ namespace MVCProject.Models
 {
     public class Schedule
     {
+        public int id { get; set; }
         public DateOnly Date { get; set; }
         public TimeOnly StartPeriod { get; set; }
         [ForeignKey("Track")]

@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Permission> 
+
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "ShowPermissions";
+}
+
+@section dashboardTitle {
+    @ViewBag.instructor.Name Dashboard
+}
+
+@{
+    if (User.IsInRole("supervisor"))
+    {
+        @section role {
+    Supervisor
+        }
+    }
+    else
+    {
+        @section role {
+    Instructor
+        }
+    }
+}
+
+@section links {
+    <partial name="../partialViews/instructorLinks" />
+}
+
+@section styles {
+    <link rel="stylesheet" href="/css/instructorPermissions.css" />
+}
+
+@if(ViewBag.Message != null)
+{
+    <div id="message" class="alert alert-success">@ViewBag.Message</div>
+}
+
+<h2 class="text-center">Permissions</h2>
+<table class="table table-light table-hover table-striped table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Student name</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody class="align-middle">
+        @if(Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="5"><p class="lead">No permissions available</p></td>
+            </tr>
+        }
+        else
+        {
+            @foreach (Permission p in Model)
+            {
+                if (p.Status.ToLower() == "pending")
+                {
+                    <tr>
+                        <td>@p.Student.Name</td>
+                        <td>@p.Date</td>
+                        <td>@p.Type</td>
+                        <td>@p.Status</td>
+                        <td>
+                            <a class="btn btn-info my-0" asp-action="acceptPermission"
+                               asp-controller="instructor"
+                               asp-route-permissionId="@p.Id"
+                               asp-route-id="@ViewBag.instructor.Id">
+                                Accept
+                            </a>
+                            <a class="btn btn-danger my-0" asp-action="refusePermission"
+                               asp-controller="instructor"
+                               asp-route-permissionId="@p.Id"
+                               asp-route-id="@ViewBag.instructor.Id">
+                                Refuse
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+

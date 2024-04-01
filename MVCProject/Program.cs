@@ -21,6 +21,12 @@ namespace MVCProject
             builder.Services.AddScoped<IInstructorRepo, InstructorRepo>();
             builder.Services.AddScoped<IStudentRepo, StudentRepo>();
             builder.Services.AddScoped<IEmployeeRepo, EmployeeRepo>();
+            builder.Services.AddScoped<IPermissionRepo, PermissionRepo>();
+            builder.Services.AddScoped<IStudentMessageRepo, StudentMessageRepo>();
+            builder.Services.AddScoped<ITrackRepo, TrackRepo>();
+            builder.Services.AddScoped<IScheduleRepo, ScheduleRepo>();
+
+
 
             builder.Services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
