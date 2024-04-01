@@ -233,3 +233,7 @@ local.properties
 
 # VS Code
 .vscode/
+
+# 
+MVCProject/obj/*
+MVCProject/bin/*
