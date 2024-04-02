@@ -7,6 +7,9 @@ namespace MVCProject.Repos
     public interface IStudentRepo
     {
         public Student GetStudentByEmailAndPassword(string email, string password);
+
+        public void RegisterStudent(Student std);
+
         public List<Student> GetAllStudents();
 
         public Student GetStudentById(int id);
@@ -22,7 +25,7 @@ namespace MVCProject.Repos
         public bool AddStudentsFromExcel(List<Student> student);
     }
 
-    public class StudentRepo: IStudentRepo
+    public class StudentRepo : IStudentRepo
     {
         private attendanceDBContext db;
 
@@ -76,6 +79,15 @@ namespace MVCProject.Repos
         {
             return db.Students.FirstOrDefault(i => i.Email.ToLower() == email.ToLower()
                                             && i.Password == password);
+        }
+        public void RegisterStudent(Student std)
+        {
+            db.Students.Add(std);
+            db.SaveChanges();
+            if (std.Id == 0)
+            {
+                throw new System.Exception("Error in saving student");
+            }
         }
 
         public Student GetStudentById(int id)
