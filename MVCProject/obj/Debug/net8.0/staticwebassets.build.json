@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "TIDJnygyIo4E9IKKaV8S4f/nZDqLuaXD37kF2v0zNVg=",
+  "Hash": "yG4w5hn/UTDtaFbhVETbffatv1xcoyxwiDs92XQLBkI=",
   "Source": "MVCProject",
   "BasePath": "_content/MVCProject",
   "Mode": "Default",
@@ -5014,12 +5014,12 @@
       "OriginalItemSpec": "wwwroot\\assets\\scss\\soft-ui-dashboard\\variables\\_virtual-reality.scss"
     },
     {
-      "Identity": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\css\\instructorPermissions.css",
+      "Identity": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\css\\alertMessagesStyle.css",
       "SourceId": "MVCProject",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\",
       "BasePath": "_content/MVCProject",
-      "RelativePath": "css/instructorPermissions.css",
+      "RelativePath": "css/alertMessagesStyle.css",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -5030,7 +5030,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\css\\instructorPermissions.css"
+      "OriginalItemSpec": "wwwroot\\css\\alertMessagesStyle.css"
     },
     {
       "Identity": "D:\\ITI\\Projects\\MVCProject\\MVCProject\\MVCProject\\wwwroot\\css\\site.css",
