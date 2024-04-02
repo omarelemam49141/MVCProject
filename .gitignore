@@ -10,6 +10,8 @@
 
 # User-specific Visual Studio 2022 directory
 .vs/
+bin/
+obj/
 
 # .NET Core
 project.lock.json
