@@ -1,0 +1,66 @@
+﻿@model Student
+
+@{
+    Layout = "_AccountLayout";
+    ViewBag.Title = "Signup";
+}
+
+<form role="form" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger list-unstyled"></div>
+
+    <label asp-for="Email"></label>
+    <div class="mb-3">
+        <input asp-for="Email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <label asp-for="Name"></label>
+    <div class="mb-3">
+        <input asp-for="Name" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="name-addon">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+
+    <label asp-for="Mobile"></label>
+    <div class="mb-3">
+        <input asp-for="Mobile" class="form-control" placeholder="Mobile" aria-label="Mobile" aria-describedby="mobile-addon">
+        <span asp-validation-for="Mobile" class="text-danger"></span>
+    </div>
+
+
+    <label asp-for="University"></label>
+    <div class="mb-3">
+        <input asp-for="University" class="form-control" placeholder="University" aria-label="University" aria-describedby="university-addon">
+        <span asp-validation-for="University" class="text-danger"></span>
+    </div>
+    <label asp-for="Faculty"></label>
+    <div class="mb-3">
+        <input asp-for="Faculty" class="form-control" placeholder="Faculty" aria-label="Faculty" aria-describedby="faculty-addon">
+        <span asp-validation-for="Faculty" class="text-danger"></span>
+    </div>
+    <label asp-for="Specialization"></label>
+    <div class="mb-3">
+        <input asp-for="Specialization" class="form-control" placeholder="Specialization" aria-label="Specialization" aria-describedby="specialization-addon">
+        <span asp-validation-for="Specialization" class="text-danger"></span>
+    </div>
+    <label asp-for="GraduationYear"></label>
+    <div class="mb-3">
+        <input asp-for="GraduationYear" class="form-control" placeholder="GraduationYear" aria-label="GraduationYear" aria-describedby="graduationYear-addon"  value="@(DateTime.Now)">
+        <span asp-validation-for="GraduationYear" class="text-danger"></span>
+    </div>
+    <label asp-for="Password"></label>
+    <div class="mb-3">
+        <input asp-for="Password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+
+    <div class="text-center">
+        <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign up</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
