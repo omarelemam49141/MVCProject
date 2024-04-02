@@ -25,6 +25,7 @@ namespace MVCProject
             builder.Services.AddScoped<IStudentMessageRepo, StudentMessageRepo>();
             builder.Services.AddScoped<ITrackRepo, TrackRepo>();
             builder.Services.AddScoped<IScheduleRepo, ScheduleRepo>();
+            builder.Services.AddScoped<IIntakeRepo, IntakeRepo>();
 
 
 
