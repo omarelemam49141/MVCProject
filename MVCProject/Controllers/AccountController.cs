@@ -14,7 +14,7 @@ namespace MVCProject.Controllers
         private IEmployeeRepo empRepo;
         private IStudentRepo stdRepo;
 
-        public AccountController(IInstructorRepo _instRepo, IStudentRepo _stdRepo, IEmployeeRepo _empRepo) 
+        public AccountController(IInstructorRepo _instRepo, IStudentRepo _stdRepo, IEmployeeRepo _empRepo)
         {
             instRepo = _instRepo;
             empRepo = _empRepo;
@@ -50,12 +50,12 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (loggedInUser.Email.ToLower() == "admin@gmail.com" && loggedInUser.Password == "123456") 
+                if (loggedInUser.Email.ToLower() == "admin@gmail.com" && loggedInUser.Password == "123456")
                 {
                     signInToken(0, "admin", "admin");
                     return RedirectToAction("index", "admin");
                 }
-                
+
                 Student std = stdRepo.GetStudentByEmailAndPassword(loggedInUser.Email, loggedInUser.Password);
                 if (std != null)
                 {
@@ -71,7 +71,7 @@ namespace MVCProject.Controllers
                 }
 
                 Instructor inst = instRepo.GetInstructorByEmailAndPassword(loggedInUser.Email, loggedInUser.Password);
-                
+
 
                 if (inst != null)
                 {
@@ -85,9 +85,9 @@ namespace MVCProject.Controllers
                     {
                         signInToken(inst.Id, inst.Name, "instructor");
                     }
-                    return RedirectToAction("index", "instructor", new {id = inst.Id});
+                    return RedirectToAction("index", "instructor", new { id = inst.Id });
                 }
-                
+
                 ModelState.AddModelError("", "Invalid Email or password");
                 return View(loggedInUser);
             }
@@ -99,6 +99,26 @@ namespace MVCProject.Controllers
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("login");
+        }
+
+        [HttpGet]
+        public IActionResult Signup()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> Signup(Student student)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(student);
+            }
+            stdRepo.RegisterStudent(student);
+            signInToken(student.Id, student.Name, "student");
+            return RedirectToAction("index", "student", new { id = student.Id });
         }
     }
 }
