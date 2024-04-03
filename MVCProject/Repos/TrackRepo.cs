@@ -1,4 +1,5 @@
-﻿using MVCProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MVCProject.Data;
 using MVCProject.Models;
 
 namespace MVCProject.Repos
@@ -12,7 +13,9 @@ namespace MVCProject.Repos
         public Track GetTrackById(int tid);
         public Track GetTrackBySupervisorID(int supervisorId);
         public Track GetTrackBySupervisor(int sid);
+        public List<Track> GetTracksForProgram(int pid);
 
+        public List<Track> GetAll();
 
         
 
@@ -77,6 +80,16 @@ namespace MVCProject.Repos
         {
             return db.Tracks.FirstOrDefault(t => t.SupervisorID == supervisorId);
 
+        }
+
+        public List<Track> GetAll()
+        {
+            return db.Tracks.ToList();
+        }
+
+        public List<Track> GetTracksForProgram(int pid)
+        {
+            return db.Tracks.Where(t => t.programID == pid).ToList();
         }
     }
 }
