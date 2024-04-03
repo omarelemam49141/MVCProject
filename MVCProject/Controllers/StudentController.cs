@@ -26,6 +26,11 @@ namespace MVCProject.Controllers
             Student std = stdRepo.GetStudentByID(id);
             return View(std);
         }
+              public IActionResult checkStudentDegree(int StudentDegree)
+        {
+            if (StudentDegree > 0 && StudentDegree < 251) return Json(true);
+            else return Json(false);
+        }
 
         public IActionResult ShowPermissions(int id)
         {

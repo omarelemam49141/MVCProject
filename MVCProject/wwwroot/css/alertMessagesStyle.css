@@ -5,6 +5,11 @@
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
     transform-origin: left;
+    position: fixed;
+    top:10%;
+    width: 70%;
+    margin: auto;
+    z-index: 2000;
 }
 
 @keyframes alertMessage {

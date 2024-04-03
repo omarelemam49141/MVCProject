@@ -4,6 +4,7 @@ using MVCProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCProject.Migrations
 {
     [DbContext(typeof(attendanceDBContext))]
-    partial class attendanceDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240401150135_AddValidationForTheScheduleTable")]
+    partial class AddValidationForTheScheduleTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("TracksId");
 
-                    b.ToTable("IntakeTrack", (string)null);
+                    b.ToTable("IntakeTrack");
                 });
 
             modelBuilder.Entity("MVCProject.Models.DailyAttendanceRecord", b =>
@@ -67,7 +70,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("StdID");
 
-                    b.ToTable("DailyAttendanceRecords", (string)null);
+                    b.ToTable("DailyAttendanceRecords");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Department", b =>
@@ -83,7 +86,7 @@ namespace MVCProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Employee", b =>
@@ -119,7 +122,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Instructor", b =>
@@ -149,7 +152,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("DeptID");
 
-                    b.ToTable("Instructors", (string)null);
+                    b.ToTable("Instructors");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Intake", b =>
@@ -165,7 +168,7 @@ namespace MVCProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Intakes", (string)null);
+                    b.ToTable("Intakes");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Permission", b =>
@@ -197,7 +200,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("StdID");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Schedule", b =>
@@ -221,7 +224,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("TrackID");
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Student", b =>
@@ -258,7 +261,7 @@ namespace MVCProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("MVCProject.Models.StudentIntakeTrack", b =>
@@ -278,7 +281,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("TrackID");
 
-                    b.ToTable("StudentIntakeTracks", (string)null);
+                    b.ToTable("StudentIntakeTracks");
                 });
 
             modelBuilder.Entity("MVCProject.Models.StudentMessage", b =>
@@ -302,7 +305,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("StudentMessage", (string)null);
+                    b.ToTable("StudentMessage");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Track", b =>
@@ -332,7 +335,7 @@ namespace MVCProject.Migrations
 
                     b.HasIndex("programID");
 
-                    b.ToTable("Tracks", (string)null);
+                    b.ToTable("Tracks");
                 });
 
             modelBuilder.Entity("MVCProject.Models._Program", b =>
@@ -348,7 +351,7 @@ namespace MVCProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Programs", (string)null);
+                    b.ToTable("Programs");
                 });
 
             modelBuilder.Entity("IntakeTrack", b =>

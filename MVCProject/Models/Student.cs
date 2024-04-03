@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MVCProject.Models
 {
@@ -35,6 +38,9 @@ namespace MVCProject.Models
         public string Specialization { get; set; }
         [Required]
         public DateTime GraduationYear { get; set; }
+        [Remote("checkStudentDegree", "student", ErrorMessage = "Student degree must be between 0 and 250")]
+        [DefaultValue(250)]
+        public int StudentDegree { get; set; } = 250;
         public ICollection<DailyAttendanceRecord> AttendaceRecords { get; set; } = new HashSet<DailyAttendanceRecord>();
         public List<StudentIntakeTrack> StudentIntakeTracks { get; set; } = new List<StudentIntakeTrack>();
         public ICollection<Permission> Permissions { get; set; } = new HashSet<Permission>();
