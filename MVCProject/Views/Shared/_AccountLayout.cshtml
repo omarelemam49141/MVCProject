@@ -12,6 +12,9 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+@{
+    string action = ViewBag.Title == "Login" ? "Signup" : "Login";
+}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,17 +60,17 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navigation">
                             <ul class="navbar-nav mx-auto ms-xl-auto me-xl-7">
-                                
+
                                 <li class="nav-item">
-                                    <a class="nav-link me-2" href="/pages/sign-up.html">
+                                    <a class="nav-link me-2" asp-controller="Account" asp-action="@action">
                                         <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
-                                        Sign Up
+                                        @action
                                     </a>
                                 </li>
-                                
+
                             </ul>
-                            
-                           
+
+
                         </div>
                     </div>
                 </nav>
@@ -83,16 +86,28 @@
                         <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
                             <div class="card card-plain mt-8">
                                 <div class="card-header pb-0 text-left bg-transparent">
-                                    <h3 class="font-weight-bolder text-info text-gradient">Welcome back</h3>
-                                    <p class="mb-0">Enter your email and password to sign in</p>
+                                    <h3 class="font-weight-bolder text-info text-gradient">@(ViewBag.Title == "Login" ? "Welcome back!" : "Join us!")</h3>
+                                    <p class="mb-0">
+                                        @(ViewBag.Title == "Login" ? "Enter your email and password to sign in" : "Create new account")
+                                    </p>
                                 </div>
                                 <div class="card-body">
                                     @RenderBody()
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-sm mx-auto">
-                                        Don't have an account?
-                                        <a href="javascript:;" class="text-info text-gradient font-weight-bold">Sign up</a>
+                                        @if (ViewBag.Title == "Login")
+                                        {
+
+                                            <a href="/Account/Signup" class="text-info text-gradient font-weight-bold">Create new account</a>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                Have an account?
+                                            </span>
+                                            <a href="/Account/Login" class="text-info text-gradient font-weight-bold">Login</a>
+                                        }
                                     </p>
                                 </div>
                             </div>
