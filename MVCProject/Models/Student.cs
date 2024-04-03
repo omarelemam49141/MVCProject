@@ -37,6 +37,7 @@ namespace MVCProject.Models
 
         public string Specialization { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime GraduationYear { get; set; }
         [Remote("checkStudentDegree", "student", ErrorMessage = "Student degree must be between 0 and 250")]
         [DefaultValue(250)]
