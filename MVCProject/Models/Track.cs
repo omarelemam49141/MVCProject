@@ -16,7 +16,9 @@ namespace MVCProject.Models
         public List<StudentIntakeTrack> StudentIntakeTracks { get; set; } = new List<StudentIntakeTrack>();
         public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
         [ForeignKey("Supervisor")]
-        public int SupervisorID { get; set; }
+        public int? SupervisorID { get; set; }
         public Instructor Supervisor { get; set; }
+        public ICollection<Instructor> instructors { get; set; } = new HashSet<Instructor>();
+
     }
 }

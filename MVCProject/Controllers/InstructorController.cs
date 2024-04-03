@@ -11,14 +11,23 @@ namespace MVCProject.Controllers
         private IInstructorRepo instRepo;
         private IPermissionRepo permissionRepo;
         private IStudentMessageRepo stdMsgRepo;
+        private ITrackRepo trackRepo;
+        private IStudentRepo studentRepo;
+        private IAttendanceRecordRepo attendanceRecordRepo;
 
         public InstructorController(IInstructorRepo _instRepo,
                                     IPermissionRepo _permissionRepo,
-                                    IStudentMessageRepo _stdMsgRepo) 
+                                    IStudentMessageRepo _stdMsgRepo,
+                                    ITrackRepo _trackRepo,
+                                    IStudentRepo _studentRepo,
+                                    IAttendanceRecordRepo _attendanceRecordRepo) 
         {
             instRepo = _instRepo; 
             permissionRepo = _permissionRepo;
             stdMsgRepo = _stdMsgRepo;
+            trackRepo = _trackRepo;
+            studentRepo = _studentRepo;
+            attendanceRecordRepo = _attendanceRecordRepo;
         }
         public IActionResult Index(int id)
         {
@@ -70,6 +79,48 @@ namespace MVCProject.Controllers
             //redirect to the showPermissions
             string denialMessage = "Permission has been denied!";
             return RedirectToAction("showPermissions", "instructor", new { id = id, message= denialMessage });
+        }
+
+        public IActionResult showStudentsDegrees(int? id)
+        {
+            if (id == null) return BadRequest();
+            Instructor instructor = instRepo.GetInstructorByID(id.Value);
+            if (instructor == null) return NotFound();
+
+            //get the instructor track
+            Track track = trackRepo.GetTrackById(instructor.TrackID);
+            if (track == null) return NotFound();
+            //get all the students who are in the instructor track
+            List<Student> students = studentRepo.GetTrackStudents(track.Id);
+
+            ViewBag.instructor = instructor;
+            ViewBag.InstructorId = id;
+            ViewBag.Track = track;
+
+            return View(students);
+        }
+
+        public IActionResult showAttendanceRecords(int? id)
+        {
+            if (id == null) return BadRequest();
+            Instructor instructor = instRepo.GetInstructorByID(id.Value);
+            if (instructor == null) return NotFound();
+
+            //get the instructor track
+            Track track = trackRepo.GetTrackById(instructor.TrackID);
+            if (track == null) return NotFound();
+            //get all the students who are in the instructor track
+            List<Student> students = studentRepo.GetTrackStudents(track.Id);
+            //Get the daily attendance records for these students 
+            List<DailyAttendanceRecord> dailyAttendanceRecords =
+                attendanceRecordRepo.GetAttendanceRecords(students);
+
+            ViewBag.instructor = instructor;
+            ViewBag.InstructorId = id;
+            ViewBag.Track = track;
+            ViewBag.RecordsDate = dailyAttendanceRecords[0].Date;
+
+            return View(dailyAttendanceRecords);
         }
     }
 }

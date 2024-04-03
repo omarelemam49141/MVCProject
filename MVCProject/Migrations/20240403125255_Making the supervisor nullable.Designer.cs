@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCProject.Migrations
 {
     [DbContext(typeof(attendanceDBContext))]
-    [Migration("20240401150135_AddValidationForTheScheduleTable")]
-    partial class AddValidationForTheScheduleTable
+    [Migration("20240403125255_Making the supervisor nullable")]
+    partial class Makingthesupervisornullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,6 +139,9 @@ namespace MVCProject.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IntakeID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Mobile")
                         .HasColumnType("nvarchar(max)");
 
@@ -148,9 +151,16 @@ namespace MVCProject.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TrackID")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeptID");
+
+                    b.HasIndex("IntakeID");
+
+                    b.HasIndex("TrackID");
 
                     b.ToTable("Instructors");
                 });
@@ -236,28 +246,42 @@ namespace MVCProject.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Faculty")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("GraduationYear")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Mobile")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Specialization")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StudentDegree")
+                        .HasColumnType("int");
+
                     b.Property<string>("University")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -322,7 +346,7 @@ namespace MVCProject.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SupervisorID")
+                    b.Property<int?>("SupervisorID")
                         .HasColumnType("int");
 
                     b.Property<int>("programID")
@@ -331,7 +355,8 @@ namespace MVCProject.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SupervisorID")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[SupervisorID] IS NOT NULL");
 
                     b.HasIndex("programID");
 
@@ -397,7 +422,23 @@ namespace MVCProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MVCProject.Models.Intake", "InstructorIntake")
+                        .WithMany("instructors")
+                        .HasForeignKey("IntakeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MVCProject.Models.Track", "InstructorTrack")
+                        .WithMany("instructors")
+                        .HasForeignKey("TrackID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("InstructorIntake");
+
+                    b.Navigation("InstructorTrack");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Permission", b =>
@@ -472,9 +513,7 @@ namespace MVCProject.Migrations
                 {
                     b.HasOne("MVCProject.Models.Instructor", "Supervisor")
                         .WithOne("TrackSupervised")
-                        .HasForeignKey("MVCProject.Models.Track", "SupervisorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MVCProject.Models.Track", "SupervisorID");
 
                     b.HasOne("MVCProject.Models._Program", "Program")
                         .WithMany()
@@ -504,6 +543,8 @@ namespace MVCProject.Migrations
             modelBuilder.Entity("MVCProject.Models.Intake", b =>
                 {
                     b.Navigation("StudentIntakeTracks");
+
+                    b.Navigation("instructors");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Student", b =>
@@ -522,6 +563,8 @@ namespace MVCProject.Migrations
                     b.Navigation("Schedules");
 
                     b.Navigation("StudentIntakeTracks");
+
+                    b.Navigation("instructors");
                 });
 #pragma warning restore 612, 618
         }

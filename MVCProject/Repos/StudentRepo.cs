@@ -23,13 +23,18 @@ namespace MVCProject.Repos
         public bool DeleteStudent(int id);
 
         public bool AddStudentsFromExcel(List<Student> student);
+        public List<Student> GetTrackStudents(int trackId);
     }
 
     public class StudentRepo : IStudentRepo
     {
         private attendanceDBContext db;
+        private TrackRepo trackRepo;
 
-        public StudentRepo(attendanceDBContext _db) { db = _db; }
+        public StudentRepo(attendanceDBContext _db) 
+        {
+            db = _db;
+        }
 
         public bool AddStudent(Student student)
         {
@@ -119,6 +124,16 @@ namespace MVCProject.Repos
         bool IStudentRepo.AddStudentsFromExcel(List<Student> student)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Student> GetTrackStudents(int trackId)
+        {
+
+            return db
+                            .Students
+                            .Include(s=>s.StudentIntakeTracks)
+                            .Where(s=>s.StudentIntakeTracks.Any(sit=>sit.TrackID==trackId))
+                            .ToList();
         }
     }
 }

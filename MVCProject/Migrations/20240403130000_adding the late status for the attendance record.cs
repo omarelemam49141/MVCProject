@@ -5,7 +5,7 @@
 namespace MVCProject.Migrations
 {
     /// <inheritdoc />
-    public partial class AddValidationForTheScheduleTable : Migration
+    public partial class addingthelatestatusfortheattendancerecord : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

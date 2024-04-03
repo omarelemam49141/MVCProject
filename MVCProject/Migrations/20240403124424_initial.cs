@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MVCProject.Migrations
 {
     /// <inheritdoc />
-    public partial class initial2 : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,14 +56,15 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    University = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Faculty = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GraduationYear = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    University = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Faculty = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GraduationYear = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StudentDegree = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,29 +93,6 @@ namespace MVCProject.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Instructors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeptID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Instructors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Instructors_Departments_DeptID",
-                        column: x => x.DeptID,
-                        principalTable: "Departments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,6 +136,37 @@ namespace MVCProject.Migrations
                         name: "FK_StudentMessage_Students_StudentID",
                         column: x => x.StudentID,
                         principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Instructors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeptID = table.Column<int>(type: "int", nullable: false),
+                    TrackID = table.Column<int>(type: "int", nullable: false),
+                    IntakeID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Instructors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Instructors_Departments_DeptID",
+                        column: x => x.DeptID,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Instructors_Intakes_IntakeID",
+                        column: x => x.IntakeID,
+                        principalTable: "Intakes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
@@ -311,6 +320,16 @@ namespace MVCProject.Migrations
                 column: "DeptID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Instructors_IntakeID",
+                table: "Instructors",
+                column: "IntakeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Instructors_TrackID",
+                table: "Instructors",
+                column: "TrackID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_IntakeTrack_TracksId",
                 table: "IntakeTrack",
                 column: "TracksId");
@@ -355,11 +374,31 @@ namespace MVCProject.Migrations
                 table: "Tracks",
                 column: "SupervisorID",
                 unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Instructors_Tracks_TrackID",
+                table: "Instructors",
+                column: "TrackID",
+                principalTable: "Tracks",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.NoAction);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Instructors_Departments_DeptID",
+                table: "Instructors");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Instructors_Intakes_IntakeID",
+                table: "Instructors");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Instructors_Tracks_TrackID",
+                table: "Instructors");
+
             migrationBuilder.DropTable(
                 name: "DailyAttendanceRecords");
 
@@ -382,22 +421,22 @@ namespace MVCProject.Migrations
                 name: "StudentMessage");
 
             migrationBuilder.DropTable(
+                name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Departments");
+
+            migrationBuilder.DropTable(
                 name: "Intakes");
 
             migrationBuilder.DropTable(
                 name: "Tracks");
 
             migrationBuilder.DropTable(
-                name: "Students");
-
-            migrationBuilder.DropTable(
                 name: "Instructors");
 
             migrationBuilder.DropTable(
                 name: "Programs");
-
-            migrationBuilder.DropTable(
-                name: "Departments");
         }
     }
 }

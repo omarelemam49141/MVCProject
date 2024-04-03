@@ -1,9 +1,9 @@
-<<<<<<< HEAD
+
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
-=======
+
 ﻿using System.ComponentModel.DataAnnotations;
->>>>>>> 78f3f0d13c7a60786c5278a03071f47172151de6
+
 
 namespace MVCProject.Models
 {

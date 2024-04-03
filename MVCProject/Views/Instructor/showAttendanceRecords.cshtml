@@ -1,0 +1,79 @@
+﻿@model IEnumerable<DailyAttendanceRecord>
+@{
+    ViewData["Title"] = "showAttendanceRecords";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section dashboardTitle {
+    @ViewBag.instructor.Name Dashboard
+}
+
+
+@section role {
+    Supervisor
+}
+
+
+@section links {
+    <partial name="../partialViews/instructorLinks" />
+}
+
+<h2 class="text-center">Attendace records for track @ViewBag.Track.Name</h2>
+<h3 class="text-center">For date: @ViewBag.RecordsDate</h3>
+<table class="table table-hover table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Record ID</th>
+            <th>Student Name</th>
+            <th>Time Of Attendance</th>
+            <th>Time Of Leave</th>
+            <th>Student Degree</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody class="align-middle">
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="6"><p class="lead">No Attendance records for today</p></td>
+            </tr>
+        }
+        else
+        {
+            @foreach (DailyAttendanceRecord d in Model)
+            {
+                string color = "transparent";
+                string text = "dark";
+                switch(d.Status.ToLower())
+                {
+                    case "absent":
+                        color = "danger";
+                        text = "light";
+                        break;
+                    case "attend":
+                        color = "success";
+                        text = "light";
+                        break;
+                    case "late":
+                        color = "warning";
+                        text = "dark";
+                        break;
+                }
+
+                <tr class="bg-@color text-@text font-weight-bold">
+                    <td>@d.Id</td>
+                    <td>@d.Student.Name</td>
+                    <td>@d.TimeOfAttendance</td>
+                    <td>@d.TimeOfLeave</td>
+                    <td>@d.StudentDegree</td>
+                    <td>@d.Status.ToUpper()</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+
+
+
