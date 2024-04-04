@@ -20,7 +20,7 @@ else
                 <p class="text-xs font-weight-bold mb-0">@p.Type</p>
             </td>
             <td class="align-middle text-center text-sm">
-                <span class="badge badge-sm bg-gradient-@(p.Status.ToLower() == "pending" ? "info" : p.Status == "accepted" ? "success" : "danger")">
+                <span class="badge badge-sm bg-gradient-@(p.Status.ToLower() == "pending" ? "info" : p.Status.ToLower() == "accepted" ? "success" : "danger")">
                     @p.Status
                 </span>
             </td>
