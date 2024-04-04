@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Permission>
+﻿@using Microsoft.CodeAnalysis.Scripting
+@model IEnumerable<Permission>
 
 @{
     Layout = "_DashboardLayout";
@@ -23,10 +24,8 @@
 
 
 
-@if (ViewBag.Message != null)
-{
-    <div id="message" class="alert alert-success">@ViewBag.Message</div>
-}
+<div id="message" class="alert alert-success d-none max-width-500 mx-auto text-center"></div>
+
 
 <div class="container-fluid py-4">
     <div class="row">
@@ -75,16 +74,16 @@
                                         *@
                                             </td>
                                             <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-@(p.Status == "pending" ? "warning" : p.Status == "accepted" ? "success" : "danger")">
+                                                <span class="badge badge-sm bg-gradient-@(p.Status.ToLower() == "pending" ? "info" : p.Status == "accepted" ? "success" : "danger")">
                                                     @p.Status
                                                 </span>
                                             </td>
                                             <td class="align-middle text-center">
-                                                @if (p.Status == "pending")
+                                                @if (p.Status.ToLower() == "pending")
                                                 {
-                                                    <a href="javascript:;" class="badge badge-sm bg-gradient-faded-danger font-weight-bold text-xl-center " data-toggle="tooltip" data-original-title="Edit user">
-                                                        Edit
-                                                    </a>
+                                                    <button id="del-btn" data-id="@p.Id" class="btn badge badge-sm bg-gradient-faded-danger font-weight-bold text-xl-center">
+                                                        Delete
+                                                    </button>
                                                 }
 
                                             </td>
@@ -101,4 +100,103 @@
         </div>
     </div>
 </div>
+
+@*
+    modal
+*@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Permission</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this permission?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" data-id="" data-stdId="@ViewBag.StudentId" class="btn bg-gradient-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    <script>
+        const table = document.querySelector('table');
+        const modalFooter = document.querySelector('.modal-footer');
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        const message = document.getElementById('message');
+        table.addEventListener('click', (e) => {
+
+            if (e.target.id !== 'del-btn') return;
+            const id = e.target.dataset?.id;
+            if (!id) return;
+            modalFooter.querySelector('[data-id]').dataset.id = id;
+            modal.show();
+        });
+
+        modalFooter.addEventListener('click', async (e) => {
+            const id = e.target.dataset?.id;
+            const stdId = e.target.dataset?.stdid;
+            if (!id || !stdId) return;
+            console.log(id);
+            console.log(stdId);
+
+            try {
+
+
+                const res = await fetch(`/Student/DeletePermission/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                const data = await res.json();
+
+                if (data) {
+                    message.innerText = "Permission deleted successfully";
+                    message.classList.add('alert-success');
+                    message.classList.remove('d-none');
+                    const permRes = await fetch(`/Student/GetPermissions/${stdId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': "text/html"
+                        }
+                    })
+                    const permData = await permRes.text();
+                    table.tBodies[0].innerHTML = permData;
+                    setTimeout(() => {
+                        message.classList.add('d-none');
+                    }, 3000);
+
+
+
+                } else {
+
+                    message.innerText = "Permission not deleted";
+                    message.classList.add('alert-danger');
+                    message.classList.remove('d-none');
+                    setTimeout(() => {
+                        message.classList.add('d-none');
+                    }, 3000);
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                modal.hide();
+            }
+
+        })
+
+
+
+    </script>
+}
+
 

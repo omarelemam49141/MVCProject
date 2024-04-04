@@ -18,7 +18,7 @@ namespace MVCProject.Repos
         public void DeletePermission(int permissionId);
 
         public bool StudentExists(int id);
- 
+
 
         public List<Student> GetAllStudents();
 
@@ -33,6 +33,8 @@ namespace MVCProject.Repos
         public bool DeleteStudent(int id);
 
         public bool AddStudentsFromExcel(List<Student> student);
+
+        public int GetInstructorIdByStudentId(int id);
     }
 
     public class StudentRepo : IStudentRepo
@@ -110,11 +112,12 @@ namespace MVCProject.Repos
             {
                 db.SaveChanges();
                 return true;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }
-          
+
         }
 
         public void AddStudentsFromExcel(List<Student> student)
@@ -125,25 +128,26 @@ namespace MVCProject.Repos
         public bool DeleteStudent(int id)
         {
             var std = db.Students.FirstOrDefault(s => s.Id == id);
-                if(std != null)
+            if (std != null)
+            {
+                db.Students.Remove(std);
+                try
                 {
-                         db.Students.Remove(std);
-                        try
-                        {
-                            db.SaveChanges();
-                            return true;
-                        }catch(Exception ex)
-                        {
-                            return false;
-                        }
+                    db.SaveChanges();
+                    return true;
                 }
-                return false;
-                    
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return false;
+
         }
 
         public List<Student> GetAllStudents()
         {
-            var stds =db.Students.ToList();
+            var stds = db.Students.ToList();
             return stds;
         }
 
@@ -157,7 +161,7 @@ namespace MVCProject.Repos
 
         public List<Student> GetStudentsByIntakeTrack(int IntakeId, int TrackId)
         {
-            var stds = db.StudentIntakeTracks.Where(I => I.IntakeID == IntakeId && I.TrackID == TrackId).Include(t => t.Student).Select(a=>a.Student). ToList();
+            var stds = db.StudentIntakeTracks.Where(I => I.IntakeID == IntakeId && I.TrackID == TrackId).Include(t => t.Student).Select(a => a.Student).ToList();
             return stds;
         }
 
@@ -169,9 +173,25 @@ namespace MVCProject.Repos
                 db.SaveChanges();
                 return true;
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public int GetInstructorIdByStudentId(int id)
+        {
+            try
+            {
+
+            var supervisorId = db.StudentIntakeTracks.Include(sit => sit.Track).FirstOrDefault(sit => sit.StdID == id).Track
+                .SupervisorID;
+            return supervisorId;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 

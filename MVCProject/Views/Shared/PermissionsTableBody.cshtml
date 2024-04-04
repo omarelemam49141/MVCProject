@@ -1,0 +1,39 @@
+﻿@model IEnumerable<MVCProject.Models.Permission>
+
+@if (Model.Count() == 0)
+{
+    <tr>
+        <td colspan="5" class="text-center"><p class="lead">No permissions available</p></td>
+
+    </tr>
+}
+else
+{
+    @foreach (Permission p in Model)
+    {
+        <tr>
+
+            <td class="align-middle text-center">
+                <span class="text-secondary text-xs font-weight-bold">@p.Date</span>
+            </td>
+            <td class="align-middle text-center">
+                <p class="text-xs font-weight-bold mb-0">@p.Type</p>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <span class="badge badge-sm bg-gradient-@(p.Status.ToLower() == "pending" ? "info" : p.Status == "accepted" ? "success" : "danger")">
+                    @p.Status
+                </span>
+            </td>
+            <td class="align-middle text-center">
+                @if (p.Status.ToLower() == "pending")
+                {
+                    <button id="del-btn" data-id="@p.Id" class="btn badge badge-sm bg-gradient-faded-danger font-weight-bold text-xl-center">
+                        Delete
+                    </button>
+                }
+
+            </td>
+        </tr>
+
+    }
+}

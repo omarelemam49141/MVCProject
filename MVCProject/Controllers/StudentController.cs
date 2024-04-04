@@ -48,18 +48,43 @@ namespace MVCProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult RequestPermission(Permission permission)
+        public IActionResult RequestPermission([Bind("Date,Type,Status,StdID")] Permission permission)
         {
-            stdRepo.RequestPermission(permission);
-            ViewBag.Message = "Permission Requested Successfully";
-            return RedirectToAction("ShowPermissions", new { id = permission.StdID });
+            try
+            {
+
+                permission.InstructorID = stdRepo.GetInstructorIdByStudentId(permission.StdID);
+                stdRepo.RequestPermission(permission);
+                ViewBag.Message = "Permission Requested Successfully";
+                return RedirectToAction("ShowPermissions", new { id = permission.StdID });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                ViewBag.Message = "Error in Requesting Permission";
+                return View(permission);
+            }
         }
 
-        public IActionResult DeletePermission(int permissionId, int stdId)
+
+        public IActionResult DeletePermission(int id)
         {
-            stdRepo.DeletePermission(permissionId);
-            ViewBag.Message = "Permission Deleted Successfully";
-            return RedirectToAction("ShowPermissions", new { id = stdId });
+            try
+            {
+                stdRepo.DeletePermission(id);
+                return Json(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Json(false);
+            }
+        }
+
+        public IActionResult GetPermissions(int id)
+        {
+            var permissions = stdRepo.GetStudentPermissions(id);
+            return PartialView("PermissionsTableBody",permissions);
         }
 
 
