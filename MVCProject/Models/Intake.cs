@@ -13,12 +13,14 @@ namespace MVCProject.Models
         public string Name { get; set; }
         public ICollection<Track> Tracks { get; set; } = new HashSet<Track>();
         public List<StudentIntakeTrack> StudentIntakeTracks { get; set; } = new List<StudentIntakeTrack>();
+
+        public ICollection<Instructor> instructors { get; set; } = new HashSet<Instructor>();
+
         public _Program Program { get; set; }
         public int ProgramId { get; set; }
         [Required]
         [Remote("ValidateYear" , "Intake")]
        public DateTime Year { get; set; }
 
-  
     }
 }

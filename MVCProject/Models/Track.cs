@@ -22,9 +22,11 @@ namespace MVCProject.Models
         public List<StudentIntakeTrack> StudentIntakeTracks { get; set; } = new List<StudentIntakeTrack>();
         public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
         [ForeignKey("Supervisor")]
-        [Required(ErrorMessage ="Please Select A Supervisor")]
+        public int? SupervisorID { get; set; }
+
         [Remote("ValidateInstructor", "Track", AdditionalFields ="Id",ErrorMessage = "This Instructor is already assigned to another track. Make the track available by <a href='/InstructorsManage/MakeTrackAvailable" + "'>clicking here</a>")]
-        public int? SupervisorID { get; set; } 
         public Instructor Supervisor { get; set; }
+        public ICollection<Instructor> instructors { get; set; } = new HashSet<Instructor>();
+
     }
 }
