@@ -13,8 +13,10 @@ namespace MVCProject.Repos
         public Schedule GetScheduleByID(int id);
         public void DeleteSchedule(Schedule schedule);
         public void UpdateSchedule(Schedule schedule);
+
+        public IEnumerable<Schedule> GetSchedulesByDateAndTrack(DateOnly date, int trackId);
     }
-    public class ScheduleRepo: IScheduleRepo
+    public class ScheduleRepo : IScheduleRepo
     {
         private attendanceDBContext db;
 
@@ -34,7 +36,7 @@ namespace MVCProject.Repos
 
         public Schedule GetScheduleByDate(DateOnly date)
         {
-            return db.Schedules.FirstOrDefault(s=>s.Date == date);
+            return db.Schedules.FirstOrDefault(s => s.Date == date);
         }
 
         public Schedule GetScheduleByID(int id)
@@ -44,13 +46,18 @@ namespace MVCProject.Repos
 
         public List<Schedule> GetTrackSchedules(int trackID)
         {
-            return db.Schedules.Where(s=>s.TrackID==trackID).ToList();
+            return db.Schedules.Where(s => s.TrackID == trackID).ToList();
         }
 
         public void UpdateSchedule(Schedule schedule)
         {
             db.Schedules.Update(schedule);
             db.SaveChanges();
+        }
+
+        public IEnumerable<Schedule> GetSchedulesByDateAndTrack(DateOnly date, int trackId)
+        {
+            return db.Schedules.Where(s => s.TrackID == trackId && s.Date >= date).Take(7);
         }
     }
 }

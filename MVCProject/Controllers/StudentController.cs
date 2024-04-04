@@ -14,10 +14,14 @@ namespace MVCProject.Controllers
     public class StudentController : Controller
     {
         private readonly IStudentRepo stdRepo;
+        private readonly IScheduleRepo scheduleRepo;
+        private readonly ITrackRepo trackRepo;
 
-        public StudentController(IStudentRepo _stdRepo)
+        public StudentController(IStudentRepo _stdRepo, IScheduleRepo _scheduleRepo, ITrackRepo _trackRepo)
         {
             stdRepo = _stdRepo;
+            scheduleRepo = _scheduleRepo;
+            trackRepo = _trackRepo;
         }
 
         public IActionResult Index(int id)
@@ -84,7 +88,24 @@ namespace MVCProject.Controllers
         public IActionResult GetPermissions(int id)
         {
             var permissions = stdRepo.GetStudentPermissions(id);
-            return PartialView("PermissionsTableBody",permissions);
+            return PartialView("PermissionsTableBody", permissions);
+        }
+
+
+
+
+        public IActionResult ShowSchedule(int id)
+        {
+
+            ViewBag.Student = stdRepo.GetStudentByID(id);
+            ViewBag.StudentId = id;
+            int trackId = stdRepo.GetTrackIdByStudentId(id);
+            ViewBag.Track = trackRepo.GetTrackById(trackId);
+
+            var schedules = scheduleRepo.GetSchedulesByDateAndTrack(DateOnly.FromDateTime(DateTime.Now), stdRepo.GetTrackIdByStudentId(id));
+            return View(schedules);
+
+
         }
 
 

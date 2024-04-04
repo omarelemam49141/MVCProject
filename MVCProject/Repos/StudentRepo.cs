@@ -35,6 +35,8 @@ namespace MVCProject.Repos
         public bool AddStudentsFromExcel(List<Student> student);
 
         public int GetInstructorIdByStudentId(int id);
+
+        public int GetTrackIdByStudentId(int id);
     }
 
     public class StudentRepo : IStudentRepo
@@ -187,6 +189,20 @@ namespace MVCProject.Repos
             var supervisorId = db.StudentIntakeTracks.Include(sit => sit.Track).FirstOrDefault(sit => sit.StdID == id).Track
                 .SupervisorID;
             return supervisorId;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public int GetTrackIdByStudentId(int id)
+        {
+            try
+            {
+                var trackId = db.StudentIntakeTracks.Where(sit=>sit.StdID == id).OrderByDescending(sit=>sit.IntakeID).FirstOrDefault().TrackID;
+                return trackId;
             }
             catch (Exception e)
             {
