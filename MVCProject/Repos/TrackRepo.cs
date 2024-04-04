@@ -64,7 +64,7 @@ namespace MVCProject.Repos
 
         public Track GetTrackBySupervisor(int supervisorId)
         {
-            return db.Tracks.FirstOrDefault(t => t.SupervisorID == supervisorId);
+            return db.Tracks.Include(p => p.Program).FirstOrDefault(t => t.SupervisorID == supervisorId);
         }
 
 
@@ -78,18 +78,18 @@ namespace MVCProject.Repos
 
         public Track GetTrackBySupervisorID(int supervisorId)
         {
-            return db.Tracks.FirstOrDefault(t => t.SupervisorID == supervisorId);
+            return db.Tracks.Include(p=>p.Program).FirstOrDefault(t => t.SupervisorID == supervisorId);
 
         }
 
         public List<Track> GetAll()
         {
-            return db.Tracks.ToList();
+            return db.Tracks.Include(p=>p.Program).ToList();
         }
 
         public List<Track> GetTracksForProgram(int pid)
         {
-            return db.Tracks.Where(t => t.programID == pid).ToList();
+            return db.Tracks.Include(p=>p.Program).Where(t => t.programID == pid).ToList();
         }
     }
 }

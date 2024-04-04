@@ -1,4 +1,5 @@
-﻿using MVCProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MVCProject.Data;
 using MVCProject.Models;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace MVCProject.Repos
         public Instructor GetInstructorByEmailAndPassword(string email, string password);
         public Instructor GetInstructorByID(int id);
         public Track GetSuperVisorTrack(int id);
-    
+        public List<Instructor> GetAll();
         public void AddInstructor(Instructor instructor);
 
         public void DeleteInstructor(int id);
@@ -70,6 +71,10 @@ namespace MVCProject.Repos
         {
             db.Instructors.Update(instructor);
             db.SaveChanges();
+        }
+        public List<Instructor> GetAll()
+        {
+            return db.Instructors.Include(p=>p.TrackSupervised).ToList();   
         }
     }
 }
