@@ -1,7 +1,7 @@
 ﻿@if (User.IsInRole("supervisor"))
 {
     <li class="nav-item">
-        <a class="nav-link" asp-action="showPermissions" asp-controller="instructor" asp-route-id="@ViewBag.InstructorId">
+        <a class="nav-link @(ViewBag.title == "ShowPermissions"?"active":"")" asp-action="showPermissions" asp-controller="instructor" asp-route-id="@ViewBag.InstructorId">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>office</title>
@@ -26,7 +26,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-action="index" asp-controller="schedule" asp-route-id="@ViewBag.InstructorId">
+        <a class="nav-link @(ViewBag.title == "Schedules"?"active":"")" asp-action="index" asp-controller="schedule" asp-route-id="@ViewBag.InstructorId">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>credit-card</title>
@@ -49,7 +49,7 @@
 @if (User.IsInRole("supervisor") || User.IsInRole("instructor"))
 {
     <li class="nav-item">
-        <a class="nav-link" asp-action="showStudentsDegrees" asp-controller="instructor" asp-route-id="@ViewBag.InstructorId">
+        <a class="nav-link @(ViewBag.title == "showStudentsDegrees"?"active":"")" asp-action="showStudentsDegrees" asp-controller="instructor" asp-route-id="@ViewBag.InstructorId">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>box-3d-50</title>
@@ -70,7 +70,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="showAttendanceRecords" asp-controller="instructor" asp-route-id="@ViewBag.InstructorId">
+        <a class="nav-link @(ViewBag.title == "showAttendanceRecords"?"active":"")" asp-action="showAttendanceRecords" asp-controller="instructor" asp-route-id="@ViewBag.InstructorId">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>settings</title>
@@ -91,7 +91,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="showProfile" asp-controller="instructor">
+        <a class="nav-link @(ViewBag.title == "InstructorProfile"?"active":"")" asp-action="showProfile" asp-controller="instructor">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>customer-support</title>

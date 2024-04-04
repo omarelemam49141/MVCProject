@@ -4,7 +4,6 @@ using System.ComponentModel;
 
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace MVCProject.Models
 {
     public class Student
@@ -39,8 +38,9 @@ namespace MVCProject.Models
 
         public string Specialization { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime GraduationYear { get; set; }
-        [Remote("checkStudentDegree", "studentMetaData", ErrorMessage = "Student degree must be between 0 and 250")]
+        [Remote("checkStudentDegree", "student", ErrorMessage = "Student degree must be between 0 and 250")]
         [DefaultValue(250)]
         public int StudentDegree { get; set; } = 250;
         public ICollection<DailyAttendanceRecord> AttendaceRecords { get; set; } = new HashSet<DailyAttendanceRecord>();

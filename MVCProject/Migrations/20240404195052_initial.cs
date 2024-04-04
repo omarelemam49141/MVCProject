@@ -25,19 +25,6 @@ namespace MVCProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Intakes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Intakes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Programs",
                 columns: table => new
                 {
@@ -93,6 +80,27 @@ namespace MVCProject.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Intakes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProgramId = table.Column<int>(type: "int", nullable: false),
+                    Year = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Intakes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Intakes_Programs_ProgramId",
+                        column: x => x.ProgramId,
+                        principalTable: "Programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,8 +214,8 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     programID = table.Column<int>(type: "int", nullable: false),
                     SupervisorID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -328,6 +336,11 @@ namespace MVCProject.Migrations
                 name: "IX_Instructors_TrackID",
                 table: "Instructors",
                 column: "TrackID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Intakes_ProgramId",
+                table: "Intakes",
+                column: "ProgramId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IntakeTrack_TracksId",

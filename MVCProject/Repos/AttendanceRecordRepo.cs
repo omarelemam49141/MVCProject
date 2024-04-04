@@ -6,7 +6,7 @@ namespace MVCProject.Repos
 {
     public interface IAttendanceRecordRepo
     {
-        public List<DailyAttendanceRecord> GetAttendanceRecords(List<Student> students);
+        public List<DailyAttendanceRecord> GetAttendanceRecords(List<Student> students, DateOnly date);
     }
     public class AttendanceRecordRepo: IAttendanceRecordRepo
     {
@@ -17,7 +17,7 @@ namespace MVCProject.Repos
             db = _db;
         }
 
-        public List<DailyAttendanceRecord> GetAttendanceRecords(List<Student> students)
+        public List<DailyAttendanceRecord> GetAttendanceRecords(List<Student> students, DateOnly date)
         {
             List<int> studentsIDs = students.Select(s=>s.Id).ToList();
             return db
@@ -25,7 +25,7 @@ namespace MVCProject.Repos
                     .Include(ar=>ar.Student)
                     .Where(
                         ar => studentsIDs.Contains(ar.StdID)
-                                && ar.Date == DateOnly.FromDateTime(DateTime.Today)
+                                && ar.Date == date
                      )
                     .ToList();
         }

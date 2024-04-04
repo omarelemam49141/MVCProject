@@ -171,9 +171,18 @@ namespace MVCProject.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Year")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProgramId");
 
                     b.ToTable("Intakes");
                 });
@@ -338,12 +347,15 @@ namespace MVCProject.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SupervisorID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("programID")
@@ -352,8 +364,7 @@ namespace MVCProject.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SupervisorID")
-                        .IsUnique()
-                        .HasFilter("[SupervisorID] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("programID");
 
@@ -438,6 +449,17 @@ namespace MVCProject.Migrations
                     b.Navigation("InstructorTrack");
                 });
 
+            modelBuilder.Entity("MVCProject.Models.Intake", b =>
+                {
+                    b.HasOne("MVCProject.Models._Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Program");
+                });
+
             modelBuilder.Entity("MVCProject.Models.Permission", b =>
                 {
                     b.HasOne("MVCProject.Models.Instructor", "Instructor")
@@ -510,7 +532,9 @@ namespace MVCProject.Migrations
                 {
                     b.HasOne("MVCProject.Models.Instructor", "Supervisor")
                         .WithOne("TrackSupervised")
-                        .HasForeignKey("MVCProject.Models.Track", "SupervisorID");
+                        .HasForeignKey("MVCProject.Models.Track", "SupervisorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MVCProject.Models._Program", "Program")
                         .WithMany()

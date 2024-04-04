@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+}
+@model List<Track>
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Program Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var track in Model)
+            {
+                    <tr>
+                        <td><input type="checkbox" /></td>
+                        <td>@track.Id</td>
+                        <td>@track.Name</td>
+                        <td>@track.Status</td>
+                        <td>@track.Program.Name</td>
+                        <td>
+                                        <a asp-action="Edit" asp-controller="Track" asp-route-id=@track.Id class="btn btn-primary">Edit</a>
+                        @if (track.Status == "Active")
+                        {
+                                            <a asp-action="Deactivate" asp-controller="Track" asp-route-id=@track.Id class="btn btn-warning ">Deactivate</a>
+                        }
+                        else
+                        {
+                                                    <a asp-action="Activate" asp-controller="Track" asp-route-id=@track.Id class="btn btn-success">Activate</a>
+                        }
+                        </td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a class="btn btn-info" asp-action="Add" asp-controller="Track">Add Track</a>
+</div>

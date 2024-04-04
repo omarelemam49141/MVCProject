@@ -113,14 +113,61 @@ namespace MVCProject.Controllers
             List<Student> students = studentRepo.GetTrackStudents(track.Id);
             //Get the daily attendance records for these students 
             List<DailyAttendanceRecord> dailyAttendanceRecords =
-                attendanceRecordRepo.GetAttendanceRecords(students);
+                attendanceRecordRepo.GetAttendanceRecords(students, DateOnly.FromDateTime(DateTime.Today));
 
             ViewBag.instructor = instructor;
             ViewBag.InstructorId = id;
             ViewBag.Track = track;
-            ViewBag.RecordsDate = dailyAttendanceRecords[0].Date;
+            ViewBag.Date = DateOnly.FromDateTime(DateTime.Today);
+            if (dailyAttendanceRecords.Count > 0)
+                ViewBag.RecordsDate = dailyAttendanceRecords[0].Date;
+            else
+                ViewBag.RecordsDate = null;
+
 
             return View(dailyAttendanceRecords);
+        }
+
+        [HttpPost]
+        public IActionResult ShowRecordsForDate(int? instID, DateOnly? date)
+        {
+            if (instID == null) return BadRequest();
+            //check if the date is correct
+            Instructor instructor = instRepo.GetInstructorByID(instID.Value);
+            if (instructor == null) return NotFound();
+
+            //get the instructor track
+            Track track = trackRepo.GetTrackById(instructor.TrackID);
+            if (track == null) return NotFound();
+            //get all the students who are in the instructor track
+            List<Student> students = studentRepo.GetTrackStudents(track.Id);
+
+            ViewBag.instructor = instructor;
+            ViewBag.InstructorId = instID;
+            ViewBag.Track = track;
+            ViewBag.Date = date;
+
+
+            if (date > DateOnly.FromDateTime(DateTime.Today))
+            {
+                ModelState.AddModelError("", "The date must be less than today's date");
+                return View("showAttendanceRecords");
+            }
+            if (date == null)
+            {
+                ModelState.AddModelError("", "Choose a date first");
+                return View("showAttendanceRecords");
+            }
+            //Get the daily attendance records for these students 
+            List<DailyAttendanceRecord> dailyAttendanceRecords =
+                attendanceRecordRepo.GetAttendanceRecords(students, date.Value);
+
+            if (dailyAttendanceRecords.Count > 0)
+                ViewBag.RecordsDate = dailyAttendanceRecords[0].Date;
+            else
+                ViewBag.RecordsDate = null;
+
+            return View("showAttendanceRecords", dailyAttendanceRecords);
         }
     }
 }
