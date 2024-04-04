@@ -24,7 +24,7 @@
 
 
 
-<div id="message" class="alert alert-success d-none max-width-500 mx-auto text-center"></div>
+<div id="message" class="alert alert-success d-none max-width-500 mx-auto text-c"></div>
 
 
 <div class="container-fluid py-4">
@@ -74,7 +74,7 @@
                                         *@
                                             </td>
                                             <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-@(p.Status.ToLower() == "pending" ? "info" : p.Status == "accepted" ? "success" : "danger")">
+                                                <span class="badge badge-sm bg-gradient-@(p.Status.ToLower() == "pending" ? "info" : p.Status.ToLower() == "accepted" ? "success" : "danger")">
                                                     @p.Status
                                                 </span>
                                             </td>
