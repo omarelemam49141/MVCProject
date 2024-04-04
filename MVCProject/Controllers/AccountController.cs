@@ -117,8 +117,8 @@ namespace MVCProject.Controllers
                 return View(student);
             }
             stdRepo.RegisterStudent(student);
-            signInToken(student.Id, student.Name, "student");
-            return RedirectToAction("index", "student", new { id = student.Id });
+            //signInToken(student.Id, student.Name, "student");
+            return RedirectToAction("Login", "Account");
         }
     }
 }

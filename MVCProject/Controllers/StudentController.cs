@@ -26,7 +26,7 @@ namespace MVCProject.Controllers
             Student std = stdRepo.GetStudentByID(id);
             return View(std);
         }
-              public IActionResult checkStudentDegree(int StudentDegree)
+        public IActionResult checkStudentDegree(int StudentDegree)
         {
             if (StudentDegree > 0 && StudentDegree < 251) return Json(true);
             else return Json(false);
@@ -55,16 +55,16 @@ namespace MVCProject.Controllers
             return RedirectToAction("ShowPermissions", new { id = permission.StdID });
         }
 
-        public IActionResult DeletePermission(int permissionId,int stdId) 
+        public IActionResult DeletePermission(int permissionId, int stdId)
         {
             stdRepo.DeletePermission(permissionId);
             ViewBag.Message = "Permission Deleted Successfully";
             return RedirectToAction("ShowPermissions", new { id = stdId });
         }
-       
 
-      
 
-        
+
+
+
     }
 }
