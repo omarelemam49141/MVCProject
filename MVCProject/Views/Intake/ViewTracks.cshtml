@@ -1,0 +1,30 @@
+﻿@model List<Track>
+@{
+    var tracks = ViewBag.tracks as List<Track>;
+}
+<form asp-action="SubmitTracks" asp-controller="intake" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Track Name</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var track in Model)
+            {
+                    <tr>
+                        <td>@track.Name</td>
+                    @{
+                        var isChecked =tracks.Any(t => t.Id == track.Id);
+                    }
+                        <td>
+                            <input type="checkbox" name="SelectedTracks" value="@track.Id" @(isChecked ? "checked" : "") />
+                        </td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+    <input value="@ViewBag.intake" name="intake" hidden />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
