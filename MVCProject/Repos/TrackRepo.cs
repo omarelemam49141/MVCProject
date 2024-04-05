@@ -16,8 +16,9 @@ namespace MVCProject.Repos
         public List<Track> GetTracksForProgram(int pid);
 
         public List<Track> GetAll();
+        List<Track> GetActiveTracks();
 
-        
+
 
     }
     public class TrackRepo : ITrackRepo
@@ -90,6 +91,11 @@ namespace MVCProject.Repos
         public List<Track> GetTracksForProgram(int pid)
         {
             return db.Tracks.Include(p=>p.Program).Where(t => t.programID == pid).ToList();
+        }
+
+        public List<Track> GetActiveTracks()
+        {
+            return db.Tracks.Where(t => t.Status.ToLower() == "active").ToList();
         }
     }
 }
