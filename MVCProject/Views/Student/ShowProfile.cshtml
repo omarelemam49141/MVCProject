@@ -1,0 +1,152 @@
+﻿@model MVCProject.Models.Student
+
+@{
+    ViewData["Title"] = "ShowProfile";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+}
+
+
+@section dashboardTitle {
+    @Model.Name Dashboard
+}
+
+@{
+    @section role {
+    Student
+    }
+}
+
+@section links {
+    <partial name="../partialViews/StudentLinks" />
+}
+
+
+
+<h4>@Model.Name&apos;s Profile</h4>
+<hr />
+<div class="row">
+    @if (ViewBag.Message != null)
+    {
+        <div id="msg" class="alert alert-success col-6 mx-auto">@ViewBag.Message</div>
+    }
+
+    <div id="message" class="alert alert-success d-none col-6 mx-auto"></div>
+
+
+    <div class="col-md-8 mx-auto">
+        <form asp-action="UpdateProfile" method="post" asp-controller="Student">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" value="@Model.Id" />
+            <div class="row">
+
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" disabled="disabled" value="@Model.Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="University" class="control-label"></label>
+                    <input asp-for="University" class="form-control" value="@Model.University" disabled="disabled" />
+                    <span asp-validation-for="University" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="Faculty" class="control-label"></label>
+                    <input asp-for="Faculty" class="form-control" value="@Model.Faculty" disabled="disabled" />
+                    <span asp-validation-for="Faculty" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="Specialization" class="control-label"></label>
+                    <input asp-for="Specialization" class="form-control" value="@Model.Specialization" disabled="disabled" />
+                    <span asp-validation-for="Specialization" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="GraduationYear" class="control-label"></label>
+                    <input asp-for="GraduationYear" class="form-control" value="@Model.GraduationYear" disabled="disabled" />
+                    <span asp-validation-for="GraduationYear" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" value="@Model.Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" value="@Model.Password" type="password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                    <label asp-for="Mobile" class="control-label"></label>
+                    <input asp-for="Mobile" class="form-control" value="@Model.Mobile" />
+                    <span asp-validation-for="Mobile" class="text-danger"></span>
+                </div>
+                <input asp-for="StudentDegree" class="form-control" hidden="hidden" value="@Model.StudentDegree" />
+                <div class="form-group text-center col-12">
+                    <input type="submit" value="Save" class="btn bg-gradient-faded-primary-vertical" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        const message = document.getElementById('message');
+        const mobile = document.getElementById('Mobile');
+        const name = document.getElementById('Name');
+        const password = document.getElementById('Password');
+        const submit = document.querySelector('input[type="submit"]');
+        const form = document.querySelector('form');
+        mobile.addEventListener('change', (e) => {
+            //egyptian mobile number 010|011|012|015 + 8 digits
+            console.log(e.target.value);
+            if (!/^(010|011|012|015)\d{8}$/.test(e.target.value)) {
+                e.target.nextElementSibling.style.display = 'block';
+                e.target.nextElementSibling.textContent = 'Please enter a valid mobile number';
+
+            } else {
+                e.target.nextElementSibling.style.display = 'none';
+
+            }
+        });
+        password.addEventListener('change', (e) => {
+            //password should be at least 8 characters
+            if (e.target.value.length < 8) {
+                e.target.nextElementSibling.style.display = 'block';
+                e.target.nextElementSibling.textContent = 'Password should be at least 8 characters';
+            } else {
+
+                e.target.nextElementSibling.style.display = 'none';
+            }
+        });
+        name.addEventListener('change', (e) => {
+            //name should be at least 3 characters
+            if (e.target.value.length < 3) {
+                e.target.nextElementSibling.style.display = 'block';
+                e.target.nextElementSibling.textContent = 'Name should be at least 3 characters';
+            } else {
+                e.target.nextElementSibling.style.display = 'none';
+            }
+        });
+        form.addEventListener('submit', async (e) => {
+            if (!/^(010|011|012|015)\d{8}$/.test(mobile.value) || password.value.length < 8 || name.value.trim().length < 3) {
+                e.preventDefault();
+                message.textContent = 'Please enter valid data';
+                message.classList.add('alert-danger');
+                message.classList.remove('d-none');
+                return;
+            }
+
+        });
+
+
+
+
+    </script>
+}
+
+
+

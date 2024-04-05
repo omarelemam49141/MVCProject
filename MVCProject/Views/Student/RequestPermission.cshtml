@@ -12,8 +12,9 @@
 
 @{
     @section role {
-        Student
+    Student
     }
+    SelectList types = new SelectList(new List<string> { "Absent", "Late" });
 }
 
 @section links {
@@ -29,46 +30,37 @@
 }
 
 
-<h1>RequestPermission</h1>
+<h4>Request Permission</h4>
 
-<h4>Permission</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="RequestPermission">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="StdID" value="@ViewBag.Student.Id" />
+            <input type="hidden" asp-for="Status" value="Pending" />
+
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+                <input asp-for="Date" class="form-control" type="date" value="@(DateTime.Now.Date.ToString("yyyy-MM-dd"))" min="@(DateTime.Now.Date.ToString("yyyy-MM-dd"))" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StdID" class="control-label"></label>
-                <select asp-for="StdID" class ="form-control" asp-items="ViewBag.StdID"></select>
-            </div>
-            <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
+                <select asp-for="Type" class="form-control" asp-items="types">
+                </select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="InstructorID" class="control-label"></label>
-                <select asp-for="InstructorID" class ="form-control" asp-items="ViewBag.InstructorID"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Request a Permission" class="btn bg-gradient-info mx-4" />
+                <a asp-action="ShowPermissions" asp-controller="Student" asp-route-id="@ViewBag.Student.Id" class="btn bg-gradient-danger">cancel
+                </a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 
