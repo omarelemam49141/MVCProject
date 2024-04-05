@@ -1,0 +1,91 @@
+﻿@model List<Student>
+
+@{
+    Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+}
+
+<div>
+    <table class="table table-striped" id="MyTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>University</th>
+                <th>Faculty</th>
+                <th>Specialization</th>
+                <th>Graduation Year</th>
+                <th>Student Degree</th>
+                <th>Actions</th> <!-- Add column for actions -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                    <tr>
+                        <td>@student.Id</td>
+                        <td>@student.Name</td>
+                        <td>@student.Email</td>
+                        <td>@student.Mobile</td>
+                        <td>@student.University</td>
+                        <td>@student.Faculty</td>
+                        <td>@student.Specialization</td>
+                        <td>@student.GraduationYear.ToShortDateString()</td>
+                        <td>@student.StudentDegree</td>
+                        <td>
+                            <!-- Delete button with SweetAlert -->
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete(@student.Id)">Delete</button>
+                        </td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section AdminScript {
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            $("#MyTable").DataTable();
+            // JavaScript function to handle deletion with SweetAlert and AJAX
+            function confirmDelete(studentId) {
+                // SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You will not be able to recover this student!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // AJAX call to delete the student
+                        $.ajax({
+                            url: '/Students/Delete/' + studentId,
+                            type: 'DELETE',
+                            success: function () {
+                                // If successful, reload the page
+                                location.reload();
+                            },
+                            error: function (xhr, status, error) {
+                                // If error, display error message
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'An error occurred while deleting the student.',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
+}
+
+ <form asp-action="AddBulk" method="post" asp-controller="StudentsManage" enctype="multipart/form-data">
+
+     <input type="file" name="Sheet"/>
+     <input type="Submit" />
+ </form>

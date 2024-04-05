@@ -98,7 +98,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" asp-action="index" asp-controller="schedule" asp-route-id="@ViewBag.InstructorId">
+            <a class="nav-link" asp-action="Index" asp-controller="StudentsManage">
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                     <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>credit-card</title>
@@ -140,7 +140,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" asp-action="showAttendanceRecords" asp-controller="instructor">
+            <a class="nav-link" asp-action="Index" asp-controller="EmployeesManage">
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                     <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>settings</title>
@@ -301,7 +301,7 @@
   src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
   integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
   crossorigin="anonymous"></script>
-
+<script src="~/js/datatables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @RenderSection("AdminScript",false)
-@RenderSection("datatables",false)
 </html>

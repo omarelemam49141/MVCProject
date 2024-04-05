@@ -32,7 +32,7 @@ namespace MVCProject.Repos
 
         public bool DeleteStudent(int id);
 
-        public bool AddStudentsFromExcel(List<Student> student);
+        public void AddRangeOfStudents(List<Student> student);
     }
 
     public class StudentRepo : IStudentRepo
@@ -175,9 +175,10 @@ namespace MVCProject.Repos
             }
         }
 
-        bool IStudentRepo.AddStudentsFromExcel(List<Student> student)
+        public void AddRangeOfStudents(List<Student> student)
         {
-            throw new NotImplementedException();
+            db.Students.AddRange(student);
+            db.SaveChanges();
         }
     }
 }

@@ -1,0 +1,62 @@
+﻿@model Employee
+@{
+    Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+}
+
+<form asp-action="@((Model == null) ? "Add" : "Edit")" asp-controller="EmployeesManage" method="post">
+    @if (Model != null)
+    {
+            <input type="hidden" asp-for="@Model.Id" />
+    }
+
+    <div class="form-group">
+        <label asp-for="@Model.Name" class="form-label">Name</label>
+        <input asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Email" class="form-label">Email</label>
+        <input asp-for="@Model.Email" class="form-control" />
+        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Password" class="form-label">Password</label>
+        <input asp-for="@Model.Password" class="form-control" />
+        <span asp-validation-for="@Model.Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Mobile" class="form-label">Mobile</label>
+        <input asp-for="@Model.Mobile" class="form-control" />
+        <span asp-validation-for="@Model.Mobile" class="text-danger"></span>
+    </div>
+
+        <div class="form-group">
+            <label asp-for="Type" class="form-label">Type</label>
+                @Html.DropDownListFor(model => model.Type, new SelectList(new[] { "StudentAffairs", "Security" }), "Select Type", new { @class = "form-control" })
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+
+    <div class="form-group">
+    <label asp-for="@Model.DeptID" class="form-label">Department</label>
+    <select asp-for="@Model.DeptID" class="form-control">
+        <option value="">Select Department</option>
+                @if (ViewBag.depts != null)
+                {
+                    foreach (var dept in ViewBag.depts as List<Department>)
+                    {
+                    var isSelected = "";
+                    if (Model != null)
+                    { isSelected = Model != null && dept.Id == Model.Department.Id ? "selected" : ""; }
+                    <option value="@dept.Id" selected="@isSelected">@dept.Name</option>
+                    }
+                }
+    </select>
+    <span asp-validation-for="@Model.DeptID" class="text-danger"></span>
+</div>
+
+
+    <button type="submit" class="btn btn-primary">@((Model == null) ? "Add" : "Edit") Employee</button>
+</form>

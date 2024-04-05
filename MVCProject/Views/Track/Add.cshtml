@@ -37,7 +37,7 @@
 
         <div class="form-group">
             <label asp-for="@Model.SupervisorID" class="form-label">Supervisoe</label>
-            <select asp-for="@Model.SupervisorID" class="form-select" id="programSelect">
+            <select asp-for="@Model.SupervisorID" class="form-select" id="SuperSelect">
                 <option value="">Select Supervisor</option>
                 @foreach (var instructor in instructors)
                 {
@@ -49,4 +49,8 @@
 
         <button type="submit" class="btn btn-primary">@((Model == null ) ? "Add" : "Edit") Intake</button>
     </form>
+    @section AdminScript{
+
+               <script src="~/js/TrackAdd.js"></script>
+    }
 

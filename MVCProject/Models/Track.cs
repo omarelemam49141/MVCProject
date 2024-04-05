@@ -23,8 +23,8 @@ namespace MVCProject.Models
         public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
         [ForeignKey("Supervisor")]
         [Required(ErrorMessage ="Please Select A Supervisor")]
-        [Remote("ValidateInstructor", "Track", AdditionalFields ="Id",ErrorMessage = "This Instructor is already assigned to another track. Make the track available by <a href='/InstructorsManage/MakeTrackAvailable" + "'>clicking here</a>")]
+        [Remote("ValidateInstructor", "Track", AdditionalFields = "Id", ErrorMessage = "This Instructor is already assigned to another track. Make the track available by <a id=\"Click\" href=\"#\" onclick=\"clicked()\">clicking here</a>")]
         public int? SupervisorID { get; set; } 
-        public Instructor Supervisor { get; set; }
+        public Instructor ?Supervisor { get; set; }
     }
 }
