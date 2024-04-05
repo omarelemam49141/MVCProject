@@ -1,0 +1,114 @@
+﻿@model IEnumerable<DailyAttendanceRecord>
+
+
+@{
+    ViewData["Title"] = "ShowAttendanceRecords";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section dashboardTitle {
+    @ViewBag.Student.Name Dashboard
+}
+
+@{
+    @section role {
+    Student
+    }
+}
+
+@section links {
+    <partial name="../partialViews/StudentLinks" />
+}
+
+
+
+
+<div id="message" class="alert alert-success d-none max-width-500 mx-auto text-c"></div>
+
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="row p-4">
+
+                    <div class="card-header pb-0 col-6">
+                        <h6>
+                            @(ViewBag.Student.Name)&apos;s Attendance
+                        </h6>
+                    </div>
+                    <div class="col-6 text-end">
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" name="startDate" value="@(DateTime.Now.AddDays(-1).Date.ToString("yyyy-MM-dd"))" max="@(DateTime.Now.AddDays(-1).Date.ToString("yyyy-MM-dd"))">
+
+                        <label for="numberOfDays">Number of Days:</label>
+                        <input type="number" id="numberOfDays" name="numberOfDays" value="7" min="1" max="7">
+                    </div>
+
+
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+                                    <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Day</th>
+                                    <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Time of Attendance</th>
+                                    <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Time of leave</th>
+                                    <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Degree</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <partial name="AttendanceRecordsTableBody" model="Model" />
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        const startDate = document.getElementById('startDate');
+        const numberOfDays = document.getElementById('numberOfDays');
+        const tableBody = document.querySelector('tbody');
+
+        startDate.addEventListener('change', async (e) => {
+            const stdId = '@ViewBag.Student.Id';
+            const date = e.target.value;
+            const days = numberOfDays.value;
+            const res = await fetch(`/Student/GetAttendanceRecordsPartial/${stdId}?startDate=${date}&numberOfDays=${days}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': "text/html"
+                }
+            })
+            const data = await res.text();
+           
+            tableBody.innerHTML = data;
+        })
+
+        numberOfDays.addEventListener('change', async (e) => {
+            const stdId = '@ViewBag.Student.Id';
+            const date = startDate.value;
+            const days = e.target.value;
+            const res = await fetch(`/Student/GetAttendanceRecordsPartial/${stdId}?startDate=${date}&numberOfDays=${days}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': "text/html"
+                }
+            })
+            const data = await res.text();
+            tableBody.innerHTML = data;
+        })
+
+
+    </script>
+}
+

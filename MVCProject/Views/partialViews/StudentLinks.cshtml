@@ -47,7 +47,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-action="showStudentsDegrees" asp-controller="instructor">
+        <a class="nav-link @(ViewBag.Title == "ShowAttendanceRecords" ? "active":"")" asp-action="ShowAttendanceRecords" asp-controller="Student" asp-route-id="@ViewBag.StudentId" asp-route-startDate="@DateOnly.FromDateTime(DateTime.Now.AddDays(-1))" asp-route-numberOfDays="7">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>box-3d-50</title>
@@ -64,11 +64,11 @@
                     </g>
                 </svg>
             </div>
-            <span class="nav-link-text ms-1">Students degrees</span>
+            <span class="nav-link-text ms-1">Attendance</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="showAttendanceRecords" asp-controller="instructor">
+        <a class="nav-link" asp-action="" asp-controller="">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>settings</title>
@@ -85,11 +85,11 @@
                     </g>
                 </svg>
             </div>
-            <span class="nav-link-text ms-1">Attendance records</span>
+            <span class="nav-link-text ms-1">TBD</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="showProfile" asp-controller="instructor">
+        <a class="nav-link" asp-action="" asp-controller="">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <svg width="12px" height="12px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>customer-support</title>
@@ -106,7 +106,7 @@
                     </g>
                 </svg>
             </div>
-            <span class="nav-link-text ms-1">Profile</span>
+            <span class="nav-link-text ms-1">TBD</span>
         </a>
     </li>
 }

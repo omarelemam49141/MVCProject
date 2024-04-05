@@ -108,6 +108,31 @@ namespace MVCProject.Controllers
 
         }
 
+        public IActionResult ShowAttendanceRecords(int id, DateOnly? startDate = null, int numberOfDays = 7 )
+        {
+            ViewBag.Student = stdRepo.GetStudentByID(id);
+            ViewBag.StudentId = id;
+
+            if (startDate == null)
+            {
+                startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
+            }
+
+            var dailyAttendances = stdRepo.GetDailyAttendanceRecordsByStudentId(id, numberOfDays,startDate.Value );
+
+            return View(dailyAttendances);
+
+        }
+
+        public IActionResult GetAttendanceRecordsPartial(int id, DateOnly startDate, int numberOfDays)
+        {
+          
+            var dailyAttendances = stdRepo.GetDailyAttendanceRecordsByStudentId(id, numberOfDays, startDate);
+
+            return PartialView("AttendanceRecordsTableBody", dailyAttendances);
+
+        }
+
 
 
 

@@ -37,6 +37,8 @@ namespace MVCProject.Repos
         public int GetInstructorIdByStudentId(int id);
 
         public int GetTrackIdByStudentId(int id);
+
+        public IEnumerable<DailyAttendanceRecord> GetDailyAttendanceRecordsByStudentId(int id,int numberOfDays,DateOnly startDate);
     }
 
     public class StudentRepo : IStudentRepo
@@ -209,6 +211,11 @@ namespace MVCProject.Repos
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public IEnumerable<DailyAttendanceRecord> GetDailyAttendanceRecordsByStudentId(int id, int numberOfDays, DateOnly startDate)
+        {
+            return db.DailyAttendanceRecords.Where(d => d.StdID == id && d.Date <= startDate).OrderByDescending(d=>d.Date).Take(numberOfDays);
         }
 
         bool IStudentRepo.AddStudentsFromExcel(List<Student> student)
