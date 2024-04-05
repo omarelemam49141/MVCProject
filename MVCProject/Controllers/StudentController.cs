@@ -133,6 +133,50 @@ namespace MVCProject.Controllers
 
         }
 
+        public IActionResult ShowProfile(int id , string? message = null)
+        {
+            Student std =  stdRepo.GetStudentByID(id);
+            ViewBag.StudentId = id;
+            ViewBag.Student = std;
+            ViewBag.Message = message;
+            
+            return View(std);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateProfile([Bind("Id,Name,Password,Mobile")] Student std)
+        {
+           
+        
+            try
+            {
+                if (std.Name == null || std.Password == null || std.Mobile == null)
+                {
+                    ViewBag.Message = "Please Fill All Fields";
+                    return View("ShowProfile", std);
+                }
+
+               
+                Student student = stdRepo.GetStudentByID(std.Id);
+                student.Name = std.Name;
+                student.Password = std.Password;
+                student.Mobile = std.Mobile;
+                
+
+
+                stdRepo.UpdateStudent(student);
+                return RedirectToAction("ShowProfile",new {id = std.Id, message = "Profile Updated Successfully" });    
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                ViewBag.Message = "Error in Updating Profile";
+                ViewBag.StudentId = std.Id;
+                ViewBag.Student = std;
+                return View("ShowProfile", std);
+            }
+        }
+
 
 
 

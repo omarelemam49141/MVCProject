@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "ShowAttendanceRecords";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    Student std = ViewBag.Student;
 }
 
 @section dashboardTitle {
@@ -31,12 +32,13 @@
         <div class="col-12">
             <div class="card mb-4">
                 <div class="row p-4">
-
-                    <div class="card-header pb-0 col-6">
-                        <h6>
-                            @(ViewBag.Student.Name)&apos;s Attendance
-                        </h6>
+                    <div class="col-6 mx-auto text-start">
+                        @(std.Name)&apos;s Attendance Degree:
+                        <span class="badge  bg-gradient-@(std.StudentDegree < 125 ? "danger" : "success")">
+                            @std.StudentDegree
+                        </span>
                     </div>
+
                     <div class="col-6 text-end">
                         <label for="startDate">Start Date:</label>
                         <input type="date" id="startDate" name="startDate" value="@(DateTime.Now.AddDays(-1).Date.ToString("yyyy-MM-dd"))" max="@(DateTime.Now.AddDays(-1).Date.ToString("yyyy-MM-dd"))">
@@ -44,6 +46,7 @@
                         <label for="numberOfDays">Number of Days:</label>
                         <input type="number" id="numberOfDays" name="numberOfDays" value="7" min="1" max="7">
                     </div>
+
 
 
                 </div>
@@ -90,14 +93,21 @@
                 }
             })
             const data = await res.text();
-           
+
             tableBody.innerHTML = data;
         })
 
         numberOfDays.addEventListener('change', async (e) => {
-            const stdId = '@ViewBag.Student.Id';
+            const stdId = @ViewBag.Student.Id;
             const date = startDate.value;
-            const days = e.target.value;
+            let days = e.target.value;
+            if (days > 7) {
+                numberOfDays.value = 7;
+                days = 7;
+            } else if (days < 1) {
+                numberOfDays.value = 1;
+                days = 1;
+            }
             const res = await fetch(`/Student/GetAttendanceRecordsPartial/${stdId}?startDate=${date}&numberOfDays=${days}`, {
                 method: 'GET',
                 headers: {
