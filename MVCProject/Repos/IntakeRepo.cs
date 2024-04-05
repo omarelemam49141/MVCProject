@@ -1,4 +1,5 @@
-﻿using MVCProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MVCProject.Data;
 using MVCProject.Models;
 namespace MVCProject.Repos
 {
@@ -40,34 +41,58 @@ namespace MVCProject.Repos
 
         public void UpdateIntake(Intake intake)
         {
+
             db.Intakes.Update(intake);
             db.SaveChanges();
         }
 
         public Intake GetIntakeById(int intakeId)
         {
-            return db.Intakes.FirstOrDefault(i => i.Id == intakeId);
+            return db.Intakes.Include(p=>p.Program).Include(c=>c.Tracks).FirstOrDefault(i => i.Id == intakeId);
         }
 
         public IEnumerable<Intake> GetAllIntakes()
         {
-            return db.Intakes.ToList();
+            return db.Intakes.Include(a=>a.Program).Include(a=>a.Tracks).ToList();
         }
 
         public void AssignTracksToIntake(int intakeId, List<int> trackIds)
         {
-            var intake = db.Intakes.FirstOrDefault(i => i.Id == intakeId);
+            // Get the intake object by its ID
+            var intake = this.GetIntakeById(intakeId);
+
             if (intake != null)
             {
-                intake.Tracks.Clear(); // Clear existing tracks to avoid duplicates
-                var tracksToAdd = db.Tracks.Where(t => trackIds.Contains(t.Id)).ToList();
-                foreach (var track in tracksToAdd)
+                var intakeTrackIds = intake.Tracks.Select(t => t.Id);
+
+                var tracksToRemove = intakeTrackIds.Except(trackIds).ToList();
+
+                var tracksToAdd = trackIds.Except(intakeTrackIds).ToList();
+
+                foreach (var trackId in tracksToRemove)
                 {
-                    intake.Tracks.Add(track);
+                    var trackToRemove = intake.Tracks.FirstOrDefault(t => t.Id == trackId);
+                    if (trackToRemove != null)
+                    {
+                        intake.Tracks.Remove(trackToRemove);
+                    }
                 }
-                db.SaveChanges();
+
+                // Add tracks to the intake
+                foreach (var trackId in tracksToAdd)
+                {
+                    var trackToAdd = db.Tracks.FirstOrDefault(t=>t.Id ==trackId); // Assuming a method to get a track by its ID
+                    if (trackToAdd != null)
+                    {
+                        intake.Tracks.Add(trackToAdd);
+                    }
+                }
+                // Save changes to the database or perform any necessary updates
+                db.SaveChanges(); // Assuming a method to save changes in the repository
             }
         }
+
+
     }
 
 

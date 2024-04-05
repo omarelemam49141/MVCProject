@@ -39,13 +39,20 @@ namespace MVCProject.Repos
         public int GetTrackIdByStudentId(int id);
 
         public IEnumerable<DailyAttendanceRecord> GetDailyAttendanceRecordsByStudentId(int id,int numberOfDays,DateOnly startDate);
+
+        public List<Student> GetTrackStudents(int trackId);
+
     }
 
     public class StudentRepo : IStudentRepo
     {
         private attendanceDBContext db;
+        private TrackRepo trackRepo;
 
-        public StudentRepo(attendanceDBContext _db) { db = _db; }
+        public StudentRepo(attendanceDBContext _db) 
+        {
+            db = _db;
+        }
 
         public Student GetStudentByEmailAndPassword(string email, string password)
         {
@@ -221,6 +228,16 @@ namespace MVCProject.Repos
         bool IStudentRepo.AddStudentsFromExcel(List<Student> student)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Student> GetTrackStudents(int trackId)
+        {
+
+            return db
+                            .Students
+                            .Include(s=>s.StudentIntakeTracks)
+                            .Where(s=>s.StudentIntakeTracks.Any(sit=>sit.TrackID==trackId))
+                            .ToList();
         }
     }
 }

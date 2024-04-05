@@ -14,5 +14,11 @@ namespace MVCProject.Models
         public Department Department { get; set; }
         public ICollection<Permission> Permissions { get; set; } = new HashSet<Permission>();
         public Track TrackSupervised { get; set; }
+        [ForeignKey("InstructorTrack")]
+        public int TrackID { get; set; }
+        public Track InstructorTrack { get; set; }
+        [ForeignKey("InstructorIntake")]
+        public int IntakeID { get; set; }
+        public Intake InstructorIntake { get; set; }
     }
 }
