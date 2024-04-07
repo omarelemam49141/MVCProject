@@ -101,12 +101,14 @@ namespace MVCProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Mobile")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
@@ -145,14 +147,9 @@ namespace MVCProject.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TrackSupervisedId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DeptID");
-
-                    b.HasIndex("TrackSupervisedId");
 
                     b.ToTable("Instructors");
                 });
@@ -425,13 +422,7 @@ namespace MVCProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MVCProject.Models.Track", "TrackSupervised")
-                        .WithMany()
-                        .HasForeignKey("TrackSupervisedId");
-
                     b.Navigation("Department");
-
-                    b.Navigation("TrackSupervised");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Intake", b =>
@@ -516,7 +507,7 @@ namespace MVCProject.Migrations
             modelBuilder.Entity("MVCProject.Models.Track", b =>
                 {
                     b.HasOne("MVCProject.Models.Instructor", "Supervisor")
-                        .WithOne()
+                        .WithOne("TrackSupervised")
                         .HasForeignKey("MVCProject.Models.Track", "SupervisorID");
 
                     b.HasOne("MVCProject.Models._Program", "Program")
@@ -540,6 +531,8 @@ namespace MVCProject.Migrations
             modelBuilder.Entity("MVCProject.Models.Instructor", b =>
                 {
                     b.Navigation("Permissions");
+
+                    b.Navigation("TrackSupervised");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Intake", b =>
