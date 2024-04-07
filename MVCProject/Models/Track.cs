@@ -26,5 +26,8 @@ namespace MVCProject.Models
         [Remote("ValidateInstructor", "Track", AdditionalFields = "Id", ErrorMessage = "This Instructor is already assigned to another track. Make the track available by <a id=\"Click\" href=\"#\" onclick=\"clicked()\">clicking here</a>")]
         public int? SupervisorID { get; set; } 
         public Instructor ?Supervisor { get; set; }
+
+        public ICollection<Instructor> instructors { get; set; } = new HashSet<Instructor>();
+
     }
 }

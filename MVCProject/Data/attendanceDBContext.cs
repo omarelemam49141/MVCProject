@@ -45,6 +45,16 @@ namespace MVCProject.Data
                   .IsRequired(false);
                });
 
+            modelBuilder.Entity<Track>()
+                .HasMany(t => t.instructors) 
+                .WithOne(i => i.InstructorTrack) 
+                .HasForeignKey(i => i.TrackID);
+
+            modelBuilder.Entity<Intake>()
+                .HasMany(i => i.instructors)
+                .WithOne(i => i.InstructorIntake)
+                .HasForeignKey(i => i.IntakeID);
+
             base.OnModelCreating(modelBuilder);
         }
     }

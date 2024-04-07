@@ -14,10 +14,14 @@ namespace MVCProject.Controllers
     public class StudentController : Controller
     {
         private readonly IStudentRepo stdRepo;
+        private readonly IScheduleRepo scheduleRepo;
+        private readonly ITrackRepo trackRepo;
 
-        public StudentController(IStudentRepo _stdRepo)
+        public StudentController(IStudentRepo _stdRepo, IScheduleRepo _scheduleRepo, ITrackRepo _trackRepo)
         {
             stdRepo = _stdRepo;
+            scheduleRepo = _scheduleRepo;
+            trackRepo = _trackRepo;
         }
 
         public IActionResult Index(int id)
@@ -26,7 +30,7 @@ namespace MVCProject.Controllers
             Student std = stdRepo.GetStudentByID(id);
             return View(std);
         }
-              public IActionResult checkStudentDegree(int StudentDegree)
+        public IActionResult checkStudentDegree(int StudentDegree)
         {
             if (StudentDegree > 0 && StudentDegree < 251) return Json(true);
             else return Json(false);
@@ -48,23 +52,134 @@ namespace MVCProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult RequestPermission(Permission permission)
+        public IActionResult RequestPermission([Bind("Date,Type,Status,StdID")] Permission permission)
         {
-            stdRepo.RequestPermission(permission);
-            ViewBag.Message = "Permission Requested Successfully";
-            return RedirectToAction("ShowPermissions", new { id = permission.StdID });
+            try
+            {
+
+                permission.InstructorID = stdRepo.GetInstructorIdByStudentId(permission.StdID);
+                stdRepo.RequestPermission(permission);
+                ViewBag.Message = "Permission Requested Successfully";
+                return RedirectToAction("ShowPermissions", new { id = permission.StdID });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                ViewBag.Message = "Error in Requesting Permission";
+                return View(permission);
+            }
         }
 
-        public IActionResult DeletePermission(int permissionId,int stdId) 
+
+        public IActionResult DeletePermission(int id)
         {
-            stdRepo.DeletePermission(permissionId);
-            ViewBag.Message = "Permission Deleted Successfully";
-            return RedirectToAction("ShowPermissions", new { id = stdId });
+            try
+            {
+                stdRepo.DeletePermission(id);
+                return Json(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Json(false);
+            }
         }
-       
 
-      
+        public IActionResult GetPermissions(int id)
+        {
+            var permissions = stdRepo.GetStudentPermissions(id);
+            return PartialView("PermissionsTableBody", permissions);
+        }
 
+
+
+
+        public IActionResult ShowSchedule(int id)
+        {
+
+            ViewBag.Student = stdRepo.GetStudentByID(id);
+            ViewBag.StudentId = id;
+            int trackId = stdRepo.GetTrackIdByStudentId(id);
+            ViewBag.Track = trackRepo.GetTrackById(trackId);
+
+            var schedules = scheduleRepo.GetSchedulesByDateAndTrack(DateOnly.FromDateTime(DateTime.Now), stdRepo.GetTrackIdByStudentId(id));
+            return View(schedules);
+
+
+        }
+
+        public IActionResult ShowAttendanceRecords(int id, DateOnly? startDate = null, int numberOfDays = 7 )
+        {
+            ViewBag.Student = stdRepo.GetStudentByID(id);
+            ViewBag.StudentId = id;
+
+            if (startDate == null)
+            {
+                startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
+            }
+
+            var dailyAttendances = stdRepo.GetDailyAttendanceRecordsByStudentId(id, numberOfDays,startDate.Value );
+
+            return View(dailyAttendances);
+
+        }
+
+        public IActionResult GetAttendanceRecordsPartial(int id, DateOnly startDate, int numberOfDays)
+        {
+          
+            var dailyAttendances = stdRepo.GetDailyAttendanceRecordsByStudentId(id, numberOfDays, startDate);
+
+            return PartialView("AttendanceRecordsTableBody", dailyAttendances);
+
+        }
+
+        public IActionResult ShowProfile(int id , string? message = null)
+        {
+            Student std =  stdRepo.GetStudentByID(id);
+            ViewBag.StudentId = id;
+            ViewBag.Student = std;
+            ViewBag.Message = message;
+            
+            return View(std);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateProfile([Bind("Id,Name,Password,Mobile")] Student std)
+        {
+           
         
+            try
+            {
+                if (std.Name == null || std.Password == null || std.Mobile == null)
+                {
+                    ViewBag.Message = "Please Fill All Fields";
+                    return View("ShowProfile", std);
+                }
+
+               
+                Student student = stdRepo.GetStudentByID(std.Id);
+                student.Name = std.Name;
+                student.Password = std.Password;
+                student.Mobile = std.Mobile;
+                
+
+
+                stdRepo.UpdateStudent(student);
+                return RedirectToAction("ShowProfile",new {id = std.Id, message = "Profile Updated Successfully" });    
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                ViewBag.Message = "Error in Updating Profile";
+                ViewBag.StudentId = std.Id;
+                ViewBag.Student = std;
+                return View("ShowProfile", std);
+            }
+        }
+
+
+
+
+
     }
 }

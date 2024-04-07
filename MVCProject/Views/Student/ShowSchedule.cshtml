@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Schedule>
+
+@{
+    ViewData["Title"] = "ShowSchedule";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section dashboardTitle {
+    @ViewBag.student.Name Dashboard
+}
+
+@{
+    @section role {
+    Student
+    }
+}
+
+@section links {
+    <partial name="../partialViews/StudentLinks" />
+}
+
+
+
+
+<div id="message" class="alert alert-success d-none max-width-500 mx-auto text-c"></div>
+
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="row p-4">
+
+                    <div class="card-header pb-0 col-6">
+                        <h6>
+                            @ViewBag.Track.Name Schedule 
+                        </h6>
+                    </div>
+                  
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Day</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Start Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if (Model.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center"><p class="lead">No permissions available</p></td>
+
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var schedule in Model)
+                                {
+                                    <tr>
+
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@schedule.Date</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">@schedule.Date.DayOfWeek</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                                <p class="text-xs font-weight-bold mb-0">@schedule.StartPeriod</p>
+                                        </td>
+                                      
+                                    </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

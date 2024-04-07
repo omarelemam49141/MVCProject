@@ -13,7 +13,7 @@ namespace MVCProject.Models
         public TimeOnly TimeOfAttendance { get; set; }
         public TimeOnly TimeOfLeave { get; set; }
         public int StudentDegree { get; set; }
-        [RegularExpression("(Attend|Absent)")]
+        [RegularExpression("(Attend|Absent|Late)")]
         public string Status { get; set; }
     }
 }
