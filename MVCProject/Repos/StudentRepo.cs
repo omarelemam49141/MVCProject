@@ -197,7 +197,7 @@ namespace MVCProject.Repos
 
             var supervisorId = db.StudentIntakeTracks.Include(sit => sit.Track).FirstOrDefault(sit => sit.StdID == id).Track
                 .SupervisorID;
-            return supervisorId;
+            return (int)supervisorId;
             }
             catch (Exception e)
             {
