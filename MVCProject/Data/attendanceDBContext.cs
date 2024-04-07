@@ -36,10 +36,7 @@ namespace MVCProject.Data
             modelBuilder.Entity<Track>(entity =>
             {
 
-                entity.HasOne(t => t.Supervisor)
-                    .WithOne()
-                    .HasForeignKey<Track>(t => t.SupervisorID)
-                    .IsRequired(false);
+      
                 modelBuilder.Entity<Track>()
                  .Property(t => t.SupervisorID)
                   .IsRequired(false);
