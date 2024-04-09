@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using MVCProject.Repos;
 using MVCProject.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVCProject.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class EmployeesManageController : Controller
     {
         private readonly IEmployeeRepo _employeeRepo;

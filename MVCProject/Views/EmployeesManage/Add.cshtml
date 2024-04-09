@@ -1,7 +1,9 @@
 ﻿@model Employee
 @{
     Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+    ViewBag.title = "EmployeesManage";
 }
+
 
 <form asp-action="@((Model == null) ? "Add" : "Edit")" asp-controller="EmployeesManage" method="post">
     @if (Model != null)

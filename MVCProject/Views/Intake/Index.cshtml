@@ -3,33 +3,34 @@
 *@
 @{
     Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+    ViewBag.title = "Intake";
+
 }
 @model  List<Intake>
 <div>
     @{
                         <table class="table table-striped col-8">
             <thead>
-                   <th>#</th>
-                  <th>id</th>
                   <th>name</th> 
+                  <th>Year</th>
                   <th>program</th>
             </thead>
     <tbody>
     @foreach(var item in Model)
         {
             <tr>
-            <td class="col-1">
-                <input type="checkbox"/>
-            </td>
-                <td>
-                    @item.Id
-                </td>
+         
+     
                 <td>
                     @item.Name
                 </td>
+                         <td>
+                            @item.Year.ToString().Split("/")[2]
+                        </td>
                 <td>
                 @item.Program.Name
                 </td>
+               
                 <td>
                         <a asp-action="Delete" asp-controller="Intake" asp-route-id = "@item.Id" class="btn btn-danger Deletebtn">Delete</a>
                 </td>

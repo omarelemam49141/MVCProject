@@ -2,6 +2,8 @@
     Layout = "~/Views/Shared/AdminDashBoard.cshtml";
     var programs = ViewBag.programs as List<_Program>;
     var instructors = ViewBag.instructors as List<Instructor>;
+    ViewBag.title = "Track";
+
 }
 @model Track
     <form asp-action="@((Model == null) ? "Add" : "Edit")" asp-controller="Track" method="post">

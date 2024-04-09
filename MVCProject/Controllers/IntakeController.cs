@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCProject.Data;
 using MVCProject.Models;
@@ -8,6 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace MVCProject.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class IntakeController : Controller
     {
         private  IIntakeRepo intakeRepo { get; set; }

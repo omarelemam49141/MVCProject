@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVCProject.Data;
 using MVCProject.Models;
 using MVCProject.Repos;
 
 namespace MVCProject.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class TrackController : Controller
     {
         private ITrackRepo trackrepo;
