@@ -56,7 +56,7 @@ namespace MVCProject.Repos
         }
         public Employee? GetEmployeeById(int id)
         {
-            Employee? employee = db.Employees.FirstOrDefault(e => e.Id == id);
+            Employee? employee = db.Employees.Include(e=>e.Department).FirstOrDefault(e => e.Id == id);
             if (employee != null)
                 return employee;
             return null;

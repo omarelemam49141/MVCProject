@@ -7,12 +7,123 @@
 }
 @model List<Instructor>
 
+    <div class="container">
+        <h2>Instructor List</h2>
+    <table class="table" id="MyTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Department</th>
+                <th>Instructor Track</th>
+                <th>Instructor Intake</th>
+                <th>Super</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var instructor in Model)
+            {
+                        <tr>
+                            <td>@instructor.Id</td>
+                            <td>@instructor.Name</td>
+                            <td>@instructor.Email</td>
+                            <td>@instructor.Mobile</td>
+                            <td>@instructor.Department.Name</td>
+                            <td>@instructor.InstructorTrack.Name</td>
+                            <td>@instructor.InstructorIntake.Name</td>
+                                    <td>@(instructor.TrackSupervised != null && instructor.TrackSupervised.Id == @instructor.InstructorTrack.Id ? "yes" : "no")</td>
+                            <td>
+                        @if (instructor.TrackSupervised!=null && instructor.TrackSupervised.Id == @instructor.InstructorTrack.Id)
+                        {
+                            <a href="#" class="btn" disabled> Already Supervisor</a>
+                        }
+                        else
+                        {
+                             <a href="#"  track="@instructor.InstructorTrack.Id" instructor="@instructor.Id" class="Sbtn btn btn-info">AssignAs Supervisor</a>
+
+                        }
+                            <a href="@Url.Action("Edit", "InstructorsManage", new { id = instructor.Id })" class="btn btn-primary">Edit</a>
+
+
+                            </td>
+                        </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<a class="btn btn-info" asp-controller="InstructorsManage" asp-action="Add">Add</a>
+<div>
+    <label for="filter"> Display Only Supervisors</label>
+    <input id="filter" type="checkbox" name="filter"/>
+</div>
  
-    @section datatables{
+    @section AdminScript{
 
         <link  rel="stylesheet" href="~/css/datatables.css"/>
         <script src="~/js/datatables.js"></script>
             <script src="~/js/JavaScriptTable.js"></script>
+       <script>
+           $("#MyTable").DataTable();
+            $("#filter").click(function(e){
+                if(e.target.checked){
+                         $("#MyTable").search("yes").draw()
+                }else{
+                }
+            })
+    $(".Sbtn").click(function(e) {
+        e.preventDefault();
 
+        let track = $(e.target).attr("track");
+        let ins = $(e.target).attr("instructor");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You will assign this Instructor as a Supervisor!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "I am Sure"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                validateTrack(track, ins);
+            }
+        });
+    });
+
+    function validateTrack(track, ins) {
+        $.ajax({
+            url: '/instructorsManage/ValidateNotSupervisedTrack/' + track
+        }).done(function(msg) {
+            if (msg.toString() === "true") {
+                assignTrackToInstructor(track, ins);
+            } else {
+                Swal.fire({
+                    title: "Confirm!",
+                    text: "This Track is Supervised by Another Instructor",
+                    icon: "question"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        assignTrackToInstructor(track, ins);
+                    }
+                });
+            }
+        });
     }
-    <script></script>
+
+    function assignTrackToInstructor(track, ins) {
+        $.ajax({
+            url: "instructorsManage/AssignTrackToInstructor/" + track + "/" + ins
+        }).done(function(msg) {
+            if (msg.toString() === "true") {
+                Swal.fire("Done!", "", "success");
+            }
+        });
+    }
+
+        </script>
+    }
+ 

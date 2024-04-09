@@ -31,7 +31,6 @@ namespace MVCProject.Controllers
         }
         [HttpPost]
         public IActionResult Add(Track track) {
-            var t = trackrepo.GetTrackBySupervisorID((int)track.SupervisorID);
             
             trackrepo.AddTrack(track);
             return RedirectToAction("Index");
@@ -93,5 +92,6 @@ namespace MVCProject.Controllers
 
             return existingTrack == null || existingTrack.Id == Id;
         }
+     
     }
 }

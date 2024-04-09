@@ -63,20 +63,13 @@
                     if (result.isConfirmed) {
                         // AJAX call to delete the student
                         $.ajax({
-                            url: '/Students/Delete/' + studentId,
+                            url: '/StudentsManage/Delete/' + studentId,
                             type: 'DELETE',
                             success: function () {
                                 // If successful, reload the page
                                 location.reload();
                             },
-                            error: function (xhr, status, error) {
-                                // If error, display error message
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'An error occurred while deleting the student.',
-                                    icon: 'error'
-                                });
-                            }
+
                         });
                     }
                 });

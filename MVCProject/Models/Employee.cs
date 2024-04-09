@@ -19,7 +19,7 @@ namespace MVCProject.Models
         public string Mobile { get; set; }
         [RegularExpression("(StudentAffairs|Security)")]
         public string Type { get; set; }
-        [ForeignKey("DeptID")]
+        [ForeignKey("Department")]
         public int DeptID { get; set; }
         public Department Department { get; set; }
     }

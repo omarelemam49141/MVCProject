@@ -74,7 +74,12 @@ namespace MVCProject.Repos
         }
         public List<Instructor> GetAll()
         {
-            return db.Instructors.Include(p=>p.TrackSupervised).ToList();   
+            return db.Instructors
+                .Include(p=>p.TrackSupervised)
+                .Include(p=>p.Department)
+                .Include(p=>p.InstructorIntake)
+                .Include(p=>p.InstructorTrack)
+                .ToList();   
         }
     }
 }
