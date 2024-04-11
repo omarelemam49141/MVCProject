@@ -86,6 +86,12 @@ namespace MVCProject.Controllers
 
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public bool ValidateName(string Name , int id)
+        {
+
+            return trackrepo.GetAll().FirstOrDefault(a=>a.Name == Name  && a.Id != id) == null;
+        }
 
         public bool ValidateInstructor(int SupervisorID, int Id)
         {

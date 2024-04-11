@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MVCProject.Models
@@ -7,6 +8,7 @@ namespace MVCProject.Models
     {
         public int Id { get; set; }
         [Required]
+        [Remote("ValidateName", "EmployeesManage" , AdditionalFields ="Id")]
         public string Name { get; set; }
         [Required]
         [EmailAddress]

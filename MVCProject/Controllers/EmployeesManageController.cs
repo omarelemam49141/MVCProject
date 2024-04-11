@@ -49,6 +49,12 @@ namespace MVCProject.Controllers
             var employee = _employeeRepo.GetEmployeeById(id);
             return View("Add",employee);
         }
+        [HttpGet]
+        public bool ValidateName(string Name, int id)
+        {
+
+            return _employeeRepo.GetAllEmployees().FirstOrDefault(a => a.Name == Name && a.Id != id) == null;
+        }
         [HttpPost]
         public IActionResult Edit(Employee employee)
         {

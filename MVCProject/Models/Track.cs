@@ -10,6 +10,7 @@ namespace MVCProject.Models
     {
         public int Id { get; set; }
         [Required(AllowEmptyStrings =false ,ErrorMessage ="Name is required") ]
+        [Remote("ValidateName" , "Track", AdditionalFields ="Id")]
         public string Name { get; set; }
         [RegularExpression("(Active|Inactive)")]
         [Required]

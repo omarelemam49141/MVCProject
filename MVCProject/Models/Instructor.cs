@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MVCProject.Models
@@ -8,6 +9,7 @@ namespace MVCProject.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Name is required")]
         [StringLength(50, ErrorMessage = "Name must be between 1 and 50 characters", MinimumLength = 1)]
+        [Remote("ValidateName" , "InstructorsManage" , AdditionalFields = "Id")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]

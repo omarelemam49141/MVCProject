@@ -84,6 +84,12 @@ namespace MVCProject.Controllers
             ViewBag.Intakes = intakeRepo.GetAllIntakes();
             return View("Add",instructor);
         }
+        [HttpGet]
+        public bool ValidateName(string Name, int id)
+        {
+
+            return instructorRepo.GetAll().FirstOrDefault(a => a.Name == Name && a.Id != id) == null;
+        }
 
     }
    
