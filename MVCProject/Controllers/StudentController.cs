@@ -177,6 +177,11 @@ namespace MVCProject.Controllers
             }
         }
 
+        public JsonResult IsEmailAvailable(string email)
+        {
+            return Json(!stdRepo.IsEmailInUse(email));
+        }
+
 
 
 
