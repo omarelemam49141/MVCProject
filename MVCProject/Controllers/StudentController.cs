@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using MVCProject.Repos;
 
 namespace MVCProject.Controllers
 {
+    [Authorize(Roles = "Student")]
     public class StudentController : Controller
     {
         private readonly IStudentRepo stdRepo;
@@ -177,6 +179,7 @@ namespace MVCProject.Controllers
             }
         }
 
+        [AllowAnonymous]
         public JsonResult IsEmailAvailable(string email)
         {
             return Json(!stdRepo.IsEmailInUse(email));
