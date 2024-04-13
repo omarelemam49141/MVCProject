@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MVCProject.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class afterM : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,8 +64,8 @@ namespace MVCProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -159,6 +159,7 @@ namespace MVCProject.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeptID = table.Column<int>(type: "int", nullable: false),
+                    TrackSupervisedId = table.Column<int>(type: "int", nullable: true),
                     TrackID = table.Column<int>(type: "int", nullable: false),
                     IntakeID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -217,7 +218,7 @@ namespace MVCProject.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     programID = table.Column<int>(type: "int", nullable: false),
-                    SupervisorID = table.Column<int>(type: "int", nullable: false)
+                    SupervisorID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -226,8 +227,7 @@ namespace MVCProject.Migrations
                         name: "FK_Tracks_Instructors_SupervisorID",
                         column: x => x.SupervisorID,
                         principalTable: "Instructors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tracks_Programs_programID",
                         column: x => x.programID,
@@ -338,6 +338,11 @@ namespace MVCProject.Migrations
                 column: "TrackID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Instructors_TrackSupervisedId",
+                table: "Instructors",
+                column: "TrackSupervisedId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Intakes_ProgramId",
                 table: "Intakes",
                 column: "ProgramId");
@@ -386,7 +391,8 @@ namespace MVCProject.Migrations
                 name: "IX_Tracks_SupervisorID",
                 table: "Tracks",
                 column: "SupervisorID",
-                unique: true);
+                unique: true,
+                filter: "[SupervisorID] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Instructors_Tracks_TrackID",
@@ -395,6 +401,13 @@ namespace MVCProject.Migrations
                 principalTable: "Tracks",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.NoAction);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Instructors_Tracks_TrackSupervisedId",
+                table: "Instructors",
+                column: "TrackSupervisedId",
+                principalTable: "Tracks",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
@@ -410,6 +423,10 @@ namespace MVCProject.Migrations
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Instructors_Tracks_TrackID",
+                table: "Instructors");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Instructors_Tracks_TrackSupervisedId",
                 table: "Instructors");
 
             migrationBuilder.DropTable(

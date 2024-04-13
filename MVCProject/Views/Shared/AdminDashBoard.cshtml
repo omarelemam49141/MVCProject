@@ -52,7 +52,7 @@
             <ul class="navbar-nav">
 
                     <li class="nav-item">
-                        <a class="nav-link"  asp-action ="index" asp-controller="Intake">
+                        <a class="nav-link @(ViewBag.title == "Intake" ? "active" :"")"   asp-action ="index" asp-controller="Intake">
                             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                 <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <title>shop </title>
@@ -73,7 +73,7 @@
                     </li>
             
         <li class="nav-item">
-            <a class="nav-link" asp-action="Index" asp-controller="Track" >
+            <a class="nav-link @(ViewBag.title == "Track" ? "active" : "")" asp-action="Index" asp-controller="Track" >
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                     <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>office</title>
@@ -98,7 +98,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" asp-action="index" asp-controller="schedule" asp-route-id="@ViewBag.InstructorId">
+            <a class="nav-link @(ViewBag.title == "StudentsManage" ? "active" : "")" asp-action="Index" asp-controller="StudentsManage">
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                     <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>credit-card</title>
@@ -119,7 +119,7 @@
         </li>
               
         <li class="nav-item">
-            <a class="nav-link" asp-action="Index" asp-controller="InstructorsManage">
+            <a class="nav-link @(ViewBag.title == "InstructorsManage" ? "active" : "")" asp-action="Index" asp-controller="InstructorsManage">
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                     <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>box-3d-50</title>
@@ -139,8 +139,8 @@
                 <span class="nav-link-text ms-1">Instructors</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-action="showAttendanceRecords" asp-controller="instructor">
+        <li class="nav-item ">
+            <a class="nav-link @(ViewBag.title == "EmployeesManage" ? "active" : "")"  asp-action="Index" asp-controller="EmployeesManage">
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                     <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>settings</title>
@@ -301,7 +301,7 @@
   src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
   integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
   crossorigin="anonymous"></script>
-
+<script src="~/js/datatables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @RenderSection("AdminScript",false)
-@RenderSection("datatables",false)
 </html>

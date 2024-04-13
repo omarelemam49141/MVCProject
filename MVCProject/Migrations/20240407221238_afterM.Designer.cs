@@ -4,6 +4,7 @@ using MVCProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCProject.Migrations
 {
     [DbContext(typeof(attendanceDBContext))]
-    partial class attendanceDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240407221238_afterM")]
+    partial class afterM
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,6 +97,9 @@ namespace MVCProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("DeptID")
                         .HasColumnType("int");
 
@@ -116,7 +122,7 @@ namespace MVCProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeptID");
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Employees");
                 });
@@ -133,26 +139,24 @@ namespace MVCProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IntakeID")
                         .HasColumnType("int");
 
                     b.Property<string>("Mobile")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TrackID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TrackSupervisedId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -162,6 +166,8 @@ namespace MVCProject.Migrations
                     b.HasIndex("IntakeID");
 
                     b.HasIndex("TrackID");
+
+                    b.HasIndex("TrackSupervisedId");
 
                     b.ToTable("Instructors");
                 });
@@ -181,8 +187,8 @@ namespace MVCProject.Migrations
                     b.Property<int>("ProgramId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("Year")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Year")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -335,9 +341,6 @@ namespace MVCProject.Migrations
                     b.Property<int>("StudentID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("read")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("StudentID");
@@ -424,9 +427,7 @@ namespace MVCProject.Migrations
                 {
                     b.HasOne("MVCProject.Models.Department", "Department")
                         .WithMany("Employees")
-                        .HasForeignKey("DeptID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
                 });
@@ -451,11 +452,17 @@ namespace MVCProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MVCProject.Models.Track", "TrackSupervised")
+                        .WithMany()
+                        .HasForeignKey("TrackSupervisedId");
+
                     b.Navigation("Department");
 
                     b.Navigation("InstructorIntake");
 
                     b.Navigation("InstructorTrack");
+
+                    b.Navigation("TrackSupervised");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Intake", b =>
@@ -540,7 +547,7 @@ namespace MVCProject.Migrations
             modelBuilder.Entity("MVCProject.Models.Track", b =>
                 {
                     b.HasOne("MVCProject.Models.Instructor", "Supervisor")
-                        .WithOne("TrackSupervised")
+                        .WithOne()
                         .HasForeignKey("MVCProject.Models.Track", "SupervisorID");
 
                     b.HasOne("MVCProject.Models._Program", "Program")
@@ -564,8 +571,6 @@ namespace MVCProject.Migrations
             modelBuilder.Entity("MVCProject.Models.Instructor", b =>
                 {
                     b.Navigation("Permissions");
-
-                    b.Navigation("TrackSupervised");
                 });
 
             modelBuilder.Entity("MVCProject.Models.Intake", b =>

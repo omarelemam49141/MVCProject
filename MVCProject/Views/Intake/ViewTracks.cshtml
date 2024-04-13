@@ -1,6 +1,8 @@
 ﻿@model List<Track>
 @{
     var tracks = ViewBag.tracks as List<Track>;
+    ViewBag.title = "Intake";
+
 }
 <form asp-action="SubmitTracks" asp-controller="intake" method="post">
     <table class="table">

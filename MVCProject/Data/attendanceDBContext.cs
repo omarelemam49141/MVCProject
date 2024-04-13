@@ -33,6 +33,14 @@ namespace MVCProject.Data
             {
                 entity.HasKey(e => new { e.StdID, e.IntakeID });
             });
+            modelBuilder.Entity<Track>(entity =>
+            {
+
+      
+                modelBuilder.Entity<Track>()
+                 .Property(t => t.SupervisorID)
+                  .IsRequired(false);
+               });
 
             modelBuilder.Entity<Track>()
                 .HasMany(t => t.instructors) 

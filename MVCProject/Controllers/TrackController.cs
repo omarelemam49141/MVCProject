@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVCProject.Data;
 using MVCProject.Models;
 using MVCProject.Repos;
 
 namespace MVCProject.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class TrackController : Controller
     {
         private ITrackRepo trackrepo;
@@ -31,7 +33,6 @@ namespace MVCProject.Controllers
         }
         [HttpPost]
         public IActionResult Add(Track track) {
-            var t = trackrepo.GetTrackBySupervisorID((int)track.SupervisorID);
             
             trackrepo.AddTrack(track);
             return RedirectToAction("Index");
@@ -85,6 +86,12 @@ namespace MVCProject.Controllers
 
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public bool ValidateName(string Name , int id)
+        {
+
+            return trackrepo.GetAll().FirstOrDefault(a=>a.Name == Name  && a.Id != id) == null;
+        }
 
         public bool ValidateInstructor(int SupervisorID, int Id)
         {
@@ -93,5 +100,6 @@ namespace MVCProject.Controllers
 
             return existingTrack == null || existingTrack.Id == Id;
         }
+     
     }
 }

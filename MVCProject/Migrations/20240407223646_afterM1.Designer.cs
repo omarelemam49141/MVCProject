@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCProject.Migrations
 {
     [DbContext(typeof(attendanceDBContext))]
-    [Migration("20240404195052_initial")]
-    partial class initial
+    [Migration("20240407223646_afterM1")]
+    partial class afterM1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,12 +104,14 @@ namespace MVCProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Mobile")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
@@ -358,7 +360,6 @@ namespace MVCProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SupervisorID")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("programID")
@@ -367,7 +368,8 @@ namespace MVCProject.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SupervisorID")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[SupervisorID] IS NOT NULL");
 
                     b.HasIndex("programID");
 
@@ -535,9 +537,7 @@ namespace MVCProject.Migrations
                 {
                     b.HasOne("MVCProject.Models.Instructor", "Supervisor")
                         .WithOne("TrackSupervised")
-                        .HasForeignKey("MVCProject.Models.Track", "SupervisorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MVCProject.Models.Track", "SupervisorID");
 
                     b.HasOne("MVCProject.Models._Program", "Program")
                         .WithMany()

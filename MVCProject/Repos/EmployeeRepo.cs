@@ -1,4 +1,5 @@
-﻿using MVCProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MVCProject.Data;
 using MVCProject.Models;
 
 namespace MVCProject.Repos
@@ -7,7 +8,7 @@ namespace MVCProject.Repos
     {
         public Employee GetEmployeeByEmailAndPassword(string email, string password);
         Employee GetEmployeeById(int id);
-        IEnumerable<Employee> GetAllEmployees();
+        List<Employee> GetAllEmployees();
         void AddEmployee(Employee employee);
         void UpdateEmployee(Employee employee);
         void DeleteEmployee(int id);
@@ -27,9 +28,9 @@ namespace MVCProject.Repos
             return db.Employees.FirstOrDefault(i => i.Email.ToLower() == email.ToLower()
                                             && i.Password == password);
         }
-        public IEnumerable<Employee> GetAllEmployees()
+        public List<Employee> GetAllEmployees()
         {
-            return db.Employees.ToList();
+            return db.Employees.Include(d=>d.Department).ToList();
         }
 
         public void AddEmployee(Employee employee)
@@ -55,7 +56,7 @@ namespace MVCProject.Repos
         }
         public Employee? GetEmployeeById(int id)
         {
-            Employee? employee = db.Employees.FirstOrDefault(e => e.Id == id);
+            Employee? employee = db.Employees.Include(e=>e.Department).FirstOrDefault(e => e.Id == id);
             if (employee != null)
                 return employee;
             return null;

@@ -1,0 +1,126 @@
+﻿@{
+    Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+    ViewBag.title = "InstructorsManage";
+
+}
+@model Instructor
+
+<div class="container">
+    <h2>@(Model == null ? "Add" : "Edit") Instructor</h2>
+    <form asp-action="@((Model == null) ? "Add" : "Edit")" asp-controller="InstructorsManage" method="post">
+        @if (Model != null)
+        {
+                <input type="hidden" asp-for="Id" />
+        }
+
+        <div class="form-group">
+            <label asp-for="Name" class="form-label">Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Mobile" class="form-label">Mobile</label>
+            <input asp-for="Mobile" class="form-control" />
+            <span asp-validation-for="Mobile" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DeptID" class="form-label">Department</label>
+            <select asp-for="DeptID" class="form-control">
+                <option value="">Select Department</option>
+                @foreach (var dept in ViewBag.Departments as List<Department>)
+                {
+                    if (Model != null && dept.Id == Model.DeptID)
+                    {
+                             <option value="@dept.Id" selected>@dept.Name</option>
+
+                    }
+                        <option value="@dept.Id" >@dept.Name</option>
+                }
+            </select>
+            <span asp-validation-for="DeptID" class="text-danger"></span>
+        </div>
+
+     
+
+        <div class="form-group">
+            <label asp-for="IntakeID" class="form-label">Instructor Intake</label>
+            <select asp-for="IntakeID" class="form-control">
+                <option value="" selected>Select Intake</option>
+                @foreach (var intake in ViewBag.Intakes as List<Intake>)
+                {
+                    if(Model != null && intake.Id == Model.IntakeID)
+                    {
+                     <option value="@intake.Id" selected>@intake.Name</option>
+
+                    }
+                    <option value="@intake.Id" >@intake.Name</option>
+                }
+            </select>
+            <span asp-validation-for="IntakeID" class="text-danger"></span>
+        </div>
+           <div class="form-group" >
+          
+                                    <label asp-for="TrackID" class="form-label">Instructor Track</label>
+                    <select asp-for="TrackID" class="form-control" id="trackSelect">
+                        <option value="">Select Track</option>
+                          @if (Model != null)
+            {
+                    @foreach (var track in ViewBag.Tracks as List<Track>)
+                    {
+                        if (Model != null && track.Id == Model.TrackID)
+                        {
+                            <option value="@track.Id" selected>@track.Name</option>
+
+                        }
+                        <option value="@track.Id" >@track.Name</option>
+                    }
+
+                }
+            </select>
+                    <span asp-validation-for="TrackID" class="text-danger"></span>
+            
+
+        </div>
+        <button type="submit" class="btn btn-primary">@((Model == null) ? "Add" : "Edit") Instructor</button>
+    </form>
+</div>
+@section AdminScript{
+    <script>
+            $("#IntakeID").change(
+                function(e){
+                    $.ajax({
+                            url:"/intake/intakeTracksJson/"+e.target.value
+                    }).done(
+                        (res)=>{
+                                    renderSelectOptions(res)
+                        }
+                    )
+                }
+            )
+                function renderSelectOptions(data) {
+        var selectHtml = '<option value="">Select Track</option>';
+
+        data.forEach(function(item) {
+            selectHtml += '<option value="' + item.Id + '">' + item.Name + '</option>';
+        });
+
+            document.getElementById("trackSelect").innerHTML =  selectHtml;
+    }
+            
+    </script>
+}
+

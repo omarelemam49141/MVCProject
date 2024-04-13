@@ -32,7 +32,7 @@ namespace MVCProject.Repos
 
         public bool DeleteStudent(int id);
 
-        public bool AddStudentsFromExcel(List<Student> student);
+        public void AddRangeOfStudents(List<Student> student);
 
         public int GetInstructorIdByStudentId(int id);
 
@@ -197,7 +197,7 @@ namespace MVCProject.Repos
 
             var supervisorId = db.StudentIntakeTracks.Include(sit => sit.Track).FirstOrDefault(sit => sit.StdID == id).Track
                 .SupervisorID;
-            return supervisorId;
+            return (int)supervisorId;
             }
             catch (Exception e)
             {
@@ -225,9 +225,10 @@ namespace MVCProject.Repos
             return db.DailyAttendanceRecords.Where(d => d.StdID == id && d.Date <= startDate).OrderByDescending(d=>d.Date).Take(numberOfDays);
         }
 
-        bool IStudentRepo.AddStudentsFromExcel(List<Student> student)
+        public void AddRangeOfStudents(List<Student> student)
         {
-            throw new NotImplementedException();
+            db.Students.AddRange(student);
+            db.SaveChanges();
         }
 
         public List<Student> GetTrackStudents(int trackId)
