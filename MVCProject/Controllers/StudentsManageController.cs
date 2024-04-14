@@ -75,9 +75,6 @@ namespace MVCProject.Controllers
                 return View("AdminError");
             }
         }
-        public bool ValidateName(string name,int id)
-        {
-            return studentRepo.GetAllStudents().FirstOrDefault(a => a.Name == name) == null;
-        }
+   
     }
 }

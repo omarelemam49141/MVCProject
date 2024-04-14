@@ -1,0 +1,77 @@
+﻿@model IEnumerable<StudentMessage>
+
+@{
+    ViewData["Title"] = "ShowMessages";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+
+@section dashboardTitle {
+    @ViewBag.Student.Name Dashboard
+}
+
+@{
+    @section role {
+    Student
+    }
+}
+
+@section links {
+    <partial name="../partialViews/StudentLinks" />
+}
+
+
+
+
+<div id="message" class="alert alert-success d-none max-width-500 mx-auto text-c"></div>
+
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="row p-4">
+
+                    <div class="card-header pb-0 col-6">
+                        <h6>Messages </h6>
+                    </div>
+
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 w-10">Date</th>
+                                    <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 "> Content</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <partial name="MessagesPartial" model="Model" />
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts
+{
+    <script>
+        window.addEventListener('DOMContentLoaded', async (e) => {
+            const notificationNo = document.querySelector('.notify-number');
+            await fetch(`/Student/MarkAllMessagesAsRead/${@ViewBag.StudentId}`);
+            notificationNo.remove();
+
+
+
+        })
+    </script>
+}
