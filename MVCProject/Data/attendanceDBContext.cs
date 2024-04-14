@@ -17,6 +17,8 @@ namespace MVCProject.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Permission> Permissions { get; set; }
 
+        public DbSet<StudentMessage> StudentMessages { get; set; }
+
 
 
         public attendanceDBContext(DbContextOptions<attendanceDBContext> options) : base(options)

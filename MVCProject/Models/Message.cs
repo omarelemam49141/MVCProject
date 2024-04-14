@@ -11,6 +11,6 @@ namespace MVCProject.Models
         public string Content { get; set; }
         public Student Student { get; set; }
 
-        public bool read { get; set; }
+        public bool Read { get; set; }
     }
 }

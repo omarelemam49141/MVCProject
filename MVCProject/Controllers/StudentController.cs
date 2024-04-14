@@ -12,24 +12,27 @@ using MVCProject.Repos;
 
 namespace MVCProject.Controllers
 {
-    [Authorize(Roles = "Student")]
+    [Authorize(Roles = "student")]
     public class StudentController : Controller
     {
         private readonly IStudentRepo stdRepo;
         private readonly IScheduleRepo scheduleRepo;
         private readonly ITrackRepo trackRepo;
-
-        public StudentController(IStudentRepo _stdRepo, IScheduleRepo _scheduleRepo, ITrackRepo _trackRepo)
+        private readonly IStudentMessageRepo studentMessageRepo;
+        public StudentController(IStudentRepo _stdRepo, IScheduleRepo _scheduleRepo, ITrackRepo _trackRepo, IStudentMessageRepo _studentMessageRepo)
         {
             stdRepo = _stdRepo;
             scheduleRepo = _scheduleRepo;
             trackRepo = _trackRepo;
+            studentMessageRepo = _studentMessageRepo;
         }
 
         public IActionResult Index(int id)
         {
             ViewBag.StudentId = id;
             Student std = stdRepo.GetStudentByID(id);
+            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+
             return View(std);
         }
         public IActionResult checkStudentDegree(int StudentDegree)
@@ -40,8 +43,10 @@ namespace MVCProject.Controllers
 
         public IActionResult ShowPermissions(int id)
         {
-            ViewBag.Student = stdRepo.GetStudentByID(id);
             ViewBag.StudentId = id;
+            ViewBag.Student = stdRepo.GetStudentByID(id);
+            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+
             var permissions = stdRepo.GetStudentPermissions(id);
             return View(permissions);
         }
@@ -50,6 +55,7 @@ namespace MVCProject.Controllers
         {
             ViewBag.StudentId = id;
             ViewBag.Student = stdRepo.GetStudentByID(id);
+            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
             return View(new Permission());
         }
 
@@ -103,6 +109,7 @@ namespace MVCProject.Controllers
             ViewBag.StudentId = id;
             int trackId = stdRepo.GetTrackIdByStudentId(id);
             ViewBag.Track = trackRepo.GetTrackById(trackId);
+            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
 
             var schedules = scheduleRepo.GetSchedulesByDateAndTrack(DateOnly.FromDateTime(DateTime.Now), stdRepo.GetTrackIdByStudentId(id));
             return View(schedules);
@@ -110,17 +117,19 @@ namespace MVCProject.Controllers
 
         }
 
-        public IActionResult ShowAttendanceRecords(int id, DateOnly? startDate = null, int numberOfDays = 7 )
+        public IActionResult ShowAttendanceRecords(int id, DateOnly? startDate = null, int numberOfDays = 7)
         {
             ViewBag.Student = stdRepo.GetStudentByID(id);
             ViewBag.StudentId = id;
+            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+
 
             if (startDate == null)
             {
                 startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
             }
 
-            var dailyAttendances = stdRepo.GetDailyAttendanceRecordsByStudentId(id, numberOfDays,startDate.Value );
+            var dailyAttendances = stdRepo.GetDailyAttendanceRecordsByStudentId(id, numberOfDays, startDate.Value);
 
             return View(dailyAttendances);
 
@@ -128,28 +137,31 @@ namespace MVCProject.Controllers
 
         public IActionResult GetAttendanceRecordsPartial(int id, DateOnly startDate, int numberOfDays)
         {
-          
+
             var dailyAttendances = stdRepo.GetDailyAttendanceRecordsByStudentId(id, numberOfDays, startDate);
 
             return PartialView("AttendanceRecordsTableBody", dailyAttendances);
 
         }
 
-        public IActionResult ShowProfile(int id , string? message = null)
+        public IActionResult ShowProfile(int id, string? message = null)
         {
-            Student std =  stdRepo.GetStudentByID(id);
+            Student std = stdRepo.GetStudentByID(id);
             ViewBag.StudentId = id;
             ViewBag.Student = std;
             ViewBag.Message = message;
-            
+
+            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+
+
             return View(std);
         }
 
         [HttpPost]
         public IActionResult UpdateProfile([Bind("Id,Name,Password,Mobile")] Student std)
         {
-           
-        
+
+
             try
             {
                 if (std.Name == null || std.Password == null || std.Mobile == null)
@@ -158,16 +170,16 @@ namespace MVCProject.Controllers
                     return View("ShowProfile", std);
                 }
 
-               
+
                 Student student = stdRepo.GetStudentByID(std.Id);
                 student.Name = std.Name;
                 student.Password = std.Password;
                 student.Mobile = std.Mobile;
-                
+
 
 
                 stdRepo.UpdateStudent(student);
-                return RedirectToAction("ShowProfile",new {id = std.Id, message = "Profile Updated Successfully" });    
+                return RedirectToAction("ShowProfile", new { id = std.Id, message = "Profile Updated Successfully" });
             }
             catch (Exception e)
             {
@@ -175,10 +187,26 @@ namespace MVCProject.Controllers
                 ViewBag.Message = "Error in Updating Profile";
                 ViewBag.StudentId = std.Id;
                 ViewBag.Student = std;
+                ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(std.Id);
                 return View("ShowProfile", std);
             }
         }
 
+        public IActionResult ShowMessages(int id)
+        {
+            ViewBag.StudentId = id;
+            ViewBag.Student = stdRepo.GetStudentByID(id);
+            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+            var messages = studentMessageRepo.GetStudentMessages(id);
+            return View(messages);
+        }
+
+        public IActionResult MarkAllMessagesAsRead(int id)
+        {
+            studentMessageRepo.MarkAllMessagesAsRead(id);
+            var messages = studentMessageRepo.GetStudentMessages(id);
+            return PartialView("MessagesPartial",messages);
+        }
         [AllowAnonymous]
         public JsonResult IsEmailAvailable(string email)
         {
