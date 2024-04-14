@@ -18,7 +18,7 @@ namespace MVCProject.Repos
         public void DeletePermission(int permissionId);
 
         public bool StudentExists(int id);
- 
+
 
         public List<Student> GetAllStudents();
 
@@ -32,8 +32,18 @@ namespace MVCProject.Repos
 
         public bool DeleteStudent(int id);
 
-        public bool AddStudentsFromExcel(List<Student> student);
+        public void AddRangeOfStudents(List<Student> student);
+
+        public int GetInstructorIdByStudentId(int id);
+
+        public int GetTrackIdByStudentId(int id);
+
+        public IEnumerable<DailyAttendanceRecord> GetDailyAttendanceRecordsByStudentId(int id,int numberOfDays,DateOnly startDate);
+
         public List<Student> GetTrackStudents(int trackId);
+
+        public bool IsEmailInUse(string email);
+
     }
 
     public class StudentRepo : IStudentRepo
@@ -53,6 +63,8 @@ namespace MVCProject.Repos
         }
         public void RegisterStudent(Student std)
         {
+            std.Email = std.Email.Trim().ToLower();
+            std.Password = std.Password.Trim();
             db.Students.Add(std);
             db.SaveChanges();
             if (std.Id == 0)
@@ -115,11 +127,12 @@ namespace MVCProject.Repos
             {
                 db.SaveChanges();
                 return true;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }
-          
+
         }
 
         public void AddStudentsFromExcel(List<Student> student)
@@ -130,25 +143,26 @@ namespace MVCProject.Repos
         public bool DeleteStudent(int id)
         {
             var std = db.Students.FirstOrDefault(s => s.Id == id);
-                if(std != null)
+            if (std != null)
+            {
+                db.Students.Remove(std);
+                try
                 {
-                         db.Students.Remove(std);
-                        try
-                        {
-                            db.SaveChanges();
-                            return true;
-                        }catch(Exception ex)
-                        {
-                            return false;
-                        }
+                    db.SaveChanges();
+                    return true;
                 }
-                return false;
-                    
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return false;
+
         }
 
         public List<Student> GetAllStudents()
         {
-            var stds =db.Students.ToList();
+            var stds = db.Students.ToList();
             return stds;
         }
 
@@ -162,7 +176,7 @@ namespace MVCProject.Repos
 
         public List<Student> GetStudentsByIntakeTrack(int IntakeId, int TrackId)
         {
-            var stds = db.StudentIntakeTracks.Where(I => I.IntakeID == IntakeId && I.TrackID == TrackId).Include(t => t.Student).Select(a=>a.Student). ToList();
+            var stds = db.StudentIntakeTracks.Where(I => I.IntakeID == IntakeId && I.TrackID == TrackId).Include(t => t.Student).Select(a => a.Student).ToList();
             return stds;
         }
 
@@ -174,15 +188,51 @@ namespace MVCProject.Repos
                 db.SaveChanges();
                 return true;
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 return false;
             }
         }
 
-        bool IStudentRepo.AddStudentsFromExcel(List<Student> student)
+        public int GetInstructorIdByStudentId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+            var supervisorId = db.StudentIntakeTracks.Include(sit => sit.Track).FirstOrDefault(sit => sit.StdID == id).Track
+                .SupervisorForeignKeyID;
+            return (int)supervisorId;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public int GetTrackIdByStudentId(int id)
+        {
+            try
+            {
+                var trackId = db.StudentIntakeTracks.Where(sit=>sit.StdID == id).OrderByDescending(sit=>sit.IntakeID).FirstOrDefault().TrackID;
+                return trackId;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public IEnumerable<DailyAttendanceRecord> GetDailyAttendanceRecordsByStudentId(int id, int numberOfDays, DateOnly startDate)
+        {
+            return db.DailyAttendanceRecords.Where(d => d.StdID == id && d.Date <= startDate).OrderByDescending(d=>d.Date).Take(numberOfDays);
+        }
+
+        public void AddRangeOfStudents(List<Student> student)
+        {
+            db.Students.AddRange(student);
+            db.SaveChanges();
         }
 
         public List<Student> GetTrackStudents(int trackId)
@@ -193,6 +243,11 @@ namespace MVCProject.Repos
                             .Include(s=>s.StudentIntakeTracks)
                             .Where(s=>s.StudentIntakeTracks.Any(sit=>sit.TrackID==trackId))
                             .ToList();
+        }
+
+        public bool IsEmailInUse(string email)
+        {
+            return db.Students.Any(s => s.Email == email.Trim().ToLower());
         }
     }
 }

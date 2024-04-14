@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+    ViewBag.title = "EmployeesManage";
+}
+
+@model List<Employee>
+
+<div>
+    <table class="table table-striped col-8" id="MyTable">
+        <thead>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>password</th>
+                <th>Edit</th>
+                <th>Delete</th>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                        <tr>
+                            <td class="col-1">
+                                <input type="checkbox" />
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.Email</td>
+                            <td>@item.Type</td>
+                            <td>@item.Password</td>
+                            <td><a href="#" id="@item.Id" class="btn btn-danger" onclick="delClicked(event)" id="Deletebtn">Delete</a></td>
+                            <td><a asp-action="Edit" asp-route-id="@item.Id" asp-controller="EmployeesManage" class="btn btn-warning">Edit</a></td>
+                        </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a class="btn btn-info" asp-action="Add" asp-controller="EmployeesManage">Add Employee</a>
+</div>
+@section AdminScript {
+    <script>
+
+    $("#MyTable").DataTable();
+    function delClicked(event) {
+        var itemId = $(event.target).attr("id"); // Get the value of itemid attribute
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/EmployeesManage/DeleteEmployee/" + itemId,
+                    method: "GET", // Specify the HTTP method as GET
+                    success: function (response) {
+                        Swal.fire("Done");
+                                location.reload();
+                    },
+                    error: function () {
+                        Swal.fire("Error occurred while deleting.");
+                    }
+                });
+            }
+        });
+    }
+
+
+    
+    </script>
+}
+

@@ -3,35 +3,36 @@
 *@
 @{
     Layout = "~/Views/Shared/AdminDashBoard.cshtml";
+    ViewBag.title = "Intake";
+
 }
 @model  List<Intake>
 <div>
     @{
                         <table class="table table-striped col-8">
             <thead>
-                   <th>#</th>
-                  <th>id</th>
                   <th>name</th> 
+                  <th>Year</th>
                   <th>program</th>
             </thead>
     <tbody>
     @foreach(var item in Model)
         {
             <tr>
-            <td class="col-1">
-                <input type="checkbox"/>
-            </td>
-                <td>
-                    @item.Id
-                </td>
+         
+     
                 <td>
                     @item.Name
                 </td>
+                         <td>
+                            @item.Year.ToString().Split("/")[2]
+                        </td>
                 <td>
                 @item.Program.Name
                 </td>
+               
                 <td>
-                <a asp-action="Delete" asp-controller="Intake" asp-route-id = "@item.Id" class="btn btn-danger" id="Deletebtn">Delete</a>
+                        <a asp-action="Delete" asp-controller="Intake" asp-route-id = "@item.Id" class="btn btn-danger Deletebtn">Delete</a>
                 </td>
                  <td>
                  <a asp-action="Edit" asp-controller="Intake" asp-route-id = "@item.Id" class="btn btn-warning">Edit</a>
@@ -53,3 +54,26 @@
 
 </div>
 
+@section AdminScript{
+
+    <script>
+            $(".Deletebtn").click(
+                (e)=>{
+                    e.preventDefault()
+                        Swal.fire({
+                title: "Are you sure?",
+                text: "Delete this track",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "I am Sure"
+            }).then((res)=>{
+                    if(res.isConfirmed){
+                        window.location = e.target.href
+                    }
+            })
+                }
+            )
+    </script>
+} 

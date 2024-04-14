@@ -14,7 +14,7 @@ namespace MVCProject.Repos
         public Track GetTrackBySupervisorID(int supervisorId);
         public Track GetTrackBySupervisor(int sid);
         public List<Track> GetTracksForProgram(int pid);
-
+        public bool AssignTrackSuperViser(int tid, int insid);
         public List<Track> GetAll();
         List<Track> GetActiveTracks();
 
@@ -59,13 +59,13 @@ namespace MVCProject.Repos
 
         public Track GetTrackById(int trackId)
         {
-            return db.Tracks.FirstOrDefault(t => t.Id == trackId);
+            return db.Tracks.Include(s=>s.Supervisor).FirstOrDefault(t => t.Id == trackId);
         }
 
 
         public Track GetTrackBySupervisor(int supervisorId)
         {
-            return db.Tracks.Include(p => p.Program).FirstOrDefault(t => t.SupervisorID == supervisorId);
+            return db.Tracks.Include(p => p.Program).FirstOrDefault(t => t.SupervisorForeignKeyID == supervisorId);
         }
 
 
@@ -79,7 +79,7 @@ namespace MVCProject.Repos
 
         public Track GetTrackBySupervisorID(int supervisorId)
         {
-            return db.Tracks.Include(p=>p.Program).FirstOrDefault(t => t.SupervisorID == supervisorId);
+            return db.Tracks.Include(p=>p.Program).FirstOrDefault(t => t.SupervisorForeignKeyID == supervisorId);
 
         }
 
@@ -90,7 +90,20 @@ namespace MVCProject.Repos
 
         public List<Track> GetTracksForProgram(int pid)
         {
-            return db.Tracks.Include(p=>p.Program).Where(t => t.programID == pid).ToList();
+            return db.Tracks.Include(p=>p.Program).Where(t => t.programID == pid && t.Status =="Active").ToList();
+        }
+        public bool AssignTrackSuperViser(int tid, int insid)
+        {
+            try
+            {
+                GetTrackById(tid).SupervisorForeignKeyID = insid;
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public List<Track> GetActiveTracks()

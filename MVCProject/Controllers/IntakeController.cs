@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCProject.Data;
 using MVCProject.Models;
 using MVCProject.Repos;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MVCProject.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class IntakeController : Controller
     {
         private  IIntakeRepo intakeRepo { get; set; }
@@ -78,10 +82,29 @@ namespace MVCProject.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            
-            intakeRepo.RemoveIntake(id);
-            var intakes = intakeRepo.GetAllIntakes();
-            return View("index", intakes);
+            try
+            {
+                intakeRepo.RemoveIntake(id);
+                var intakes = intakeRepo.GetAllIntakes();
+                return View("index", intakes);
+            }
+            catch
+            {
+                ViewBag.reasons = new List<string>()
+                {
+                    "This Intake Already has Some Records So this will Affect the Other tables"
+                };
+                return View("AdminError");
+            }
+         
+        }
+        public IActionResult intakeTracksJson(int id)
+        {
+            var options = new JsonSerializerOptions()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            };
+            return Json(intakeRepo.GetIntakeById(id).Tracks.Where(t=>t.Status == "Active"),options);
         }
     }
 }

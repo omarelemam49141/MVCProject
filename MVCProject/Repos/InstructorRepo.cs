@@ -65,7 +65,7 @@ namespace MVCProject.Repos
         //Return the track if the instructor is a supervisor
         public Track GetSuperVisorTrack(int id)
         {
-            return db.Tracks.FirstOrDefault(t => t.SupervisorID == id);
+            return db.Tracks.FirstOrDefault(t => t.SupervisorForeignKeyID == id);
         }
 
         public void UpdateInstructor(int id, Instructor instructor)
@@ -76,7 +76,12 @@ namespace MVCProject.Repos
         }
         public List<Instructor> GetAll()
         {
-            return db.Instructors.Include(p=>p.TrackSupervised).ToList();   
+            return db.Instructors
+                .Include(p=>p.TrackSupervised)
+                .Include(p=>p.Department)
+                .Include(p=>p.InstructorIntake)
+                .Include(p=>p.InstructorTrack)
+                .ToList();   
         }
 
         public Instructor GetInstructorByIDWithTrackIntakeDept(int id)

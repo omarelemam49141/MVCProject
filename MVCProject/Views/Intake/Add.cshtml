@@ -2,6 +2,8 @@
     Layout = "~/Views/Shared/AdminDashBoard.cshtml";
     var programs = ViewBag.programs as List<_Program>;
     var tracks = ViewBag.tracks as List<Track>;
+    ViewBag.title = "Intake";
+
 
 }
 @model Intake;
@@ -13,13 +15,14 @@
     <label asp-for="@Model.Name" class="form-label">Intake Name</label>
     <input asp-for="@Model.Name" class="form-control" id="IntakeName">
   </div>
-  <div class="form-group">
+<div class="form-group">
     <label asp-for="@Model.Year" class="form-label">Intake Year</label>
-    <input asp-for="@Model.Year" class="form-control" id="datepicker">
-  </div>
+    <input asp-for="@Model.Year" type="date" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+
+</div>
   <div class="form-group">
     <label asp-for="@Model.Year" class="form-label">Intake Program</label>
-<select class="form-select" id="programSelect" name="programid" @(Model != null ? "disabled" : "")>
+<select class="form-select" id="programSelect" name="programid" @(Model != null ? "hidden" : "")>
                 @foreach (var item in programs)
                 {
                     if (Model != null && Model.ProgramId == item.Id)
@@ -39,12 +42,7 @@
 </form>
 </div>
 @section AdminScript {
-        <script>
-          $('#datepicker').datepicker({
-            minViewMode: 2,
-            format: 'yyyy',
-            autoclose: true
-          });
+
     
         </script>
 }

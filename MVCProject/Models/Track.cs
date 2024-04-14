@@ -11,6 +11,7 @@ namespace MVCProject.Models
     {
         public int Id { get; set; }
         [Required(AllowEmptyStrings =false ,ErrorMessage ="Name is required") ]
+        [Remote("ValidateName" , "Track", AdditionalFields ="Id")]
         public string Name { get; set; }
         [RegularExpression("(Active|Inactive)")]
         [Required]
@@ -22,12 +23,13 @@ namespace MVCProject.Models
         public ICollection<Intake> Intakes { get; set; } = new HashSet<Intake>();
         public List<StudentIntakeTrack> StudentIntakeTracks { get; set; } = new List<StudentIntakeTrack>();
         public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
+        
         [ForeignKey("Supervisor")]
-        [AllowNull]
-        public int? SupervisorID { get; set; }
-
-        [Remote("ValidateInstructor", "Track", AdditionalFields ="Id",ErrorMessage = "This Instructor is already assigned to another track. Make the track available by <a href='/InstructorsManage/MakeTrackAvailable" + "'>clicking here</a>")]
+        [Required(ErrorMessage ="Please Select A Supervisor")]
+        [Remote("ValidateInstructor", "Track", AdditionalFields = "Id", ErrorMessage = "This Instructor is already assigned to another track. Make the track available by <a id=\"Click\" href=\"#\" onclick=\"clicked()\">clicking here</a>")]
+        public int? SupervisorForeignKeyID { get; set; } 
         public Instructor Supervisor { get; set; }
+
         public ICollection<Instructor> instructors { get; set; } = new HashSet<Instructor>();
 
     }

@@ -20,7 +20,7 @@ namespace MVCProject.Models
         public int ProgramId { get; set; }
         [Required]
         [Remote("ValidateYear" , "Intake")]
-       public DateTime Year { get; set; }
+       public DateOnly Year { get; set; }
 
     }
 }

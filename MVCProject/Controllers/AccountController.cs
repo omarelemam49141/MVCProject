@@ -112,13 +112,17 @@ namespace MVCProject.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Signup(Student student)
         {
+            if (student.Email != null && stdRepo.IsEmailInUse(student.Email))
+            {
+                ModelState.AddModelError("Email", "Email is already in use");
+            }
             if (!ModelState.IsValid)
             {
                 return View(student);
             }
             stdRepo.RegisterStudent(student);
-            signInToken(student.Id, student.Name, "student");
-            return RedirectToAction("index", "student", new { id = student.Id });
+            //signInToken(student.Id, student.Name, "student");
+            return RedirectToAction("Login", "Account");
         }
     }
 }

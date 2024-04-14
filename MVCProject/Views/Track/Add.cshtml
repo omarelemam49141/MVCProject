@@ -2,6 +2,8 @@
     Layout = "~/Views/Shared/AdminDashBoard.cshtml";
     var programs = ViewBag.programs as List<_Program>;
     var instructors = ViewBag.instructors as List<Instructor>;
+    ViewBag.title = "Track";
+
 }
 @model Track
     <form asp-action="@((Model == null) ? "Add" : "Edit")" asp-controller="Track" method="post">
@@ -24,29 +26,31 @@
                 </select>
                 <span asp-validation-for="@Model.Status" class="text-danger"></span>
             </div>
-        <div class="form-group">
-            <label asp-for="@Model.programID" class="form-label">Program</label>
-            <select asp-for="@Model.programID" class="form-select" id="programSelect">
+        <div class="form-group" @(Model != null ? "hidden" : "")>
+            <label asp-for="@Model.programID" class="form-label" >Program</label>
+<select class="form-select" id="programSelect" name="programid" @(Model != null ? "hidden" : "")>
                 <option value="">Select Program</option>
                 @foreach (var program in programs)
                 {
-                    <option value="@program.Id">@program.Name</option>
+                if(Model != null && program.Id == Model.programID)
+                {
+                    <option value="@program.Id" Selected>@program.Name</option>
+                }
+                else
+                {
+                   <option value="@program.Id" >@program.Name</option>
+
+                }
                 }
             </select>
                         <span asp-validation-for="@Model.programID" class="text-danger"></span>
 
-        <div class="form-group">
-            <label asp-for="@Model.SupervisorID" class="form-label">Supervisoe</label>
-            <select asp-for="@Model.SupervisorID" class="form-select" id="programSelect">
-                <option value="">Select Supervisor</option>
-                @foreach (var instructor in instructors)
-                {
-                        <option value="@instructor.Id">@instructor.Name</option>
-                }
-            </select>
-            <span asp-validation-for="@Model.SupervisorID" class="text-danger"></span>
-        </div>
+    </div>
 
         <button type="submit" class="btn btn-primary">@((Model == null ) ? "Add" : "Edit") Intake</button>
     </form>
+    @section AdminScript{
+
+               <script src="~/js/TrackAdd.js"></script>
+    }
 
