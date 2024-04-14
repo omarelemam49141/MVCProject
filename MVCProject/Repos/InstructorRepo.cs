@@ -9,13 +9,14 @@ namespace MVCProject.Repos
     {
         public Instructor GetInstructorByEmailAndPassword(string email, string password);
         public Instructor GetInstructorByID(int id);
+        public Instructor GetInstructorByIDWithTrackIntakeDept(int id);
         public Track GetSuperVisorTrack(int id);
         public List<Instructor> GetAll();
         public void AddInstructor(Instructor instructor);
 
         public void DeleteInstructor(int id);
 
-        public void UpdateInstructor(Instructor instructor);
+        public void UpdateInstructor(int id, Instructor instructor);
 
         public void AssignTrackToInstructor(int id, int trackid);
     }
@@ -64,11 +65,12 @@ namespace MVCProject.Repos
         //Return the track if the instructor is a supervisor
         public Track GetSuperVisorTrack(int id)
         {
-            return db.Tracks.FirstOrDefault(t => t.SupervisorID == id);
+            return db.Tracks.FirstOrDefault(t => t.SupervisorForeignKeyID == id);
         }
 
-        public void UpdateInstructor(Instructor instructor)
+        public void UpdateInstructor(int id, Instructor instructor)
         {
+            instructor.Id = id;
             db.Instructors.Update(instructor);
             db.SaveChanges();
         }
@@ -80,6 +82,16 @@ namespace MVCProject.Repos
                 .Include(p=>p.InstructorIntake)
                 .Include(p=>p.InstructorTrack)
                 .ToList();   
+        }
+
+        public Instructor GetInstructorByIDWithTrackIntakeDept(int id)
+        {
+            return db
+                    .Instructors
+                    .Include(i=>i.InstructorTrack)
+                    .Include(i=>i.Department)
+                    .Include(i=>i.InstructorIntake)
+                    .FirstOrDefault(i=>i.Id==id);
         }
     }
 }

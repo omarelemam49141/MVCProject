@@ -14,13 +14,17 @@ namespace MVCProject.Controllers
         private ITrackRepo trackRepo;
         private IStudentRepo studentRepo;
         private IAttendanceRecordRepo attendanceRecordRepo;
+        private IDepartmentRepo deptRepo;
+        private IIntakeRepo intakeRepo;
 
         public InstructorController(IInstructorRepo _instRepo,
                                     IPermissionRepo _permissionRepo,
                                     IStudentMessageRepo _stdMsgRepo,
                                     ITrackRepo _trackRepo,
                                     IStudentRepo _studentRepo,
-                                    IAttendanceRecordRepo _attendanceRecordRepo) 
+                                    IAttendanceRecordRepo _attendanceRecordRepo,
+                                    IIntakeRepo _intakeRepo,
+                                    IDepartmentRepo _deptRepo) 
         {
             instRepo = _instRepo; 
             permissionRepo = _permissionRepo;
@@ -28,6 +32,8 @@ namespace MVCProject.Controllers
             trackRepo = _trackRepo;
             studentRepo = _studentRepo;
             attendanceRecordRepo = _attendanceRecordRepo;
+            deptRepo = _deptRepo;
+            intakeRepo = _intakeRepo;
         }
         public IActionResult Index(int id)
         {
@@ -169,5 +175,50 @@ namespace MVCProject.Controllers
 
             return View("showAttendanceRecords", dailyAttendanceRecords);
         }
+
+        public IActionResult ShowProfile(int? instID, string message)
+        {
+            if (instID == null) return BadRequest();
+            Instructor instructor = instRepo.GetInstructorByIDWithTrackIntakeDept(instID.Value);
+            if (instructor == null) return NotFound();
+            ViewBag.InstructorId = instID;
+
+            if (message != null)
+                ViewBag.SuccessMessage = message;
+            return View(instructor);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null) return BadRequest();
+            Instructor instructor = instRepo.GetInstructorByID(id.Value);
+            if (instructor == null) return NotFound();
+            ViewBag.Tracks = trackRepo.GetActiveTracks();
+            ViewBag.Intakes = intakeRepo.GetAllIntakes();
+            ViewBag.Depts = deptRepo.GetAllDepartments();
+            ViewBag.InstructorId = id;
+            return View(instructor);
+        }
+        [HttpPost]
+        public IActionResult Edit(int? id, Instructor inst)
+        {
+            if (id == null) return BadRequest();
+            ViewBag.InstructorId = id;
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Tracks = trackRepo.GetActiveTracks();
+                ViewBag.Intakes = intakeRepo.GetAllIntakes();
+                ViewBag.Depts = deptRepo.GetAllDepartments();
+                return View(inst);
+            }
+            
+
+            instRepo.UpdateInstructor(id.Value, inst);
+            
+            return RedirectToAction("ShowProfile", new { instID = id, message = "Profile updated successfully" });
+        }
     }
+
+    
 }

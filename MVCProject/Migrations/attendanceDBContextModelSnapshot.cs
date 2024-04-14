@@ -17,7 +17,7 @@ namespace MVCProject.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -361,7 +361,7 @@ namespace MVCProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SupervisorID")
+                    b.Property<int?>("SupervisorForeignKeyID")
                         .HasColumnType("int");
 
                     b.Property<int>("programID")
@@ -369,9 +369,9 @@ namespace MVCProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SupervisorID")
+                    b.HasIndex("SupervisorForeignKeyID")
                         .IsUnique()
-                        .HasFilter("[SupervisorID] IS NOT NULL");
+                        .HasFilter("[SupervisorForeignKeyID] IS NOT NULL");
 
                     b.HasIndex("programID");
 
@@ -541,7 +541,7 @@ namespace MVCProject.Migrations
                 {
                     b.HasOne("MVCProject.Models.Instructor", "Supervisor")
                         .WithOne("TrackSupervised")
-                        .HasForeignKey("MVCProject.Models.Track", "SupervisorID");
+                        .HasForeignKey("MVCProject.Models.Track", "SupervisorForeignKeyID");
 
                     b.HasOne("MVCProject.Models._Program", "Program")
                         .WithMany()

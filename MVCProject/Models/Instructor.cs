@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,19 +22,20 @@ namespace MVCProject.Models
         [RegularExpression(@"^(010|011|012|015)\d{8}$", ErrorMessage = "Invalid mobile number format")]
         public string Mobile { get; set; }
         [ForeignKey("Department")]
+
+        [Display(Name="Department")]
         [Required(ErrorMessage = "Department ID is required")]
         public int DeptID { get; set; }
         public Department Department { get; set; }
         public ICollection<Permission> Permissions { get; set; } = new HashSet<Permission>();
         public Track TrackSupervised { get; set; }
         [ForeignKey("InstructorTrack")]
+        [Display(Name = "Track")]
         [Required(ErrorMessage = "Track ID is required")]
-
         public int TrackID { get; set; }
         public Track InstructorTrack { get; set; }
         [ForeignKey("InstructorIntake")]
         [Required(ErrorMessage = "Intake ID is required")]
-
         public int IntakeID { get; set; }
         public Intake InstructorIntake { get; set; }
     }
