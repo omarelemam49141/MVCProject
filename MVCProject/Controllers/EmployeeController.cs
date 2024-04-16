@@ -42,7 +42,30 @@ namespace MVCProject.Controllers
         }
 
 
-		[HttpPost]
+        /********************************* record attendance **************************************/
+        public IActionResult RecordAttendance()
+		{
+			//send tracks to the view
+			ViewBag.Tracks = trackRepo.GetActiveTracks();
+			//send students in that track to the view
+			ViewBag.Students = studentRepo.GetAllStudents();
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+        /*-----------------------------------------------------------------------------------------*/
+
+
+
+        [HttpPost]
         public IActionResult Edit(int? id, Employee emp)
         {
             if (id == null) return BadRequest();

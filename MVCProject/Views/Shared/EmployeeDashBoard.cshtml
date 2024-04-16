@@ -73,7 +73,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewBag.title == "Track" ? "active" : "")" asp-action="Index" asp-controller="Track">
+                    <a class="nav-link @(ViewBag.title == "Employee" ? "active" : "")" asp-action="RecordAttendance" asp-controller="Employee">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>office</title>
@@ -98,7 +98,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewBag.title == "StudentsManage" ? "active" : "")" asp-action="showAttendanceRecords" asp-controller="Employee">
+                    <a class="nav-link @(ViewBag.title == "Employee" ? "active" : "")" asp-action="showAttendanceRecords" asp-controller="Employee">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>credit-card</title>
@@ -119,7 +119,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewBag.title == "InstructorsManage" ? "active" : "")" asp-action="showStudentsDegrees" asp-controller="Employee">
+                    <a class="nav-link @(ViewBag.title == "Employee" ? "active" : "")" asp-action="showStudentsDegrees" asp-controller="Employee">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>box-3d-50</title>
@@ -140,7 +140,7 @@
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link @(ViewBag.title == "EmployeesManage" ? "active" : "")" asp-action="showStudentsDegrees" asp-controller="EmployeeController">
+                    <a class="nav-link @(ViewBag.title == "Employee" ? "active" : "")" asp-action="showStudentsDegrees" asp-controller="EmployeeController">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>settings</title>
