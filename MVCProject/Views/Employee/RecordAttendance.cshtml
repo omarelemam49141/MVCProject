@@ -1,0 +1,47 @@
+﻿
+@model IEnumerable<Student>
+@{
+    	ViewBag.Title = "Record Attendance";
+        Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
+
+        @*recieve the date from viewBag*@
+		var students = ViewBag.Students as List<Student>;
+}
+
+<h2 class="text-center">Record Attendance</h2>
+
+<form class="col-md-8 m-auto text-center p-3 my-3" asp-action="RecordAttendance">
+	
+    @*display all students abd select state (present/ absent)*@
+    <table class="table table-bordered">
+        <thead>
+			<tr>
+				<th>Student Name</th>
+				<th>Status</th>
+			</tr>
+        </thead>
+        <tbody>
+            @*for loop to display all students*@
+            @for (int i = 0; i < students.Count; i++)
+			{
+				<tr>
+					<td>@students[i].Name</td>
+					<td>
+						<select name="status" class="form-control">
+							<option value="Present">Present</option>
+							<option value="Absent">Absent</option>
+						</select>
+					</td>
+				</tr>
+			}
+
+            @*save to the database*@
+            <tr>
+				<td colspan="2">
+					<input type="submit" value="Save" class="btn btn-primary" />
+				</td>
+        </tbody>
+    </table>
+
+    
+</form>
