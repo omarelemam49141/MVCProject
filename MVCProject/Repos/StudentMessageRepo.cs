@@ -24,6 +24,7 @@ namespace MVCProject.Repos
             message.StudentID = stdID;
             message.Date = date;
             message.Content = content;
+            db.StudentMessages.Add(message);
             db.SaveChanges();
         }
 
