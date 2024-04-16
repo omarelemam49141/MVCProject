@@ -29,8 +29,6 @@ namespace MVCProject
             builder.Services.AddScoped<IAttendanceRecordRepo, AttendanceRecordRepo>();
             builder.Services.AddScoped<IDepartmentRepo, DepartmentRepo>();
 
-
-
             builder.Services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
                 options.ExpireTimeSpan = TimeSpan.FromDays(1); // Set the expiration time to one day
