@@ -23,9 +23,12 @@ namespace MVCProject.Repos
     public class TrackRepo : ITrackRepo
     {
         private attendanceDBContext db;
-        public TrackRepo(attendanceDBContext _db)
+        private IPermissionRepo permissionRepo;
+        public TrackRepo(attendanceDBContext _db , IPermissionRepo _permissionRepo)
         {
             db = _db;
+            permissionRepo = _permissionRepo;
+
         }
         public void RemoveTrack(int trackId)
         {
@@ -95,7 +98,13 @@ namespace MVCProject.Repos
         {
             try
             {
+
+                var oldsup = GetTrackById(tid).SupervisorID;
                 GetTrackById(tid).SupervisorID = insid;
+                foreach (var item in permissionRepo.GetPermissionsBySupervisorID((int)oldsup))
+                {
+                    item.InstructorID = insid;
+                };
                 db.SaveChanges();
                 return true;
             }

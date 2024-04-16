@@ -57,10 +57,7 @@
     </table>
 </div>
 <a class="btn btn-info" asp-controller="InstructorsManage" asp-action="Add">Add</a>
-<div>
-    <label for="filter"> Display Only Supervisors</label>
-    <input id="filter" type="checkbox" name="filter"/>
-</div>
+
  
     @section AdminScript{
 
@@ -102,6 +99,7 @@
         }).done(function(msg) {
             if (msg.toString() === "true") {
                 assignTrackToInstructor(track, ins);
+                location.reload();
             } else {
                 Swal.fire({
                     title: "Confirm!",
@@ -110,6 +108,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         assignTrackToInstructor(track, ins);
+                        location.reload()
                     }
                 });
             }

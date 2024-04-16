@@ -9,7 +9,7 @@
 @model Intake;
 <div id="sectionA">
 <form asp-action="@((Model == null) ? "add" : "edit")" asp-controller="intake">
-
+    <input asp-for="Id" hidden />
   <div class="form-group">
     <span asp-validation-for="@Model.Name"></span>
     <label asp-for="@Model.Name" class="form-label">Intake Name</label>
@@ -44,6 +44,5 @@
 @section AdminScript {
 
     
-        </script>
 }
 

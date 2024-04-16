@@ -12,12 +12,13 @@ namespace MVCProject.Controllers
        private IInstructorRepo instructorRepo;
        private IDepartmentRepo departmentRepo;
        private IIntakeRepo intakeRepo;
-        public InstructorsManageController(ITrackRepo _trackRepo , IInstructorRepo _instructorRepo , IDepartmentRepo _departmentRepo , IIntakeRepo _intakeRepo) {
+        private IAllDBEmails allDBEmails;
+        public InstructorsManageController(ITrackRepo _trackRepo , IInstructorRepo _instructorRepo , IDepartmentRepo _departmentRepo , IIntakeRepo _intakeRepo , IAllDBEmails _allDBEmails) {
             trackRepo = _trackRepo;
             instructorRepo = _instructorRepo;
             departmentRepo = _departmentRepo;
             intakeRepo = _intakeRepo;
-
+            allDBEmails = _allDBEmails;
         }
         public IActionResult Index()
         {
@@ -76,6 +77,12 @@ namespace MVCProject.Controllers
                 }
          
         }
+        [HttpPost]
+        public IActionResult Edit(Instructor instructor)
+        {
+            instructorRepo.UpdateInstructor(instructor);
+            return RedirectToAction("Index");
+        }
         public IActionResult Edit(int id)
         {
            var instructor =  instructorRepo.GetInstructorByID(id);
@@ -90,8 +97,18 @@ namespace MVCProject.Controllers
 
             return instructorRepo.GetAll().FirstOrDefault(a => a.Name == Name && a.Id != id) == null;
         }
+        public bool ValidateEmail(string email, int id)
+        {
+            email = Uri.UnescapeDataString(email);
+
+
+            var emails = allDBEmails.GetEmails();
+
+            return emails.Any(e => e.email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.id == id);
+        }
+
 
     }
-   
+
 
 }
