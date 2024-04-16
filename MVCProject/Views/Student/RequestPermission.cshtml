@@ -37,7 +37,7 @@
     <div class="col-md-4">
         <form asp-action="RequestPermission">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="StdID" value="@ViewBag.Student.Id" />
+            <input type="hidden" asp-for="StdID" value="@ViewBag?.StudentId" />
             <input type="hidden" asp-for="Status" value="Pending" />
 
             <div class="form-group">
