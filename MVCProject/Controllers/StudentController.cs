@@ -72,7 +72,6 @@ namespace MVCProject.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 ViewBag.Message = "Error in Requesting Permission";
                 return View(permission);
             }
