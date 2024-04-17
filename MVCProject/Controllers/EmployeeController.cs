@@ -44,10 +44,22 @@ namespace MVCProject.Controllers
         }
 
 
-        /********************************* record attendance **************************************/
-        public IActionResult RecordAttendance()
+		/********************************* record attendance **************************************/
+		[Route("Employee/RecordAttendance/{Tid?}/{Iid?}")]
+		public IActionResult RecordAttendance(int? Tid, int? Iid)
 		{
+			if(Tid != null && Iid != null)
+			{
+				ViewBag.track = Tid;
+				ViewBag.intake = Iid;
+				var students = studentRepo.GetStudentsByIntakeTrack(Iid.Value, Tid.Value);
+				ViewBag.Tracks = trackRepo.GetActiveTracks();
+				ViewBag.Intakes = intakeRepo.GetAllIntakes();
+				ViewBag.Students = students;
+				return View();
+			}
 			ViewBag.Tracks = trackRepo.GetActiveTracks();
+			ViewBag.Intakes = intakeRepo.GetAllIntakes();
 			ViewBag.Students = studentRepo.GetAllStudents();
             return View();
         }

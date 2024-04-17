@@ -4,24 +4,61 @@
     	ViewBag.Title = "Record Attendance";
         Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
 
-        @*recieve the date from viewBag*@
+	@*recieve the date from viewBag*@
 		var students = ViewBag.Students as List<Student>;
 		var tracks = ViewBag.Tracks as List<Track>;
+		var intakes = ViewBag.Intakes as List<Intake>;
 
 		SelectList trackList = new SelectList(tracks, "Id", "Name");
+		SelectList intakeList = new SelectList(intakes, "Id", "Name");
 }
 
 <h2 class="text-center">Record Attendance</h2>
+		<select id="selectedTrack" name="Tid" class="form-control w-50 mx-auto my-1">
+    <option value="">Select Track</option>
+	@foreach (var track in ViewBag.Tracks)
+    {
+		if(ViewBag.track == track.Id)
+		{
+			<option value="@track.Id" selected>
+				@track.Name
+			</option>
+		}
+		else
+		{
+			<option value="@track.Id">
+				@track.Name
+				</option>
+		}
+	}
+</select>
 
-@*select list to select track --> whose value will define the students will be shown *@
-		<select name="trackId" asp-items="@trackList" class="form-control w-50 mx-auto">
-			<option value="">Select Track</option>
-		</select>
+<select id="selectedIntake" name="Iid" class="form-control w-50 mx-auto my-1">
+	<option value="">Select Intake</option>
+	@foreach (var intake in ViewBag.Intakes)
+	{
+		if (ViewBag.intake == intake.Id)
+		{
+			<option value="@intake.Id" selected>
+				@intake.Name
+			</option>
+		}
+		else
+		{
+			<option value="@intake.Id">
+				@intake.Name
+			</option>
+		}
+	}
+</select>
+<a id="ShowStudents" href="#" > Show Students</a>
+
+@* <input type="date" value="@ViewBag.Date?.ToString("yyyy-MM-dd")" name="date" id="date" max="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" class="form-control w-50 mx-auto my-1" />
+ *@
 
 
 <form class="col-md-8 m-auto text-center p-3 my-3" asp-action="RecordAttendance">
 	
-    @*display all students abd select state (present/ absent)*@
     <table class="table table-bordered">
         <thead>
 			<tr>
@@ -30,7 +67,6 @@
 			</tr>
         </thead>
         <tbody>
-            @*for loop to display all students*@
             @for (int i = 0; i < students.Count; i++)
 			{
 				<tr>
@@ -45,13 +81,33 @@
 				</tr>
 			}
 
-            @*save to the database*@
             <tr>
 				<td colspan="2">
 					<input type="submit" value="Save" class="btn btn-primary" />
 				</td>
         </tbody>
     </table>
-
-    
 </form>
+@section EmployeeScript{
+	<script>
+		
+	
+		document.getElementById("ShowStudents").addEventListener("click", (e) => {
+			var Intake = document.getElementById("selectedIntake").value;
+			var Track = document.getElementById("selectedTrack").value;
+			console.log(Intake , Track)
+			e.preventDefault();
+			if (Intake != '' && Track != '') {
+				window.location = "/Employee/RecordAttendance?Tid=" + Track + "&Iid=" + Intake;
+				
+
+			}
+
+		})
+
+
+	</script>
+
+}
+
+
