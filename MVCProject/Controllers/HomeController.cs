@@ -15,13 +15,10 @@ namespace MVCProject.Controllers
 
         public IActionResult Index()
         {
-            return View();
+          return RedirectToAction("Login","Account");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

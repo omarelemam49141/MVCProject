@@ -14,6 +14,8 @@ namespace MVCProject.Models
         public string Name { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
+        [Remote("ValidateEmail", "InstructorsManage", AdditionalFields = "Id", ErrorMessage = "Email Alread Exist")]
+
         public string Email { get; set; }
         [StringLength(50, ErrorMessage = "Password must be between 8 and 50 characters", MinimumLength = 8)]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")]

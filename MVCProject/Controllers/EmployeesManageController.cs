@@ -12,11 +12,13 @@ namespace MVCProject.Controllers
     {
         private readonly IEmployeeRepo _employeeRepo;
         private readonly attendanceDBContext ctx;
+        private readonly IAllDBEmails allDBEmails;
 
-        public EmployeesManageController(IEmployeeRepo employeeRepo , attendanceDBContext _ctx)
+        public EmployeesManageController(IEmployeeRepo employeeRepo , attendanceDBContext _ctx, IAllDBEmails _allDBEmails)
         {
             _employeeRepo = employeeRepo;
             ctx = _ctx;
+            allDBEmails = _allDBEmails;
         }
 
         public IActionResult Index()
@@ -61,6 +63,15 @@ namespace MVCProject.Controllers
 
             _employeeRepo.UpdateEmployee(employee);
             return RedirectToAction("Index");
+        }
+        public bool ValidateEmail(string email, int id)
+        {
+            email = Uri.UnescapeDataString(email);
+
+
+            var emails = allDBEmails.GetEmails();
+
+            return emails.Any(e => e.email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.id == id);
         }
     }
 }

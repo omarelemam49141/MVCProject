@@ -27,7 +27,10 @@ namespace MVCProject
             builder.Services.AddScoped<IScheduleRepo, ScheduleRepo>();
             builder.Services.AddScoped<IIntakeRepo, IntakeRepo>();
             builder.Services.AddScoped<IAttendanceRecordRepo, AttendanceRecordRepo>();
-            builder.Services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+            builder.Services.AddScoped<IDepartmentRepo,DepartmentRepo>();
+            builder.Services.AddScoped<IAllDBEmails,AllDBEmails>();
+
+
 
             builder.Services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
