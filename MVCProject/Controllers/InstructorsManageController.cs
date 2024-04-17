@@ -80,7 +80,7 @@ namespace MVCProject.Controllers
         [HttpPost]
         public IActionResult Edit(Instructor instructor)
         {
-            instructorRepo.UpdateInstructor(instructor);
+            instructorRepo.UpdateInstructor(0,instructor);
             return RedirectToAction("Index");
         }
         public IActionResult Edit(int id)

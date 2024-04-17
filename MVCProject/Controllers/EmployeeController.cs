@@ -47,9 +47,7 @@ namespace MVCProject.Controllers
         /********************************* record attendance **************************************/
         public IActionResult RecordAttendance()
 		{
-			//send tracks to the view
 			ViewBag.Tracks = trackRepo.GetActiveTracks();
-			//send students in that track to the view
 			ViewBag.Students = studentRepo.GetAllStudents();
             return View();
         }
@@ -79,6 +77,7 @@ namespace MVCProject.Controllers
             employee.Mobile = emp.Mobile;
             employee.Type = emp.Type;
             empRepo.UpdateEmployee(employee);
+			
             return RedirectToAction("Index", new { id = employee.Id });
         }
         /*[HttpPost]

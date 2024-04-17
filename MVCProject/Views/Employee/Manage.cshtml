@@ -1,31 +1,41 @@
-﻿@model MVCProject.Models.Student
+﻿@model Student
 
 @{
+    Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
     ViewData["Title"] = "Manage Student";
+
     var tracks = ViewBag.Tracks as List<Track>;
     var intakes = ViewBag.Intakes as List<Intake>;
-
     SelectList trackList = new SelectList(tracks, "Id", "Name");
     SelectList intakeList = new SelectList(intakes, "Id", "Name");
 }
 
-<h1>Manage</h1>
+<h3 class="mx-auto">Manage Student</h3>
 
-<h4>Student</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Manage" method="Post">
+<div class="row text-center">
+    <div class="text-center">
+        <form class="col-md-4 mx-auto" asp-action="Manage" method="Post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" readonly/>
+            </div>
+
+            <div class="form-group">
+            <label class="control-label">Track</label>
             <select name="trackId" class="form-control" asp-items="@trackList">
                 <option value="">Select Track</option>
             </select>
+            </div>
 
+            <div class="form-group">
+                <label class="control-label">Intake</label>
             <select name="intakeId" class="form-control" asp-items="@intakeList">
 				<option value="">Select Intake</option>
             </select>
+            </div>
 
             
             
@@ -36,10 +46,3 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
