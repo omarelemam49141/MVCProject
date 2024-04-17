@@ -105,6 +105,7 @@ namespace MVCProject.Repos
                     oldsup = 0;
                 }
                 GetTrackById(tid).SupervisorForeignKeyID = insid;
+
                 foreach (var item in permissionRepo.GetPermissionsBySupervisorID((int)oldsup))
                 {
                     item.InstructorID = insid;
