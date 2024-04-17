@@ -27,8 +27,13 @@ namespace MVCProject
             builder.Services.AddScoped<IScheduleRepo, ScheduleRepo>();
             builder.Services.AddScoped<IIntakeRepo, IntakeRepo>();
             builder.Services.AddScoped<IAttendanceRecordRepo, AttendanceRecordRepo>();
+<<<<<<< HEAD
             builder.Services.AddScoped<IDepartmentRepo, DepartmentRepo>();
             builder.Services.AddScoped<IStudentIntakeTrackRepo, StudentIntakeTrackRepo>();
+=======
+            builder.Services.AddScoped<IDepartmentRepo,DepartmentRepo>();
+            builder.Services.AddScoped<IAllDBEmails,AllDBEmails>();
+>>>>>>> 616681381b1c97c7580e9c7c402ce3656403044d
 
 
 
