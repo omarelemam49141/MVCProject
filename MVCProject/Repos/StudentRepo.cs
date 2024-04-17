@@ -42,6 +42,8 @@ namespace MVCProject.Repos
 
         public List<Student> GetTrackStudents(int trackId);
 
+        public bool IsEmailInUse(string email);
+
     }
 
     public class StudentRepo : IStudentRepo
@@ -61,6 +63,8 @@ namespace MVCProject.Repos
         }
         public void RegisterStudent(Student std)
         {
+            std.Email = std.Email.Trim().ToLower();
+            std.Password = std.Password.Trim();
             db.Students.Add(std);
             db.SaveChanges();
             if (std.Id == 0)
@@ -196,7 +200,7 @@ namespace MVCProject.Repos
             {
 
             var supervisorId = db.StudentIntakeTracks.Include(sit => sit.Track).FirstOrDefault(sit => sit.StdID == id).Track
-                .SupervisorID;
+                .SupervisorForeignKeyID;
             return (int)supervisorId;
             }
             catch (Exception e)
@@ -239,6 +243,11 @@ namespace MVCProject.Repos
                             .Include(s=>s.StudentIntakeTracks)
                             .Where(s=>s.StudentIntakeTracks.Any(sit=>sit.TrackID==trackId))
                             .ToList();
+        }
+
+        public bool IsEmailInUse(string email)
+        {
+            return db.Students.Any(s => s.Email == email.Trim().ToLower());
         }
     }
 }

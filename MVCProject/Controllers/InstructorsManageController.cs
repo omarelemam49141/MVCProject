@@ -65,7 +65,7 @@ namespace MVCProject.Controllers
 
                 if (track != null)
                 {
-                    track.SupervisorID = null;
+                    track.SupervisorForeignKeyID = null;
 
                     trackRepo.UpdateTrack(track);
 

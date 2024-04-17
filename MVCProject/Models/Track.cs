@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NuGet.DependencyResolver;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MVCProject.Models
 {
@@ -22,11 +23,12 @@ namespace MVCProject.Models
         public ICollection<Intake> Intakes { get; set; } = new HashSet<Intake>();
         public List<StudentIntakeTrack> StudentIntakeTracks { get; set; } = new List<StudentIntakeTrack>();
         public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
+        
         [ForeignKey("Supervisor")]
         [Required(ErrorMessage ="Please Select A Supervisor")]
         [Remote("ValidateInstructor", "Track", AdditionalFields = "Id", ErrorMessage = "This Instructor is already assigned to another track. Make the track available by <a id=\"Click\" href=\"#\" onclick=\"clicked()\">clicking here</a>")]
-        public int? SupervisorID { get; set; } 
-        public Instructor ?Supervisor { get; set; }
+        public int? SupervisorForeignKeyID { get; set; } 
+        public Instructor Supervisor { get; set; }
 
         public ICollection<Instructor> instructors { get; set; } = new HashSet<Instructor>();
 

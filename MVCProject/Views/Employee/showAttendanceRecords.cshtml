@@ -1,0 +1,80 @@
+﻿@model IEnumerable<DailyAttendanceRecord>
+@{
+    ViewData["Title"] = "showAttendanceRecords";
+    Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
+}
+
+
+
+
+<h2 class="text-center">Attendace records for all tracks</h2>
+<form class="col-md-4 m-auto text-center border-2 border-dark border-dashed p-3 my-3" asp-action="ShowRecordsForDate">
+    @if(!ViewData.ModelState.IsValid)
+    {
+        <div id="date-validation" class="text-danger mb-3 bg-white" asp-validation-summary="All"></div>
+    }
+    <label class="lead">Choose a date:</label>
+    <input type="date" value="@ViewBag.Date?.ToString("yyyy-MM-dd")" name="date" id="date" max="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" class="form-control" />
+    <input type="submit" class="my-3 btn btn-primary" value="Display records"/>
+</form>
+@if (ViewBag.Date != null)
+{
+    <h3 class="text-center">For date: @ViewBag.Date</h3>
+}
+<table class="table table-hover table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Record ID</th>
+            <th>Student Name</th>
+            <th>Time Of Attendance</th>
+            <th>Time Of Leave</th>
+            <th>Student Degree</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody class="align-middle">
+        @if (Model==null || Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="6"><p class="lead">No Attendance records for today</p></td>
+            </tr>
+        }
+        else
+        {
+            @foreach (DailyAttendanceRecord d in Model)
+            {
+                string color = "transparent";
+                string text = "dark";
+                switch(d.Status.ToLower())
+                {
+                    case "absent":
+                        color = "danger";
+                        text = "light";
+                        break;
+                    case "attend":
+                        color = "success";
+                        text = "light";
+                        break;
+                    case "late":
+                        color = "warning";
+                        text = "dark";
+                        break;
+                }
+
+                <tr class="bg-@color text-@text font-weight-bold">
+                    <td>@d.Id</td>
+                    <td>@d.Student.Name</td>
+                    <td>@d.TimeOfAttendance</td>
+                    <td>@d.TimeOfLeave</td>
+                    <td>@d.StudentDegree</td>
+                    <td>@d.Status.ToUpper()</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+
+
+

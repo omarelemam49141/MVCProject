@@ -17,6 +17,8 @@ namespace MVCProject.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Permission> Permissions { get; set; }
 
+        public DbSet<StudentMessage> StudentMessages { get; set; }
+
 
 
         public attendanceDBContext(DbContextOptions<attendanceDBContext> options) : base(options)
@@ -35,17 +37,20 @@ namespace MVCProject.Data
             });
             modelBuilder.Entity<Track>(entity =>
             {
+                entity.Property(e => e.SupervisorForeignKeyID).IsRequired(false);
+            });
 
-      
-                modelBuilder.Entity<Track>()
-                 .Property(t => t.SupervisorID)
-                  .IsRequired(false);
-               });
 
             modelBuilder.Entity<Track>()
                 .HasMany(t => t.instructors) 
                 .WithOne(i => i.InstructorTrack) 
                 .HasForeignKey(i => i.TrackID);
+
+            modelBuilder.Entity<Instructor>()
+            .HasOne(i => i.TrackSupervised)
+            .WithOne(t => t.Supervisor)
+            .HasForeignKey<Track>(t => t.SupervisorForeignKeyID);
+
 
             modelBuilder.Entity<Intake>()
                 .HasMany(i => i.instructors)

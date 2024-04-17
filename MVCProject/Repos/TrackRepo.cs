@@ -16,8 +16,9 @@ namespace MVCProject.Repos
         public List<Track> GetTracksForProgram(int pid);
         public bool AssignTrackSuperViser(int tid, int insid);
         public List<Track> GetAll();
+        List<Track> GetActiveTracks();
 
-        
+
 
     }
     public class TrackRepo : ITrackRepo
@@ -67,7 +68,7 @@ namespace MVCProject.Repos
 
         public Track GetTrackBySupervisor(int supervisorId)
         {
-            return db.Tracks.Include(p => p.Program).FirstOrDefault(t => t.SupervisorID == supervisorId);
+            return db.Tracks.Include(p => p.Program).FirstOrDefault(t => t.SupervisorForeignKeyID == supervisorId);
         }
 
 
@@ -81,7 +82,7 @@ namespace MVCProject.Repos
 
         public Track GetTrackBySupervisorID(int supervisorId)
         {
-            return db.Tracks.Include(p=>p.Program).FirstOrDefault(t => t.SupervisorID == supervisorId);
+            return db.Tracks.Include(p=>p.Program).FirstOrDefault(t => t.SupervisorForeignKeyID == supervisorId);
 
         }
 
@@ -105,6 +106,7 @@ namespace MVCProject.Repos
                 {
                     item.InstructorID = insid;
                 };
+
                 db.SaveChanges();
                 return true;
             }
@@ -112,6 +114,11 @@ namespace MVCProject.Repos
             {
                 return false;
             }
+        }
+
+        public List<Track> GetActiveTracks()
+        {
+            return db.Tracks.Where(t => t.Status.ToLower() == "active").ToList();
         }
     }
 }

@@ -1,0 +1,107 @@
+﻿@model Instructor
+@{
+    ViewData["Title"] = "InstructorProfile";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    SelectList DeptList = new SelectList(ViewBag.Depts, "Id", "Name");
+    SelectList TrackList = new SelectList(ViewBag.Tracks, "Id", "Name");
+    SelectList IntakeList = new SelectList(ViewBag.Intakes, "Id", "Name");
+}
+
+@section dashboardTitle {
+    @Model.Name Dashboard
+}
+
+
+@{
+    if (User.IsInRole("supervisor"))
+    {
+        @section role {
+            Supervisor
+        }
+    }
+    else
+    {
+        @section role {
+            Instructor
+        }
+    }
+}
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial"></partial>
+}
+
+
+
+<section class="min-vh-100 mb-8">
+    <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style="background-image: url('../assets/img/curved-images/curved14.jpg');">
+        <span class="mask bg-gradient-dark opacity-6"></span>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 text-center mx-auto">
+                    <h1 class="text-white mb-2 mt-5">Edit Profile</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row mt-lg-n10 mt-md-n11 mt-n10">
+            <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+                <div class="card z-index-0">
+
+                    <div class="card-body">
+                        <form role="form text-left" method="post" asp-route-id="@Model.Id">
+                            <div asp-validation-summary="ModelOnly" class="text-danger m-3"></div>
+                            <div class="mb-3">
+                                <label asp-for="Name"></label>
+                                <input asp-for="Name" class="form-control">
+                                <span asp-validation-for="Name" class="badge bg-danger my-2"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Email"></label>
+                                <input asp-for="Email" class="form-control">
+                                <span asp-validation-for="Email" class="badge bg-danger my-2"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Password"></label>
+                                <input asp-for="Password" class="form-control">
+                                <span asp-validation-for="Password" class="badge bg-danger my-2"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Mobile"></label>
+                                <input asp-for="Mobile" class="form-control">
+                                <span asp-validation-for="Mobile" class="badge bg-danger my-2"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="DeptID"></label>
+                                <select asp-for="DeptID" asp-items="DeptList" class="form-select"></select>
+                                <span asp-validation-for="DeptID" class="badge bg-danger my-2"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="TrackID"></label>
+                                <select asp-for="TrackID" asp-items="TrackList" class="form-select"></select>
+                                <span asp-validation-for="TrackID" class="badge bg-danger my-2"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="IntakeID"></label>
+                                <select asp-for="IntakeID" asp-items="IntakeList" class="form-select"></select>
+                                <span asp-validation-for="IntakeID" class="badge bg-danger my-2"></span>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Update profile</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section links {
+    <partial name="../partialViews/instructorLinks" />
+}
+

@@ -15,9 +15,9 @@ namespace MVCProject.Models
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name must contain only letters")]
         [Remote("ValidateName", "StudentsManage", AdditionalFields = "Id")]
         public string Name { get; set; }
-
         [Required]
         [EmailAddress]
+        [Remote("IsEmailAvailable", "Student",ErrorMessage = "Email is already in use")]
         public string Email { get; set; }
 
         [Required]

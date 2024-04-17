@@ -62,7 +62,7 @@
                 </div>
                 <div class="form-group col-12 col-md-6">
                     <label asp-for="GraduationYear" class="control-label"></label>
-                    <input asp-for="GraduationYear" class="form-control" value="@Model.GraduationYear" disabled="disabled" />
+                    <input asp-for="GraduationYear" class="form-control" value="@(DateOnly.FromDateTime(Model.GraduationYear).ToString("yyyy-MM-dd"))" disabled="disabled" />
                     <span asp-validation-for="GraduationYear" class="text-danger"></span>
                 </div>
 
