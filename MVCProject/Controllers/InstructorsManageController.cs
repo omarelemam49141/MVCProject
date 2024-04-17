@@ -80,7 +80,7 @@ namespace MVCProject.Controllers
         [HttpPost]
         public IActionResult Edit(Instructor instructor)
         {
-            instructorRepo.UpdateInstructor(instructor);
+            instructorRepo.UpdateInstructor(0,instructor);
             return RedirectToAction("Index");
         }
         public IActionResult Edit(int id)
@@ -104,7 +104,19 @@ namespace MVCProject.Controllers
 
             var emails = allDBEmails.GetEmails();
 
-            return emails.Any(e => e.email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.id == id);
+            var s = emails.FirstOrDefault(s => s.email == email);
+            if(s == null)
+            {
+                return true;
+            }else
+            {
+                var student = instructorRepo.GetAll().FirstOrDefault(s=>s.Email == email);
+                if(student.Id == id)
+                    return true;
+                else
+                    return false;
+
+            }
         }
 
 

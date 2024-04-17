@@ -100,8 +100,11 @@ namespace MVCProject.Repos
             try
             {
 
-                var oldsup = GetTrackById(tid).SupervisorID;
-                GetTrackById(tid).SupervisorID = insid;
+                var oldsup = GetTrackById(tid).SupervisorForeignKeyID;
+                if(oldsup == null) {
+                    oldsup = 0;
+                }
+                GetTrackById(tid).SupervisorForeignKeyID = insid;
                 foreach (var item in permissionRepo.GetPermissionsBySupervisorID((int)oldsup))
                 {
                     item.InstructorID = insid;
