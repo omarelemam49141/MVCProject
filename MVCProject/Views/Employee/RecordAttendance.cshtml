@@ -11,6 +11,7 @@
 
 		SelectList trackList = new SelectList(tracks, "Id", "Name");
 		SelectList intakeList = new SelectList(intakes, "Id", "Name");
+		var listOfStudents = ViewBag.SRecord as List<StudentRecord> ?? new List<StudentRecord>();
 }
 
 <h2 class="text-center">Record Attendance</h2>
@@ -51,14 +52,14 @@
 		}
 	}
 </select>
-<a id="ShowStudents" href="#" > Show Students</a>
+<a id="ShowStudents" href="#" class="btn btn-primary d-block w-25 mx-auto mt-2"> Show Students</a>
 
 @* <input type="date" value="@ViewBag.Date?.ToString("yyyy-MM-dd")" name="date" id="date" max="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" class="form-control w-50 mx-auto my-1" />
  *@
 
 
 	
-    <table class="table table-bordered">
+    <table class="table table-bordered hover">
         <thead>
 			<tr>
 				<th>Student Name</th>
@@ -66,30 +67,27 @@
 			</tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < students.Count; i++)
-			{
-				<tr>
-				<form asp-action="SaveRecords">
-							<td>@students[i].Name</td>
-				<input name="StdID" asp-for="@students[i].Id" hidden />
-				<input name="Date" value="@DateTime.UtcNow.Date.ToString("yyyy-MM-dd")" hidden />
-				<input name="TimeOfAttendance" value="@DateTime.Now.TimeOfDay" hidden />
-							<td>
-								<select name="status" class="form-control">
-									<option value="Present">Present</option>
-									<option value="Absent">Absent</option>
-									<option value="Late">Late</option>
-								</select>
-							</td>
-							<td>
-								<input type="submit" />
-							</td>
-					</form>
-					
-				</tr>
-			}
 
-           
+		@foreach (var student in listOfStudents)
+		{
+			<tr>
+				<td>@student.Name</td>
+				<td>
+					<form asp-action="SaveRecords">
+						<input name="StdID" value="@student.Id" hidden />
+						<input name="Date" value="@DateTime.UtcNow.Date.ToString("yyyy-MM-dd")" hidden />
+						<input name="TimeOfAttendance" value="@DateTime.Now.TimeOfDay" hidden />
+						<select name="status" class="form-control">
+							<option value="Present">Present</option>
+							<option value="Absent">Absent</option>
+							<option value="Late">Late</option>
+						</select>
+						<input type="submit" class="btn btn-primary"/>
+					</form>
+				</td>
+			</tr>
+		}
+
         </tbody>
     </table>
 

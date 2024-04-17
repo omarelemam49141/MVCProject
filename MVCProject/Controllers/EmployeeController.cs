@@ -58,15 +58,30 @@ namespace MVCProject.Controllers
 		public IActionResult RecordAttendance(int? Tid, int? Iid)
 		{
 			
+			
 			if(Tid != null && Iid != null)
 			{
-				ViewBag.track = Tid;
+
+                ViewBag.track = Tid;
 				ViewBag.intake = Iid;
 				var students = studentRepo.GetStudentsByIntakeTrack(Iid.Value, Tid.Value);
 				ViewBag.Tracks = trackRepo.GetActiveTracks();
 				ViewBag.Intakes = intakeRepo.GetAllIntakes();
-				ViewBag.Students = students;
-				return View();
+				//ViewBag.Students = students;
+                ////////////////
+                var Trecords =  dailyAttendanceRepo.getTodayRecords();
+                var joinedData = from student in students
+                                 join record in Trecords on student.Id equals record.StdID into studentRecords
+                                 select new
+                                 {
+                                     student.Id,
+									 student.Name,
+                                     Status = studentRecords.Any() ? studentRecords.First().Status : "Absent" 
+                                 };
+
+                ViewBag.SRecord = joinedData.ToList();
+
+                return View();
 			}
 			ViewBag.Tracks = trackRepo.GetActiveTracks();
 			ViewBag.Intakes = intakeRepo.GetAllIntakes();
