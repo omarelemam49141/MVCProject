@@ -30,6 +30,7 @@ namespace MVCProject
             builder.Services.AddScoped<IStudentIntakeTrackRepo, StudentIntakeTrackRepo>();
             builder.Services.AddScoped<IDepartmentRepo,DepartmentRepo>();
             builder.Services.AddScoped<IAllDBEmails,AllDBEmails>();
+            builder.Services.AddScoped<IDailyAttendanceRepo, DailyAttendanceRepo>();
 
 
 

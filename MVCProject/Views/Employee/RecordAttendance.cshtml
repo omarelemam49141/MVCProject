@@ -57,7 +57,6 @@
  *@
 
 
-<form class="col-md-8 m-auto text-center p-3 my-3" asp-action="RecordAttendance">
 	
     <table class="table table-bordered">
         <thead>
@@ -70,24 +69,30 @@
             @for (int i = 0; i < students.Count; i++)
 			{
 				<tr>
-					<td>@students[i].Name</td>
-					<td>
-						<select name="status" class="form-control">
-							<option value="present">Present</option>
-							<option value="absent">Absent</option>
-							<option value="late">Late</option>
-						</select>
-					</td>
+				<form asp-action="SaveRecords">
+							<td>@students[i].Name</td>
+				<input name="StdID" asp-for="@students[i].Id" hidden />
+				<input name="Date" value="@DateTime.UtcNow.Date.ToString("yyyy-MM-dd")" hidden />
+				<input name="TimeOfAttendance" value="@DateTime.Now.TimeOfDay" hidden />
+							<td>
+								<select name="status" class="form-control">
+									<option value="Present">Present</option>
+									<option value="Absent">Absent</option>
+									<option value="Late">Late</option>
+								</select>
+							</td>
+							<td>
+								<input type="submit" />
+							</td>
+					</form>
+					
 				</tr>
 			}
 
-            <tr>
-				<td colspan="2">
-					<input type="submit" value="Save" class="btn btn-primary" />
-				</td>
+           
         </tbody>
     </table>
-</form>
+
 @section EmployeeScript{
 	<script>
 		
@@ -104,7 +109,7 @@
 			}
 
 		})
-
+	
 
 	</script>
 
