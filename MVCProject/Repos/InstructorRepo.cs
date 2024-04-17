@@ -70,7 +70,6 @@ namespace MVCProject.Repos
 
         public void UpdateInstructor(int id, Instructor instructor)
         {
-            instructor.Id = id;
             db.Instructors.Update(instructor);
             db.SaveChanges();
         }
