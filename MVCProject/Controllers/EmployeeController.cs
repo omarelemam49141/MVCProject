@@ -14,8 +14,9 @@ namespace MVCProject.Controllers
 		private IInstructorRepo	instRepo;
 		private ITrackRepo trackRepo;
 		private IStudentRepo studentRepo;
+		private IStudentIntakeTrackRepo studentIntakeTrackRepo;
 
-        public EmployeeController(IEmployeeRepo _empRepo, IIntakeRepo _intakeRepo, IDepartmentRepo _deptRepo, IAttendanceRecordRepo _attendanceRecordRepo, IInstructorRepo _intsRepo, ITrackRepo _trackRepo, IStudentRepo _studentRepo)
+        public EmployeeController(IEmployeeRepo _empRepo, IIntakeRepo _intakeRepo, IDepartmentRepo _deptRepo, IAttendanceRecordRepo _attendanceRecordRepo, IInstructorRepo _intsRepo, ITrackRepo _trackRepo, IStudentRepo _studentRepo, IStudentIntakeTrackRepo _studentIntakeTrackRepo)
         {
 			empRepo = _empRepo;
 			intakeRepo = _intakeRepo;
@@ -24,6 +25,7 @@ namespace MVCProject.Controllers
 			instRepo = _intsRepo;
 			trackRepo = _trackRepo;
 			studentRepo = _studentRepo;
+			studentIntakeTrackRepo = _studentIntakeTrackRepo;
 		}
 
         public IActionResult Index(int id)
@@ -176,5 +178,36 @@ namespace MVCProject.Controllers
 		}
 
 
+
+		public IActionResult ManageStudents()
+		{
+			List<Student> allStudents = studentRepo.GetAllStudents();
+			//List<StudentIntakeTrack> studentsHasTrackIntake = studentIntakeTrackRepo.getAllStudents();
+
+			List<Student> studentsHasTrackIntake = studentIntakeTrackRepo.getAllStudents().Select(s => s.Student).ToList();
+
+			List<Student> studentsHasNoTrackOrIntake = allStudents.Except(studentsHasTrackIntake).ToList();
+
+/*			ViewBag.Intakes = intakeRepo.GetAllIntakes();
+			ViewBag.Tracks = trackRepo.GetActiveTracks();*/
+			return View(studentsHasNoTrackOrIntake);
+		}
+
+		public IActionResult Manage(int id)
+		{
+			Student student = studentRepo.GetStudentById(id);
+			ViewBag.Intakes = intakeRepo.GetAllIntakes();
+			ViewBag.Tracks = trackRepo.GetActiveTracks();
+			return View(student);
+		}
+
+		[HttpPost]
+
+		public IActionResult Manage(int id, int intakeId, int trackId)
+		{
+            Student student = studentRepo.GetStudentById(id);
+			studentIntakeTrackRepo.AddStudentIntakeTrack(student.Id, intakeId, trackId);
+            return RedirectToAction("ManageStudents");
+        }
 	}
 }
