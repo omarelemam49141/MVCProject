@@ -18,19 +18,26 @@ namespace MVCProject.Controllers
         public IActionResult Index()
         {
 
-            if(!User.Identity.IsAuthenticated)
-                    return RedirectToAction("Login","Account");
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login", "Account");
             else
             {
                 var Id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 if (User.IsInRole("admin"))
                 {
                     return RedirectToAction("index", "admin");
-                }else if (User.IsInRole("instructor") || User.IsInRole("supervisor"))
+                }
+                else if (User.IsInRole("instructor") || User.IsInRole("supervisor"))
                 {
                     return RedirectToAction("index", "instructor", new { id = Id });
 
-                }else
+                }
+                else if (User.IsInRole("student"))
+                {
+                    return RedirectToAction("index", "Student", new { id = Id });
+
+                }
+                else
                 {
                     RedirectToAction("index", "employee", new { id = Id });
                 }
@@ -39,7 +46,7 @@ namespace MVCProject.Controllers
 
         }
 
-        
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
