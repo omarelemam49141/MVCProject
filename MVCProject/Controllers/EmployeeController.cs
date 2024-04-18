@@ -1,5 +1,7 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using MathNet.Numerics.Distributions;
 using MVCProject.Models;
 using MVCProject.Repos;
 
@@ -57,7 +59,7 @@ namespace MVCProject.Controllers
 
 
 		/********************************* record attendance **************************************/
-		[Route("Employee/RecordAttendance/{Tid?}/{Iid?}")]
+		[Route("Employee/RecordAttendance/{Tid?}/{Iid?}/{date?}")]
 		public IActionResult RecordAttendance(int? Tid, int? Iid , DateOnly date)
 		{
 			
@@ -70,28 +72,34 @@ namespace MVCProject.Controllers
 				var students = studentRepo.GetStudentsByIntakeTrack(Iid.Value, Tid.Value);
 				ViewBag.Tracks = trackRepo.GetActiveTracks();
 				ViewBag.Intakes = intakeRepo.GetAllIntakes();
-				//ViewBag.Students = students;
-                ////////////////
-                var Trecords =  dailyAttendanceRepo.getTodayRecords();
-                var joinedData = from student in students
-                                 join record in Trecords on student.Id equals record.StdID into studentRecords
-                                 select new
-                                 {
-                                     student.Id,
-									 student.Name,
-                                     Status = studentRecords.Any() ? studentRecords.First().Status : "Absent" 
-                                 };
+				var attendanceRecords =  dailyAttendanceRepo.getRecordsByDate(date, students.Select(s=>s.Id).ToList());
+				if(attendanceRecords.Count == 0)
+				{
+					foreach (var student in students)
+					{
+						DailyAttendanceRecord record = new DailyAttendanceRecord();
+						record.StdID = student.Id;
+						record.Date = date;
+						record.Status = "Absent";
+						record.StudentDegree = 0;
+						record.Date = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+						dailyAttendanceRepo.AddRecordAttendance(record);
+					}
+					attendanceRecords = dailyAttendanceRepo.getRecordsByDate(date, students.Select(s => s.Id).ToList());
+				}
+				ViewBag.attendanceRecords = attendanceRecords;
+				ViewBag.Date = date;
 
-                ViewBag.SRecord = joinedData.ToList();
-                return View();
+				////////////////
+
+				return View();
 			}
 			ViewBag.Tracks = trackRepo.GetActiveTracks();
 			ViewBag.Intakes = intakeRepo.GetAllIntakes();
-			ViewBag.Students = studentRepo.GetAllStudents();
             return View();
         }
 		[HttpPost]
-		public IActionResult SaveRecords(DailyAttendanceRecord record)
+		public IActionResult SaveRecords(DailyAttendanceRecord record , int intake , int track)
 		{
 			
 			var permission =  permissionRepo.GetPermissionByStd(record.StdID);
@@ -118,12 +126,13 @@ namespace MVCProject.Controllers
 			{
 				record.StudentDegree = 0;
 			}
+			record.TimeOfAttendance = TimeOnly.FromDateTime(DateTime.Now);
 			dailyAttendanceRepo.AddRecordAttendance(record);
 			var std = studentRepo.GetStudentById(record.StdID);
 			std.StudentDegree -= record.StudentDegree;
 			studentRepo.UpdateStudent(std);
-			return RedirectToAction("RecordAttendance");
-	
+			return Redirect(Url.Action("RecordAttendance" , "Employee") +   "?Tid="+track + "&Iid=" + intake+ "&date=" +record.Date.ToString());
+
 		}
 
 

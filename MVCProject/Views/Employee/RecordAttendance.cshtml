@@ -5,11 +5,11 @@
         Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
 
 	@*recieve the date from viewBag*@
-		var students = ViewBag.Students as List<Student>;
-		var tracks = ViewBag.Tracks as List<Track>;
-		var intakes = ViewBag.Intakes as List<Intake>;
-
-		SelectList trackList = new SelectList(tracks, "Id", "Name");
+	var students = ViewBag.Students as List<Student> ?? new List<Student>();
+	var tracks = ViewBag.Tracks as List<Track>;
+	var intakes = ViewBag.Intakes as List<Intake>;
+	var attendanceRecords = ViewBag.attendanceRecords as List<DailyAttendanceRecord> ?? new List<DailyAttendanceRecord>();
+	SelectList trackList = new SelectList(tracks, "Id", "Name");
 		SelectList intakeList = new SelectList(intakes, "Id", "Name");
 		var listOfStudents = ViewBag.SRecord as List<StudentRecord> ?? new List<StudentRecord>();
 }
@@ -54,7 +54,7 @@
 </select>
 
  
-<input type="date" value="@ViewBag.Date?.ToString("yyyy-MM-dd")" name="date" id="date" max="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" class="form-control w-50 mx-auto my-1" />
+<input type="date" value="@ViewBag.Date?.ToString("yyyy-MM-dd")"  name="date" id="date" max="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" class="form-control w-50 mx-auto my-1" />
 
 <a id="ShowStudents" href="#" class="btn btn-primary d-block w-25 mx-auto mt-2"> Show Students</a>
 
@@ -69,19 +69,36 @@
         </thead>
         <tbody>
 
-		@foreach (var student in listOfStudents)
+		@foreach (var Record in attendanceRecords)
 		{
 			<tr>
-				<td>@student.Name</td>
+				<td>@Record.Student.Name</td>
 				<td>
-					<form asp-action="SaveRecords">
-						<input name="StdID" value="@student.Id" hidden />
-						<input name="Date" value="@DateTime.UtcNow.Date.ToString("yyyy-MM-dd")" hidden />
-						<input name="TimeOfAttendance" value="@DateTime.Now.TimeOfDay" hidden />
+					<form asp-action="SaveRecords" asp-route-track='@ViewBag.track' asp-route-intake='@ViewBag.intake'>
+						<input name="ID" value="@Record.Id" hidden />
+						<input name="Date" value="@Record.Date" hidden />
+						<input name="TimeOfAttendance" value="@Record.TimeOfAttendance" hidden />
+						<input name="StdID" value="@Record.StdID" hidden />
 						<select name="status" class="form-control">
-							<option value="Present">Present</option>
-							<option value="Absent">Absent</option>
-							<option value="Late">Late</option>
+							@if(Record.Status == "Present")
+							{
+								<option value="Present" selected>Present</option>
+								<option value="Absent" >Absent</option>
+								<option value="Late" >Late</option>
+
+							}
+							@if (Record.Status == "Absent")
+							{
+								<option value="Present" >Present</option>
+								<option value="Absent" selected>Absent</option>
+								<option value="Late">Late</option>
+							}
+							@if (Record.Status == "Late")
+							{
+								<option value="Present">Present</option>
+								<option value="Absent" >Absent</option>
+								<option value="Late" selected>Late</option>
+							}
 						</select>
 						<input type="submit" class="btn btn-primary"/>
 					</form>
@@ -99,10 +116,10 @@
 		document.getElementById("ShowStudents").addEventListener("click", (e) => {
 			var Intake = document.getElementById("selectedIntake").value;
 			var Track = document.getElementById("selectedTrack").value;
-			console.log(Intake , Track)
+			var date = document.getElementById("date").value;
 			e.preventDefault();
-			if (Intake != '' && Track != '') {
-				window.location = "/Employee/RecordAttendance?Tid=" + Track + "&Iid=" + Intake;
+			if (Intake != '' && Track != ''&&date != '') {
+				window.location = "/Employee/RecordAttendance?Tid=" + Track + "&Iid=" + Intake + "&date=" + date ;
 				
 
 			}

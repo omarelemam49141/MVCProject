@@ -17,6 +17,7 @@ namespace MVCProject.Controllers
 
         public IActionResult Index()
         {
+
             if(!User.Identity.IsAuthenticated)
                     return RedirectToAction("Login","Account");
             else
@@ -35,6 +36,7 @@ namespace MVCProject.Controllers
                 }
                 return View();
             }
+
         }
 
         
