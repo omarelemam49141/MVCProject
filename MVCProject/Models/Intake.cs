@@ -9,7 +9,7 @@ namespace MVCProject.Models
     {
         public int Id { get; set; }
         [Required]
-       // [Remote("ValidateName","Intake" , AdditionalFields = "Id", ErrorMessage ="This Name Already Exist")]
+        [Remote("ValidateName","Intake" , AdditionalFields = "Id", ErrorMessage ="This Name Already Exist")]
         public string Name { get; set; }
         public ICollection<Track> Tracks { get; set; } = new HashSet<Track>();
         public List<StudentIntakeTrack> StudentIntakeTracks { get; set; } = new List<StudentIntakeTrack>();

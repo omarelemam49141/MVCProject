@@ -6,9 +6,18 @@
 
         @*recieve the date from viewBag*@
 		var students = ViewBag.Students as List<Student>;
+		var tracks = ViewBag.Tracks as List<Track>;
+
+		SelectList trackList = new SelectList(tracks, "Id", "Name");
 }
 
 <h2 class="text-center">Record Attendance</h2>
+
+@*select list to select track --> whose value will define the students will be shown *@
+		<select name="trackId" asp-items="@trackList" class="form-control w-50 mx-auto">
+			<option value="">Select Track</option>
+		</select>
+
 
 <form class="col-md-8 m-auto text-center p-3 my-3" asp-action="RecordAttendance">
 	
@@ -28,8 +37,9 @@
 					<td>@students[i].Name</td>
 					<td>
 						<select name="status" class="form-control">
-							<option value="Present">Present</option>
-							<option value="Absent">Absent</option>
+							<option value="present">Present</option>
+							<option value="absent">Absent</option>
+							<option value="late">Late</option>
 						</select>
 					</td>
 				</tr>
