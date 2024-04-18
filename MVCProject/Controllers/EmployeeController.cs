@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MVCProject.Models;
 using MVCProject.Repos;
+using System.Security.Claims;
 
 namespace MVCProject.Controllers
 {
@@ -42,20 +43,17 @@ namespace MVCProject.Controllers
 		}
 
         public IActionResult Index(int id)
-        {
+		{
 			ViewBag.EmployeeId = id;
-            var employee = empRepo.GetEmployeeById(id);
-			return View(employee);
+			return View();
 		}
-        public IActionResult Edit(int id)
-        {
-            //if(id == null) return BadRequest();
-            //var employee = empRepo.GetEmployeeById(id.Value);
-            var employee = empRepo.GetEmployeeById(id);
-			ViewBag.EmployeeId = id;
-            return View(employee);
-        }
 
+		public IActionResult ShowProfile()
+		{
+		
+			var emp = empRepo.GetEmployeeById(Int32.Parse(User.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier).Value));
+			return View(emp);
+		}
 
 		/********************************* record attendance **************************************/
 		[Route("Employee/RecordAttendance/{Tid?}/{Iid?}/{date?}")]
