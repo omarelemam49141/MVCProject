@@ -14,16 +14,17 @@ namespace MVCProject.Controllers
 		private IInstructorRepo	instRepo;
 		private ITrackRepo trackRepo;
 		private IStudentRepo studentRepo;
-        private readonly IStudentIntakeTrackRepo studentIntakeTrackRepo;
 
-        public EmployeeController(IEmployeeRepo _empRepo
-									,IIntakeRepo _intakeRepo
-									,IDepartmentRepo _deptRepo
-									,IAttendanceRecordRepo _attendanceRecordRepo
-									,IInstructorRepo _intsRepo
-									,ITrackRepo _trackRepo
-									,IStudentRepo _studentRepo
-									,IStudentIntakeTrackRepo studentIntakeTrackRepo)
+		private IStudentIntakeTrackRepo studentIntakeTrackRepo;
+		private IPermissionRepo permissionRepo;
+		private IDailyAttendanceRepo dailyAttendanceRepo;
+
+		public EmployeeController(IDailyAttendanceRepo _dailyAttendanceRepo ,IPermissionRepo _permissionRepo,
+			IEmployeeRepo _empRepo, IIntakeRepo _intakeRepo, 
+			IDepartmentRepo _deptRepo, IAttendanceRecordRepo _attendanceRecordRepo,
+			IInstructorRepo _intsRepo, ITrackRepo _trackRepo,
+			IStudentRepo _studentRepo,
+			IStudentIntakeTrackRepo _studentIntakeTrackRepo)
         {
 			empRepo = _empRepo;
 			intakeRepo = _intakeRepo;
@@ -32,7 +33,10 @@ namespace MVCProject.Controllers
 			instRepo = _intsRepo;
 			trackRepo = _trackRepo;
 			studentRepo = _studentRepo;
-			studentIntakeTrackRepo = studentIntakeTrackRepo;
+			studentIntakeTrackRepo = _studentIntakeTrackRepo;
+	        permissionRepo = _permissionRepo;
+			dailyAttendanceRepo = _dailyAttendanceRepo;
+
 		}
 
         public IActionResult Index(int id)
@@ -51,13 +55,76 @@ namespace MVCProject.Controllers
         }
 
 
-        /********************************* record attendance **************************************/
-        public IActionResult RecordAttendance()
+		/********************************* record attendance **************************************/
+		[Route("Employee/RecordAttendance/{Tid?}/{Iid?}")]
+		public IActionResult RecordAttendance(int? Tid, int? Iid)
 		{
+			
+			
+			if(Tid != null && Iid != null)
+			{
+
+                ViewBag.track = Tid;
+				ViewBag.intake = Iid;
+				var students = studentRepo.GetStudentsByIntakeTrack(Iid.Value, Tid.Value);
+				ViewBag.Tracks = trackRepo.GetActiveTracks();
+				ViewBag.Intakes = intakeRepo.GetAllIntakes();
+				//ViewBag.Students = students;
+                ////////////////
+                var Trecords =  dailyAttendanceRepo.getTodayRecords();
+                var joinedData = from student in students
+                                 join record in Trecords on student.Id equals record.StdID into studentRecords
+                                 select new
+                                 {
+                                     student.Id,
+									 student.Name,
+                                     Status = studentRecords.Any() ? studentRecords.First().Status : "Absent" 
+                                 };
+
+                ViewBag.SRecord = joinedData.ToList();
+
+                return View();
+			}
 			ViewBag.Tracks = trackRepo.GetActiveTracks();
+			ViewBag.Intakes = intakeRepo.GetAllIntakes();
 			ViewBag.Students = studentRepo.GetAllStudents();
             return View();
         }
+		[HttpPost]
+		public IActionResult SaveRecords(DailyAttendanceRecord record)
+		{
+			
+			var permission =  permissionRepo.GetPermissionByStd(record.StdID);
+			if (record.Status == "Absent" || record.Status == "Late")
+			{
+				if (permission == null)
+				{
+					record.StudentDegree = 25;
+				}
+				else
+				{
+					if (permission.Status == "Accepted")
+					{
+						record.StudentDegree = 5;
+					}
+					else
+					{
+						record.StudentDegree = 15;
+					}
+
+				}
+			}
+			else
+			{
+				record.StudentDegree = 0;
+			}
+			dailyAttendanceRepo.AddRecordAttendance(record);
+			var std = studentRepo.GetStudentById(record.StdID);
+			std.StudentDegree -= record.StudentDegree;
+			studentRepo.UpdateStudent(std);
+			return RedirectToAction("RecordAttendance");
+	
+		}
 
 
 
@@ -67,12 +134,11 @@ namespace MVCProject.Controllers
 
 
 
-
-        /*-----------------------------------------------------------------------------------------*/
-
+		/*-----------------------------------------------------------------------------------------*/
 
 
-        [HttpPost]
+
+		[HttpPost]
         public IActionResult Edit(int? id, Employee emp)
         {
             if (id == null) return BadRequest();
