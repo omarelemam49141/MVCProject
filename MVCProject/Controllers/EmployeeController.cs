@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MathNet.Numerics.Distributions;
+using Microsoft.AspNetCore.Mvc;
 using MVCProject.Models;
 using MVCProject.Repos;
 
@@ -192,14 +193,56 @@ namespace MVCProject.Controllers
 
         /*---------------------------------------------------------------------------------------------------*/
 
-        public IActionResult showStudentsDegrees()
+        public IActionResult showStudentsDegrees(string trackName="All tracks", string intakeName="All intakes")
 		{
-			//get all the students who are in the instructor track
-			List<Student> students = studentRepo.GetAllStudents();
-			return View(students);
+
+            //get all the students who are in the instructor track
+            List<Student> students = studentRepo.GetAllStudents();
+			ViewBag.Tracks = trackRepo.GetAll();
+			ViewBag.Intakes = intakeRepo.GetAllIntakes();
+			ViewBag.selectedTrackName = trackName;
+            ViewBag.selectedIntakeName = intakeName;
+
+            return View(students);
 		}
 
-		public IActionResult showAttendanceRecords(string trackName, string intakeName)
+		[HttpPost]
+        public IActionResult showStudentsDegrees(int? intakeID, int? trackID)
+        {
+            if (intakeID == null || trackID == null) return BadRequest();
+
+            if (intakeID == 0) ModelState.AddModelError("", "You must select an intake");
+
+            if (trackID == 0) ModelState.AddModelError("", "You must select a track");
+
+            ViewBag.Tracks = trackRepo.GetAll();
+            ViewBag.Intakes = intakeRepo.GetAllIntakes();
+            var students = new List<Student>();
+
+            if (!ModelState.IsValid)
+			{
+                ViewBag.selectedTrackName = "All tracks";
+                ViewBag.selectedIntakeName = "All intakes";
+                students = studentRepo.GetAllStudents();
+                return View(students);
+            }
+                
+
+            //get all the students who are in the instructor track
+            List<StudentIntakeTrack> studentIntakeTracks = studentIntakeTrackRepo.GetByTrackAndIntakeIDs(trackID.Value, intakeID.Value);
+
+            foreach (var item in studentIntakeTracks)
+            {
+				students.Add(item.Student);
+            }
+
+			ViewBag.selectedTrackName = trackRepo.GetTrackById(trackID.Value).Name;
+            ViewBag.selectedIntakeName = intakeRepo.GetIntakeById(intakeID.Value).Name;
+
+            return View(students);
+        }
+
+        public IActionResult showAttendanceRecords(string trackName, string intakeName)
 		{
 			//get all the students who are in the instructor track
 			List<Student> students = studentRepo.GetAllStudents();
