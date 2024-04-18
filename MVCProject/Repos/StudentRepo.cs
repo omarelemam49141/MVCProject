@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCProject.Data;
 using MVCProject.Models;
+using System.Security.Claims;
 
 namespace MVCProject.Repos
 {
@@ -43,6 +44,9 @@ namespace MVCProject.Repos
         public List<Student> GetTrackStudents(int trackId);
 
         public bool IsEmailInUse(string email);
+
+        int GetUserId(ClaimsPrincipal user);
+        public bool IsStudentEnrolledInTrack(int studentId);
 
     }
 
@@ -249,5 +253,19 @@ namespace MVCProject.Repos
         {
             return db.Students.Any(s => s.Email == email.Trim().ToLower());
         }
+
+
+        public int GetUserId(ClaimsPrincipal user)
+        {
+            var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            return Convert.ToInt32(userIdClaim.Value);
+        }
+
+        public bool IsStudentEnrolledInTrack(int studentId)
+        {
+            return db.StudentIntakeTracks.Any(sit => sit.StdID == studentId);
+        }
+
     }
 }

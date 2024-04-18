@@ -1,36 +1,42 @@
 ﻿@if (User.IsInRole("student"))
 {
-    <li class="nav-item">
-        <a class="nav-link @(ViewBag.Title == "ShowPermissions" ? "active" : "")" asp-action="showPermissions" asp-controller="Student" asp-route-id="@ViewBag.StudentId">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="fas fa-user-shield text-dark"></i>
+
+
+    @if (ViewBag.IsStudentEnrolledInTrack == true)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(ViewBag.Title == "ShowPermissions" ? "active" : "")" asp-action="showPermissions" asp-controller="Student" asp-route-id="@ViewBag.StudentId">
+                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-user-shield text-dark"></i>
                 </div>
 
-            <span class="nav-link-text ms-1">
-                Permissions
-            </span>
+                <span class="nav-link-text ms-1">
+                    Permissions
+                </span>
 
-        </a>
-    </li>
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a class="nav-link @(ViewBag.Title == "ShowSchedule"? "active" :"")" asp-action="ShowSchedule" asp-controller="Student" asp-route-id="@ViewBag.StudentId">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                
-                <i class="fas fa-table text-dark"></i>
-            </div>
-            <span class="nav-link-text ms-1">Schedule</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewBag.Title == "ShowSchedule" ? "active" : "")" asp-action="ShowSchedule" asp-controller="Student" asp-route-id="@ViewBag.StudentId">
+                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
 
-    <li class="nav-item">
-        <a class="nav-link @(ViewBag.Title == "ShowAttendanceRecords" ? "active":"")" asp-action="ShowAttendanceRecords" asp-controller="Student" asp-route-id="@ViewBag.StudentId" asp-route-startDate="@DateOnly.FromDateTime(DateTime.Now.AddDays(-1))" asp-route-numberOfDays="7">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="fas fa-calendar-alt text-dark"></i>
-            </div>
-            <span class="nav-link-text ms-1">Attendance</span>
-        </a>
-    </li>
+                    <i class="fas fa-table text-dark"></i>
+                </div>
+                <span class="nav-link-text ms-1">Schedule</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link @(ViewBag.Title == "ShowAttendanceRecords" ? "active" : "")" asp-action="ShowAttendanceRecords" asp-controller="Student" asp-route-id="@ViewBag.StudentId" asp-route-startDate="@DateOnly.FromDateTime(DateTime.Now.AddDays(-1))" asp-route-numberOfDays="7">
+                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-calendar-alt text-dark"></i>
+                </div>
+                <span class="nav-link-text ms-1">Attendance</span>
+            </a>
+        </li>
+    }
+
     <li class="nav-item">
         <a class="nav-link @(ViewBag.Title == "ShowProfile" ? "active" : "")" asp-action="ShowProfile" asp-controller="Student" asp-route-id="@ViewBag.StudentId">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -52,17 +58,17 @@
             <span class="nav-link-text ms-1">Profile</span>
         </a>
     </li>
-
-    <li class="nav-item">
-        <a class="nav-link @(ViewBag.Title == "messages" ? "active" : "")" asp-action="ShowMessages" asp-controller="Student" asp-route-id="@ViewBag.StudentId">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center position-relative">
-                @if (ViewBag.UnreadMessagesCount > 0)
-                {
-                    <span class="notify-number badge bg-danger position-absolute top-0 start-100 translate-middle"> @ViewBag.UnreadMessagesCount</span>
-                }
-                <i class="fas fa-envelope text-dark"></i>
-            </div>
-            <span class="nav-link-text ms-1">Messages</span>
-        </a>
-    </li>
 }
+
+<li class="nav-item">
+    <a class="nav-link @(ViewBag.Title == "messages" ? "active" : "")" asp-action="ShowMessages" asp-controller="Student" asp-route-id="@ViewBag.StudentId">
+        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center position-relative">
+            @if (ViewBag.UnreadMessagesCount > 0)
+            {
+                <span class="notify-number badge bg-danger position-absolute top-0 start-100 translate-middle"> @ViewBag.UnreadMessagesCount</span>
+            }
+            <i class="fas fa-envelope text-dark"></i>
+        </div>
+        <span class="nav-link-text ms-1">Messages</span>
+    </a>
+</li>
