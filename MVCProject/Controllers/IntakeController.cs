@@ -77,7 +77,8 @@ namespace MVCProject.Controllers
         [HttpPost]
         public IActionResult SubmitTracks(int intake,List<int> SelectedTracks) {
             intakeRepo.AssignTracksToIntake(intake, SelectedTracks);
-            return RedirectToAction("ViewTracks");
+            int progid = intakeRepo.GetIntakeById(intake).ProgramId;
+            return RedirectToAction("ViewTracks",new {intake , id = progid});
         }
         [HttpGet]
         public IActionResult Delete(int id)
@@ -88,8 +89,9 @@ namespace MVCProject.Controllers
                 var intakes = intakeRepo.GetAllIntakes();
                 return View("index", intakes);
             }
-            catch
+            catch(Exception ex)
             {
+
                 ViewBag.reasons = new List<string>()
                 {
                     "This Intake Already has Some Records So this will Affect the Other tables"

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Student>
+
+@{
+	Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
+	ViewBag.Title = "Manage Students";
+
+	var intakes = ViewBag.Intakes as List<Intake>;
+	var tracks = ViewBag.Tracks as List<Track>;
+}
+
+<h2 class="text-center">Manage Students</h2>
+
+<table class="table table-bordered mt-3 text-center">
+	<thead>
+		<tr>
+			<th>Student Name</th>
+			<th>Email</th>
+			<th>mobile</th>
+			<th>Specialization</th>
+			<th>Faculty</th>
+			<th>Univeristy</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var student in Model)
+		{
+			<tr>
+				<td>@student.Name</td>
+				<td>@student.Email</td>
+				<td>@student.Mobile</td>
+				<td>@student.Specialization</td>
+				<td>@student.Faculty</td>
+				<td>@student.University</td>
+				<td>
+					<a asp-action="Manage" asp-route-id="@student.Id" class="btn btn-primary">Manage</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

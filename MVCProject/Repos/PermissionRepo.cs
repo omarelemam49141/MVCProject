@@ -9,6 +9,7 @@ namespace MVCProject.Repos
         public List<Permission> GetPermissionsBySupervisorID(int supervisorID);
         public Permission GetPermissionByID(int id);
         public void UpdatePermissionStatus(Permission p, string status);
+        public Permission GetPermissionByStd(int stdID);
     }
     public class PermissionRepo: IPermissionRepo
     {
@@ -30,5 +31,9 @@ namespace MVCProject.Repos
             p.Status = status;
             db.SaveChanges();
         }
+        public Permission GetPermissionByStd(int stdID)
+        {
+			return db.Permissions.FirstOrDefault(p => p.StdID == stdID);
+		}
     }
 }
