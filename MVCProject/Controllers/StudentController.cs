@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,13 +28,24 @@ namespace MVCProject.Controllers
             studentMessageRepo = _studentMessageRepo;
         }
 
-        public IActionResult Index(int id)
+        public IActionResult Index()
         {
-            ViewBag.StudentId = id;
-            Student std = stdRepo.GetStudentByID(id);
-            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+            try
+            {
 
-            return View(std);
+                int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ViewBag.StudentId = id;
+                Student std = stdRepo.GetStudentByID(id);
+                ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+                ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+
+                return View(std);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("Login", "Account");
+            }
         }
         public IActionResult checkStudentDegree(int StudentDegree)
         {
@@ -41,22 +53,47 @@ namespace MVCProject.Controllers
             else return Json(false);
         }
 
-        public IActionResult ShowPermissions(int id)
+        public IActionResult ShowPermissions()
         {
-            ViewBag.StudentId = id;
-            ViewBag.Student = stdRepo.GetStudentByID(id);
-            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+            try
+            {
 
-            var permissions = stdRepo.GetStudentPermissions(id);
-            return View(permissions);
+                int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                ViewBag.StudentId = id;
+                ViewBag.Student = stdRepo.GetStudentByID(id);
+                ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+
+                ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+
+                var permissions = stdRepo.GetStudentPermissions(id);
+                return View(permissions);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("Login", "Account");
+            }
         }
         [HttpGet]
-        public IActionResult RequestPermission(int id)
+        public IActionResult RequestPermission(string? message)
         {
-            ViewBag.StudentId = id;
-            ViewBag.Student = stdRepo.GetStudentByID(id);
-            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
-            return View(new Permission());
+            try
+            {
+                int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ViewBag.StudentId = id;
+                ViewBag.Student = stdRepo.GetStudentByID(id);
+                ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+                ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+                ViewBag.Message = message;
+
+                return View(new Permission());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("RequestPermission", new { message = "error requesting a permission" });
+            }
         }
 
         [HttpPost]
@@ -67,13 +104,13 @@ namespace MVCProject.Controllers
 
                 permission.InstructorID = stdRepo.GetInstructorIdByStudentId(permission.StdID);
                 stdRepo.RequestPermission(permission);
-                ViewBag.Message = "Permission Requested Successfully";
-                return RedirectToAction("ShowPermissions", new { id = permission.StdID });
+                return RedirectToAction("ShowPermissions");
             }
             catch (Exception e)
             {
-                ViewBag.Message = "Error in Requesting Permission";
-                return View(permission);
+                Console.WriteLine(e);
+                return RedirectToAction("RequestPermission", new { message = "error requesting a permission" });
+
             }
         }
 
@@ -101,26 +138,36 @@ namespace MVCProject.Controllers
 
 
 
-        public IActionResult ShowSchedule(int id)
+        public IActionResult ShowSchedule()
         {
+            try
+            {
+                int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            ViewBag.Student = stdRepo.GetStudentByID(id);
-            ViewBag.StudentId = id;
-            int trackId = stdRepo.GetTrackIdByStudentId(id);
-            ViewBag.Track = trackRepo.GetTrackById(trackId);
-            ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+                ViewBag.StudentId = id;
+                ViewBag.Student = stdRepo.GetStudentByID(id);
+                int trackId = stdRepo.GetTrackIdByStudentId(id);
+                ViewBag.Track = trackRepo.GetTrackById(trackId);
+                ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+                var schedules = scheduleRepo.GetSchedulesByDateAndTrack(DateOnly.FromDateTime(DateTime.Now), stdRepo.GetTrackIdByStudentId(id));
+                return View(schedules);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
 
-            var schedules = scheduleRepo.GetSchedulesByDateAndTrack(DateOnly.FromDateTime(DateTime.Now), stdRepo.GetTrackIdByStudentId(id));
-            return View(schedules);
+            }
 
 
         }
 
-        public IActionResult ShowAttendanceRecords(int id, DateOnly? startDate = null, int numberOfDays = 7)
+        public IActionResult ShowAttendanceRecords(DateOnly? startDate = null, int numberOfDays = 7)
         {
-            ViewBag.Student = stdRepo.GetStudentByID(id);
+            int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.StudentId = id;
+            ViewBag.Student = stdRepo.GetStudentByID(id);
             ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+            ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
 
 
             if (startDate == null)
@@ -143,16 +190,15 @@ namespace MVCProject.Controllers
 
         }
 
-        public IActionResult ShowProfile(int id, string? message = null)
+        public IActionResult ShowProfile(string? message = null)
         {
-            Student std = stdRepo.GetStudentByID(id);
+            int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.StudentId = id;
+            Student std = stdRepo.GetStudentByID(id);
             ViewBag.Student = std;
             ViewBag.Message = message;
-
             ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
-
-
+            ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
             return View(std);
         }
 
@@ -165,8 +211,7 @@ namespace MVCProject.Controllers
             {
                 if (std.Name == null || std.Password == null || std.Mobile == null)
                 {
-                    ViewBag.Message = "Please Fill All Fields";
-                    return View("ShowProfile", std);
+                    return RedirectToAction("ShowProfile", new { message = "error Please fill all the fields" });
                 }
 
 
@@ -182,20 +227,17 @@ namespace MVCProject.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                ViewBag.Message = "Error in Updating Profile";
-                ViewBag.StudentId = std.Id;
-                ViewBag.Student = std;
-                ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(std.Id);
-                return View("ShowProfile", std);
+                return RedirectToAction("ShowProfile", new { message = "error updating profile" });
             }
         }
 
-        public IActionResult ShowMessages(int id)
+        public IActionResult ShowMessages()
         {
+            int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.StudentId = id;
             ViewBag.Student = stdRepo.GetStudentByID(id);
             ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+            ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
             var messages = studentMessageRepo.GetStudentMessages(id);
             return View(messages);
         }
@@ -204,7 +246,7 @@ namespace MVCProject.Controllers
         {
             studentMessageRepo.MarkAllMessagesAsRead(id);
             var messages = studentMessageRepo.GetStudentMessages(id);
-            return PartialView("MessagesPartial",messages);
+            return PartialView("MessagesPartial", messages);
         }
         [AllowAnonymous]
         public JsonResult IsEmailAvailable(string email)
