@@ -7,7 +7,9 @@ namespace MVCProject.Repos
     public interface IAttendanceRecordRepo
     {
         public List<DailyAttendanceRecord> GetAttendanceRecords(List<Student> students, DateOnly date);
-    }
+        public void AddAttendanceRecord(DailyAttendanceRecord attendanceRecord);
+
+	}
     public class AttendanceRecordRepo: IAttendanceRecordRepo
     {
         private attendanceDBContext db;
@@ -29,5 +31,10 @@ namespace MVCProject.Repos
                      )
                     .ToList();
         }
+        public void AddAttendanceRecord(DailyAttendanceRecord attendanceRecord)
+        {
+			db.DailyAttendanceRecords.Add(attendanceRecord);
+			db.SaveChanges();
+		}
     }
 }

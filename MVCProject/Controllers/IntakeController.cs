@@ -58,6 +58,7 @@ namespace MVCProject.Controllers
         [HttpGet]
         public bool ValidateName(string name, int? Id)
         {
+
             return intakeRepo.GetAllIntakes().FirstOrDefault(a => a.Name == name && a.Id != Id) == null;
         }
         [HttpGet]
