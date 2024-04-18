@@ -57,7 +57,7 @@ namespace MVCProject.Controllers
 
 		/********************************* record attendance **************************************/
 		[Route("Employee/RecordAttendance/{Tid?}/{Iid?}")]
-		public IActionResult RecordAttendance(int? Tid, int? Iid)
+		public IActionResult RecordAttendance(int? Tid, int? Iid , DateOnly date)
 		{
 			
 			
@@ -82,7 +82,6 @@ namespace MVCProject.Controllers
                                  };
 
                 ViewBag.SRecord = joinedData.ToList();
-
                 return View();
 			}
 			ViewBag.Tracks = trackRepo.GetActiveTracks();
@@ -309,8 +308,8 @@ namespace MVCProject.Controllers
 
 		public IActionResult Manage(int id, int intakeId, int trackId)
 		{
-            Student student = studentRepo.GetStudentById(id);
-			studentIntakeTrackRepo.AddStudentIntakeTrack(student.Id, intakeId, trackId);
+            //Student student = studentRepo.GetStudentById(id);
+			studentIntakeTrackRepo.AddStudentIntakeTrack(id, intakeId, trackId);
             return RedirectToAction("ManageStudents");
         }
 	}
