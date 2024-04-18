@@ -71,7 +71,20 @@ namespace MVCProject.Controllers
 
             var emails = allDBEmails.GetEmails();
 
-            return emails.Any(e => e.email.Equals(email, StringComparison.OrdinalIgnoreCase) && e.id == id);
+            var s = emails.FirstOrDefault(s => s.email == email);
+            if (s == null)
+            {
+                return true;
+            }
+            else
+            {
+                var student = _employeeRepo.GetAllEmployees().FirstOrDefault(s => s.Email == email);
+                if (student.Id == id)
+                    return true;
+                else
+                    return false;
+
+            }
         }
     }
 }
