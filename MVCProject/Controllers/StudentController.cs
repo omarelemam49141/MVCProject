@@ -63,10 +63,17 @@ namespace MVCProject.Controllers
                 ViewBag.StudentId = id;
                 ViewBag.Student = stdRepo.GetStudentByID(id);
                 ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+                bool isStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
 
-                ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+                if (!isStudentEnrolledInTrack)
+                {
+                    return RedirectToAction("ShowProfile", new { message = "wait to be added in a track." });
+                }
 
-                var permissions = stdRepo.GetStudentPermissions(id);
+                ViewBag.IsStudentEnrolledInTrack = isStudentEnrolledInTrack;
+
+
+               var permissions = stdRepo.GetStudentPermissions(id);
                 return View(permissions);
             }
             catch (Exception e)
@@ -84,7 +91,15 @@ namespace MVCProject.Controllers
                 ViewBag.StudentId = id;
                 ViewBag.Student = stdRepo.GetStudentByID(id);
                 ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
-                ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+                
+                bool isStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+
+                if (!isStudentEnrolledInTrack)
+                {
+                    return RedirectToAction("ShowProfile", new { message = "wait to be added in a track." });
+                }
+
+                ViewBag.IsStudentEnrolledInTrack = isStudentEnrolledInTrack; 
                 ViewBag.Message = message;
 
                 return View(new Permission());
@@ -101,15 +116,15 @@ namespace MVCProject.Controllers
         {
             try
             {
-
-                permission.InstructorID = stdRepo.GetInstructorIdByStudentId(permission.StdID);
+                var instructorId = stdRepo.GetInstructorIdByStudentId(permission.StdID);
+                permission.InstructorID = instructorId;
                 stdRepo.RequestPermission(permission);
                 return RedirectToAction("ShowPermissions");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return RedirectToAction("RequestPermission", new { message = "error requesting a permission" });
+                return RedirectToAction("RequestPermission", new { message = "requesting a permission failed" });
 
             }
         }
@@ -149,7 +164,14 @@ namespace MVCProject.Controllers
                 int trackId = stdRepo.GetTrackIdByStudentId(id);
                 ViewBag.Track = trackRepo.GetTrackById(trackId);
                 ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
-                ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+                bool isStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+
+                if (!isStudentEnrolledInTrack)
+                {
+                    return RedirectToAction("ShowProfile", new { message = "wait to be added in a track." });
+                }
+
+                ViewBag.IsStudentEnrolledInTrack = isStudentEnrolledInTrack;
                 var schedules = scheduleRepo.GetSchedulesByDateAndTrack(DateOnly.FromDateTime(DateTime.Now), stdRepo.GetTrackIdByStudentId(id));
                 return View(schedules);
             }
@@ -168,8 +190,14 @@ namespace MVCProject.Controllers
             ViewBag.StudentId = id;
             ViewBag.Student = stdRepo.GetStudentByID(id);
             ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
-            ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
+            bool isStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
 
+            if (!isStudentEnrolledInTrack)
+            {
+                return RedirectToAction("ShowProfile", new { message = "wait to be added in a track." });
+            }
+
+            ViewBag.IsStudentEnrolledInTrack = isStudentEnrolledInTrack;
 
             if (startDate == null)
             {
