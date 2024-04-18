@@ -1,0 +1,32 @@
+﻿@model MVCProject.Models.Employee
+
+@{
+	Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
+    ViewData["Title"] = "Show Profile";
+}
+
+<div class="text-center">
+	<h1 class="text-center">Employee Profile</h1>
+
+	<table class="mt-3 table table-bordered">
+
+		<tr>
+			<td>Name</td>
+			<td>@Model.Name</td>
+		</tr>
+		<tr>
+			<td>Email</td>
+			<td>@Model.Email</td>
+		</tr>
+		<tr>
+			<td>Phone</td>
+			<td>@Model.Mobile</td>
+		</tr>
+		<tr>
+			<td>Type</td>
+			<td>@Model.Type</td>
+		</tr>
+
+	</table>
+
+</div>

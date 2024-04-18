@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 ﻿using MathNet.Numerics.Distributions;
 using MVCProject.Models;
 using MVCProject.Repos;
+using System.Security.Claims;
 
 namespace MVCProject.Controllers
 {
+	[Authorize(Roles = "employee")]
     public class EmployeeController : Controller
     {
 
@@ -43,20 +46,17 @@ namespace MVCProject.Controllers
 		}
 
         public IActionResult Index(int id)
-        {
+		{
 			ViewBag.EmployeeId = id;
-            var employee = empRepo.GetEmployeeById(id);
-			return View(employee);
+			return View();
 		}
-        public IActionResult Edit(int id)
-        {
-            //if(id == null) return BadRequest();
-            //var employee = empRepo.GetEmployeeById(id.Value);
-            var employee = empRepo.GetEmployeeById(id);
-			ViewBag.EmployeeId = id;
-            return View(employee);
-        }
 
+		public IActionResult ShowProfile()
+		{
+		
+			var emp = empRepo.GetEmployeeById(Int32.Parse(User.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier).Value));
+			return View(emp);
+		}
 
 		/********************************* record attendance **************************************/
 		[Route("Employee/RecordAttendance/{Tid?}/{Iid?}/{date?}")]
@@ -81,7 +81,7 @@ namespace MVCProject.Controllers
 						record.StdID = student.Id;
 						record.Date = date;
 						record.Status = "Absent";
-						record.StudentDegree = 0;
+						record.StudentDegree = 25;
 						record.Date = DateOnly.FromDateTime(DateTime.UtcNow.Date);
 						dailyAttendanceRepo.AddRecordAttendance(record);
 					}
