@@ -21,7 +21,7 @@ namespace MVCProject.Controllers
                     return RedirectToAction("Login","Account");
             else
             {
-                var Id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                var Id = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
                 if (User.IsInRole("admin"))
                 {
                     return RedirectToAction("index", "admin");
