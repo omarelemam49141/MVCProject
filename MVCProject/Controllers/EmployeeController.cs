@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MVCProject.Models;
@@ -6,6 +7,7 @@ using MVCProject.Repos;
 
 namespace MVCProject.Controllers
 {
+	[Authorize(Roles = "employee")]
     public class EmployeeController : Controller
     {
 
@@ -78,7 +80,7 @@ namespace MVCProject.Controllers
 						record.StdID = student.Id;
 						record.Date = date;
 						record.Status = "Absent";
-						record.StudentDegree = 0;
+						record.StudentDegree = 25;
 						record.Date = DateOnly.FromDateTime(DateTime.UtcNow.Date);
 						dailyAttendanceRepo.AddRecordAttendance(record);
 					}

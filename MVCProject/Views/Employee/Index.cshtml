@@ -12,10 +12,7 @@
 	<h1 class="text-center">Employee Profile</h1>
 
 	<table class="mt-3 table table-bordered">
-		@* <tr>
-			<td>Employee ID</td>
-			<td>@Model.Id</td>
-		</tr> *@
+
 		<tr>
 			<td>Name</td>
 			<td>@Model.Name</td>
@@ -32,11 +29,7 @@
 			<td>Type</td>
 			<td>@Model.Type</td>
 		</tr>
-		<tr>
-			<td colspan="2">
-				<a asp-action="edit" asp-route-id="@Model.Id">Edit</a>
-			</td>
-		</tr>
+
 	</table>
 
 </div>
