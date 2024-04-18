@@ -13,7 +13,6 @@ namespace MVCProject.Models
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name must contain only letters")]
-        [Remote("ValidateName", "StudentsManage", AdditionalFields = "Id")]
         public string Name { get; set; }
         [Required]
         [EmailAddress]
