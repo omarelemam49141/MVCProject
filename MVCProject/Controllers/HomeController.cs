@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MVCProject.Models;
+using NPOI.SS.Formula.Functions;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace MVCProject.Controllers
 {
@@ -15,7 +17,26 @@ namespace MVCProject.Controllers
 
         public IActionResult Index()
         {
-          return View();
+
+            if(!User.Identity.IsAuthenticated)
+                    return RedirectToAction("Login","Account");
+            else
+            {
+                var Id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                if (User.IsInRole("admin"))
+                {
+                    return RedirectToAction("index", "admin");
+                }else if (User.IsInRole("instructor") || User.IsInRole("supervisor"))
+                {
+                    return RedirectToAction("index", "instructor", new { id = Id });
+
+                }else
+                {
+                    RedirectToAction("index", "employee", new { id = Id });
+                }
+                return View();
+            }
+
         }
 
         

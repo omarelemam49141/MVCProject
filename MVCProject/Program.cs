@@ -32,8 +32,6 @@ namespace MVCProject
             builder.Services.AddScoped<IAllDBEmails,AllDBEmails>();
             builder.Services.AddScoped<IDailyAttendanceRepo, DailyAttendanceRepo>();
 
-
-
             builder.Services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
                 options.ExpireTimeSpan = TimeSpan.FromDays(1); // Set the expiration time to one day

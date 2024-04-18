@@ -18,7 +18,7 @@
 }
 
 @section links {
-    <partial name="../partialViews/StudentLinks" />
+    <partial name="../partialViews/StudentLinks" view-data="ViewData"/>
 }
 
 
@@ -26,7 +26,7 @@
 
 @if (ViewBag.Message != null)
 {
-    <div id="message" class="alert alert-success">@ViewBag.Message</div>
+    <div id="message" class="alert alert-danger ">@ViewBag.Message</div>
 }
 
 

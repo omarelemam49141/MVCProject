@@ -5,11 +5,12 @@ using MVCProject.Models;
 namespace MVCProject.Repos
 {
 
-    public interface IStudentIntakeTrackRepo
+   public interface IStudentIntakeTrackRepo
     {
         //get all student in the table studentIntakeTrack
         public List<StudentIntakeTrack> getAllStudents();
         void AddStudentIntakeTrack(int stdID, int IntakeID, int TrackID);
+        List<StudentIntakeTrack> GetByTrackAndIntakeIDs(int trackID, int intakeID);
 	}
     public class StudentIntakeTrackRepo : IStudentIntakeTrackRepo
     {
@@ -18,6 +19,16 @@ namespace MVCProject.Repos
         public StudentIntakeTrackRepo(attendanceDBContext _db) 
         {
             db = _db;
+        }
+
+
+        public List<StudentIntakeTrack> GetByTrackAndIntakeIDs(int trackID, int intakeID)
+        {
+            return db
+                    .StudentIntakeTracks
+                    .Include(sit=>sit.Student)
+                    .Where(sit=>sit.IntakeID==intakeID && sit.TrackID==trackID)
+                    .ToList();
         }
 
         public void AddStudentIntakeTrack(int _StdID, int _IntakeID, int _TrackID)

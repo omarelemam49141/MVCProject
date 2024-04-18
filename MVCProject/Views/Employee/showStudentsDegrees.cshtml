@@ -1,12 +1,62 @@
 ﻿@model IEnumerable<Student>
 
 @{
-    ViewData["Title"] = "showStudentsDegrees";
+    ViewData["Title"] = "StudentsDegrees";
     Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
+
+    List<Track> tracks = ViewBag.Tracks;
+    List<Intake> intakes = ViewBag.Intakes;
+
+    SelectList tracksList = new SelectList(tracks, "Id", "Name");
+    SelectList intakesList = new SelectList(intakes, "Id", "Name");
 }
 
+@section styles {
+    <style>
+        #date-validation {
+            border: 1px dashed red;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            box-shadow: 2px 2px 2px;
+        }
 
-<h2 class="text-center">Students' degrees for all tracks</h2>
+            #date-validation ul {
+                margin: 0;
+                list-style: none;
+                padding: 0;
+            }
+    </style>
+}
+
+<h2 class="text-center">Student degrees</h2>
+<p class="lead bold text-center">Track: @ViewBag.selectedTrackName</p>
+<p class="lead bold text-center">Intake: @ViewBag.selectedIntakeName</p>
+<form class="col-md-4 m-auto text-center border-2 border-dark border-dashed p-3 my-3" method="post" asp-action="showStudentsDegrees">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div id="date-validation" class="text-danger mb-3 bg-white" asp-validation-summary="All"></div>
+    }
+    <div class="form-group">
+        <label class="lead">Choose a track:</label>
+        <select name="trackId" asp-items="tracksList" class="form-select">
+            <option value="0">All</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="lead">Choose an intake:</label>
+        <select name="intakeId" asp-items="intakesList" class="form-select">
+            <option value="0">All</option>
+        </select>
+    </div>
+    <input type="submit" class="my-3 btn btn-primary" value="Display students" />
+    <a asp-action="showStudentsDegrees"
+       class="btn btn-secondary my-3"
+       asp-route-trackName="All tracks"
+       asp-route-intakeName="All intakes">
+        Display today records
+    </a>
+</form>
 <table class="table table-light table-hover table-striped table-bordered text-center">
     <thead>
         <tr>
