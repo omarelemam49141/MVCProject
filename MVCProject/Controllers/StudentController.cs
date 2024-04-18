@@ -149,6 +149,7 @@ namespace MVCProject.Controllers
                 int trackId = stdRepo.GetTrackIdByStudentId(id);
                 ViewBag.Track = trackRepo.GetTrackById(trackId);
                 ViewBag.UnreadMessagesCount = studentMessageRepo.GetUnreadMessagesCount(id);
+                ViewBag.IsStudentEnrolledInTrack = stdRepo.IsStudentEnrolledInTrack(id);
                 var schedules = scheduleRepo.GetSchedulesByDateAndTrack(DateOnly.FromDateTime(DateTime.Now), stdRepo.GetTrackIdByStudentId(id));
                 return View(schedules);
             }
