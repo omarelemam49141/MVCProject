@@ -60,11 +60,12 @@
 
 
 	
-    <table class="table table-bordered hover">
+    <table class="table table-bordered hover text-center">
         <thead>
 			<tr>
 				<th>Student Name</th>
 				<th>Status</th>
+				<th>Action</th>
 			</tr>
         </thead>
         <tbody>
@@ -73,13 +74,14 @@
 		{
 			<tr>
 				<td>@Record.Student.Name</td>
-				<td>
 					<form asp-action="SaveRecords" asp-route-track='@ViewBag.track' asp-route-intake='@ViewBag.intake'>
+				<td>
+				
 						<input name="ID" value="@Record.Id" hidden />
 						<input name="Date" value="@Record.Date" hidden />
 						<input name="TimeOfAttendance" value="@Record.TimeOfAttendance" hidden />
 						<input name="StdID" value="@Record.StdID" hidden />
-						<select name="status" class="form-control">
+						<select name="status" class="form-control text-center">
 							@if(Record.Status == "Present")
 							{
 								<option value="Present" selected>Present</option>
@@ -100,9 +102,13 @@
 								<option value="Late" selected>Late</option>
 							}
 						</select>
-						<input type="submit" class="btn btn-primary"/>
-					</form>
+				
+				
 				</td>
+				<td>
+						<input type="submit" class="btn btn-primary" />
+				</td>
+					</form>
 			</tr>
 		}
 
