@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+
+﻿using MathNet.Numerics.Distributions;
+
 using MVCProject.Models;
 using MVCProject.Repos;
 using System.Security.Claims;
@@ -20,6 +22,7 @@ namespace MVCProject.Controllers
 		private IInstructorRepo	instRepo;
 		private ITrackRepo trackRepo;
 		private IStudentRepo studentRepo;
+
 		private IStudentIntakeTrackRepo studentIntakeTrackRepo;
 		private IPermissionRepo permissionRepo;
 		private IDailyAttendanceRepo dailyAttendanceRepo;
@@ -41,6 +44,7 @@ namespace MVCProject.Controllers
 			studentIntakeTrackRepo = _studentIntakeTrackRepo;
 	        permissionRepo = _permissionRepo;
 			dailyAttendanceRepo = _dailyAttendanceRepo;
+
 		}
 
         public IActionResult Index(int id)
@@ -136,16 +140,57 @@ namespace MVCProject.Controllers
 
         /*---------------------------------------------------------------------------------------------------*/
 
-        public IActionResult showStudentsDegrees()
+        public IActionResult showStudentsDegrees(string trackName="All tracks", string intakeName="All intakes")
 		{
-			//get all the students who are in the instructor track
-			List<Student> students = studentRepo.GetAllStudents();
-			return View(students);
+
+            //get all the students who are in the instructor track
+            List<Student> students = studentRepo.GetAllStudents();
+			ViewBag.Tracks = trackRepo.GetAll();
+			ViewBag.Intakes = intakeRepo.GetAllIntakes();
+			ViewBag.selectedTrackName = trackName;
+            ViewBag.selectedIntakeName = intakeName;
+
+            return View(students);
 		}
 
-		public IActionResult showAttendanceRecords()
+		[HttpPost]
+        public IActionResult showStudentsDegrees(int? intakeID, int? trackID)
+        {
+            if (intakeID == null || trackID == null) return BadRequest();
+
+            if (intakeID == 0) ModelState.AddModelError("", "You must select an intake");
+
+            if (trackID == 0) ModelState.AddModelError("", "You must select a track");
+
+            ViewBag.Tracks = trackRepo.GetAll();
+            ViewBag.Intakes = intakeRepo.GetAllIntakes();
+            var students = new List<Student>();
+
+            if (!ModelState.IsValid)
+			{
+                ViewBag.selectedTrackName = "All tracks";
+                ViewBag.selectedIntakeName = "All intakes";
+                students = studentRepo.GetAllStudents();
+                return View(students);
+            }
+                
+
+            //get all the students who are in the instructor track
+            List<StudentIntakeTrack> studentIntakeTracks = studentIntakeTrackRepo.GetByTrackAndIntakeIDs(trackID.Value, intakeID.Value);
+
+            foreach (var item in studentIntakeTracks)
+            {
+				students.Add(item.Student);
+            }
+
+			ViewBag.selectedTrackName = trackRepo.GetTrackById(trackID.Value).Name;
+            ViewBag.selectedIntakeName = intakeRepo.GetIntakeById(intakeID.Value).Name;
+
+            return View(students);
+        }
+
+        public IActionResult showAttendanceRecords(string trackName, string intakeName)
 		{
-			
 			//get all the students who are in the instructor track
 			List<Student> students = studentRepo.GetAllStudents();
 			//Get the daily attendance records for these students 
@@ -158,28 +203,61 @@ namespace MVCProject.Controllers
 			else
 				ViewBag.RecordsDate = null;
 
+			ViewBag.Tracks = trackRepo.GetAll();
+			ViewBag.Intakes = intakeRepo.GetAllIntakes();
+
+			ViewBag.selectedTrackName = trackName;
+			ViewBag.selectedIntakeName = intakeName;
 
 			return View(dailyAttendanceRecords);
 		}
 
 		[HttpPost]
-		public IActionResult ShowRecordsForDate(DateOnly? date)
+		public IActionResult ShowRecordsForDate(DateOnly? date, int? trackId, int? intakeId)
 		{
-			//get all the students who are in the instructor track
-			List<Student> students = studentRepo.GetAllStudents();
-			ViewBag.Date = date;
+            //get all the tracks and all the intakes
+            ViewBag.Tracks = trackRepo.GetAll();
+            ViewBag.Intakes = intakeRepo.GetAllIntakes();
 
+            //Validations
+            if (trackId == null || intakeId == null) return BadRequest();
 
-			if (date > DateOnly.FromDateTime(DateTime.Today))
+            if (date > DateOnly.FromDateTime(DateTime.Today))
+            {
+                ModelState.AddModelError("", "The date must be less than today's date");
+            }
+            if (date == null)
+            {
+                ModelState.AddModelError("", "Choose a date first");
+            }
+			if(trackId == 0)
 			{
-				ModelState.AddModelError("", "The date must be less than today's date");
-				return View("showAttendanceRecords");
-			}
-			if (date == null)
-			{
-				ModelState.AddModelError("", "Choose a date first");
-				return View("showAttendanceRecords");
-			}
+                ModelState.AddModelError("", "Choose a track first");
+            }
+            if (intakeId == 0)
+            {
+                ModelState.AddModelError("", "Choose an intake first");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.selectedTrackName = "All tracks";
+                ViewBag.selectedIntakeName = "All intakes";
+                return View("showAttendanceRecords");
+            }
+
+            //Get the students in the selected track and the selected intake
+            List<StudentIntakeTrack> studentIntakeTracks 
+				= studentIntakeTrackRepo.GetByTrackAndIntakeIDs(trackId.Value, intakeId.Value);
+
+			//Fill the list of the students with the selected students
+            List<Student> students = new List<Student>();
+            foreach (var item in studentIntakeTracks)
+            {
+				students.Add(item.Student);
+            }
+            ViewBag.Date = date;
+						
 			//Get the daily attendance records for these students 
 			List<DailyAttendanceRecord> dailyAttendanceRecords =
 				attendanceRecordRepo.GetAttendanceRecords(students, date.Value);
@@ -189,11 +267,11 @@ namespace MVCProject.Controllers
 			else
 				ViewBag.RecordsDate = null;
 
-			return View("showAttendanceRecords", dailyAttendanceRecords);
+            ViewBag.selectedTrackName = trackRepo.GetTrackById(trackId.Value).Name;
+            ViewBag.selectedIntakeName = intakeRepo.GetIntakeById(intakeId.Value).Name;
+
+            return View("showAttendanceRecords", dailyAttendanceRecords);
 		}
-
-
-
 		public IActionResult ManageStudents()
 		{
 			List<Student> allStudents = studentRepo.GetAllStudents();

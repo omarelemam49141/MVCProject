@@ -18,7 +18,7 @@
 }
 
 @section links {
-    <partial name="../partialViews/StudentLinks" />
+    <partial name="../partialViews/StudentLinks" view-data="ViewData"/>
 }
 
 
@@ -28,7 +28,7 @@
 <div class="row">
     @if (ViewBag.Message != null)
     {
-        <div id="msg" class="alert alert-success col-6 mx-auto">@ViewBag.Message</div>
+        <div id="msg" class="alert alert-info col-6 mx-auto">@ViewBag.Message</div>
     }
 
     <div id="message" class="alert alert-success d-none col-6 mx-auto"></div>
@@ -83,7 +83,7 @@
                 </div>
                 <input asp-for="StudentDegree" class="form-control" hidden="hidden" value="@Model.StudentDegree" />
                 <div class="form-group text-center col-12">
-                    <input type="submit" value="Save" class="btn bg-gradient-faded-primary-vertical" />
+                    <input type="submit" value="Save" class="btn bg-gradient-primary" />
                 </div>
             </div>
         </form>
@@ -134,6 +134,7 @@
         form.addEventListener('submit', async (e) => {
             if (!/^(010|011|012|015)\d{8}$/.test(mobile.value) || password.value.length < 8 || name.value.trim().length < 3) {
                 e.preventDefault();
+                document.getElementById('msg').classList.add('d-none');
                 message.textContent = 'Please enter valid data';
                 message.classList.add('alert-danger');
                 message.classList.remove('d-none');
