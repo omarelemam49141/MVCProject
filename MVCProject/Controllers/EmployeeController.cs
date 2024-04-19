@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
 ﻿using MathNet.Numerics.Distributions;
+
 using MVCProject.Models;
 using MVCProject.Repos;
 using System.Security.Claims;
@@ -134,70 +136,6 @@ namespace MVCProject.Controllers
 			return Redirect(Url.Action("RecordAttendance" , "Employee") +   "?Tid="+track + "&Iid=" + intake+ "&date=" +record.Date.ToString());
 
 		}
-
-
-
-
-
-
-
-
-
-		/*-----------------------------------------------------------------------------------------*/
-
-
-
-		[HttpPost]
-        public IActionResult Edit(int? id, Employee emp)
-        {
-            if (id == null) return BadRequest();
-            Employee employee = empRepo.GetEmployeeById(id.Value);
-            if (employee == null) return NotFound();
-            employee.Name = emp.Name;
-            employee.Email = emp.Email;
-            employee.Password = emp.Password;
-            employee.Mobile = emp.Mobile;
-            employee.Type = emp.Type;
-            empRepo.UpdateEmployee(employee);
-			
-            return RedirectToAction("Index", new { id = employee.Id });
-        }
-        /*[HttpPost]
-        public IActionResult Edit(Employee emp)
-        {
-			empRepo.UpdateEmployee(emp);
-			return RedirectToAction("Index");
-		}*/
-
-        /*
-         public IActionResult Edit(int? id)
-        {
-            if(id == null) return BadRequest();
-            Employee emp = empRepo.GetEmployeeById(id.Value);
-            if(emp == null) return NotFound();
-            ViewBag.EmployeeId = id;
-            return View(emp);
-
-		}
-
-		[HttpPost]
-        public IActionResult Edit(int? id, Employee emp)
-        {
-			if(id == null) return BadRequest();
-			Employee employee = empRepo.GetEmployeeById(id.Value);
-			if(employee == null) return NotFound();
-			employee.Name = emp.Name;
-			employee.Email = emp.Email;
-			employee.Password = emp.Password;
-			employee.Mobile = emp.Mobile;
-            employee.Type = emp.Type;
-			empRepo.UpdateEmployee(employee);
-			return RedirectToAction("Index", new { id = employee.Id });
-		}
-         */
-
-
-
 
 
         /*---------------------------------------------------------------------------------------------------*/
@@ -337,7 +275,6 @@ namespace MVCProject.Controllers
 		public IActionResult ManageStudents()
 		{
 			List<Student> allStudents = studentRepo.GetAllStudents();
-			//List<StudentIntakeTrack> studentsHasTrackIntake = studentIntakeTrackRepo.getAllStudents();
 
 			List<Student> studentsHasTrackIntake = studentIntakeTrackRepo.getAllStudents().Select(s => s.Student).ToList();
 
@@ -360,9 +297,27 @@ namespace MVCProject.Controllers
 
 		public IActionResult Manage(int id, int intakeId, int trackId)
 		{
-            //Student student = studentRepo.GetStudentById(id);
 			studentIntakeTrackRepo.AddStudentIntakeTrack(id, intakeId, trackId);
-            return RedirectToAction("ManageStudents");
-        }
+			return RedirectToAction("ManageStudents");
+		}
+
+		/*[HttpPost]
+		public IActionResult Manage(int id, int intakeId, int trackId)
+		{
+			studentIntakeTrackRepo.AddStudentIntakeTrack(id, intakeId, trackId);
+			var message = new Message
+			{
+				StudentId = id,
+				// Add any additional information you need for the message
+				// For example:
+				Content = $"A new student has been added with ID: {id}"
+			};
+
+			// Save the message to the database
+			// Assuming you have a DbContext instance called dbContext
+			dbContext.Messages.Add(message);
+			dbContext.SaveChanges();
+			return RedirectToAction("ManageStudents");
+		}*/
 	}
 }

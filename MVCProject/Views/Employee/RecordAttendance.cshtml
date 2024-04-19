@@ -59,51 +59,56 @@
 <a id="ShowStudents" href="#" class="btn btn-primary d-block w-25 mx-auto mt-2"> Show Students</a>
 
 
-	
-    <table class="table table-bordered hover">
+	<table class="table table-bordered hover text-center">
         <thead>
 			<tr>
 				<th>Student Name</th>
 				<th>Status</th>
+				<th>Action</th>
 			</tr>
         </thead>
         <tbody>
 
-		@foreach (var Record in attendanceRecords)
-		{
-			<tr>
-				<td>@Record.Student.Name</td>
-				<td>
+			@foreach (var Record in attendanceRecords)
+			{
+				<tr>
+					<td>@Record.Student.Name</td>
 					<form asp-action="SaveRecords" asp-route-track='@ViewBag.track' asp-route-intake='@ViewBag.intake'>
-						<input name="ID" value="@Record.Id" hidden />
-						<input name="Date" value="@Record.Date" hidden />
-						<input name="TimeOfAttendance" value="@Record.TimeOfAttendance" hidden />
-						<input name="StdID" value="@Record.StdID" hidden />
-						<select name="status" class="form-control">
-							@if(Record.Status == "Present")
-							{
-								<option value="Present" selected>Present</option>
-								<option value="Absent" >Absent</option>
-								<option value="Late" >Late</option>
+						<td>
+				
+							<input name="ID" value="@Record.Id" hidden />
+							<input name="Date" value="@Record.Date" hidden />
+							<input name="TimeOfAttendance" value="@Record.TimeOfAttendance" hidden />
+							<input name="StdID" value="@Record.StdID" hidden />
+							<select name="status" class="form-control text-center">
+								@if(Record.Status == "Present")
+								{
+									<option value="Present" selected>Present</option>
+									<option value="Absent" >Absent</option>
+									<option value="Late" >Late</option>
 
-							}
-							@if (Record.Status == "Absent")
-							{
-								<option value="Present" >Present</option>
-								<option value="Absent" selected>Absent</option>
-								<option value="Late">Late</option>
-							}
-							@if (Record.Status == "Late")
-							{
-								<option value="Present">Present</option>
-								<option value="Absent" >Absent</option>
-								<option value="Late" selected>Late</option>
-							}
-						</select>
-						<input type="submit" class="btn btn-primary"/>
+								}
+								@if (Record.Status == "Absent")
+								{
+									<option value="Present" >Present</option>
+									<option value="Absent" selected>Absent</option>
+									<option value="Late">Late</option>
+								}
+								@if (Record.Status == "Late")
+								{
+									<option value="Present">Present</option>
+									<option value="Absent" >Absent</option>
+									<option value="Late" selected>Late</option>
+								}
+							</select>
+				
+				
+						</td>
+						<td>
+							<input type="submit" class="btn btn-primary" />
+						</td>
 					</form>
-				</td>
-			</tr>
+				</tr>
 		}
 
         </tbody>

@@ -1,10 +1,12 @@
+
 ﻿@model IEnumerable<DailyAttendanceRecord>
 @{
     ViewData["Title"] = "AttendanceRecords";
     Layout = "~/Views/Shared/EmployeeDashBoard.cshtml";
 
     List<Track> tracks = ViewBag.Tracks;
-    List<Intake> intakes = ViewBag.Intakes;
+    List<Intake> intakes = ViewBag.Intakes;
+
     SelectList tracksList = new SelectList(tracks, "Id", "Name");
     SelectList intakesList = new SelectList(intakes, "Id", "Name");
 }
